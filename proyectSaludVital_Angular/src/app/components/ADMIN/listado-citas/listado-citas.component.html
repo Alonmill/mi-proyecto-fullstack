@@ -1,0 +1,25 @@
+<h3>Listado de Citas</h3>
+<table border="1" cellpadding="5">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Paciente</th>
+      <th>Médico</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Motivo</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let cita of citas">
+    <td data-label="ID">{{ cita.id }}</td>
+    <td data-label="Paciente">{{ cita.pacienteNombre }}</td>
+    <td data-label="Médico">{{ cita.medicoNombre }}</td>
+    <td data-label="Fecha">{{ cita.fecha }}</td>
+    <td data-label="Hora">{{ cita.hora }}</td>
+    <td data-label="Motivo">{{ cita.motivo }}</td>
+    <td data-label="Estado">{{ cita.estado }}</td>
+  </tr>
+</tbody>
+</table>

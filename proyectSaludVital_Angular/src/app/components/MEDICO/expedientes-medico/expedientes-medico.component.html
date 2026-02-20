@@ -1,0 +1,42 @@
+<div class="container">
+  <h2>Ver Expediente Médico</h2>
+
+  <label>ID Expediente:</label>
+  <input type="number" [(ngModel)]="idBuscar">
+  <button (click)="buscar()">Buscar</button>
+
+  <div *ngIf="expediente" class="card">
+    <h3>Paciente: {{ expediente.nombrePaciente }}</h3>
+    <p><strong>ID:</strong> {{ expediente.id }}</p>
+    <p><strong>Número Identificación:</strong> {{ expediente.numeroIdentificacion }}</p>
+    <p><strong>Fecha Nacimiento:</strong> {{ expediente.fechaNacimiento }}</p>
+
+    <h3>Entradas del Historial</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Diagnóstico</th>
+          <th>Tratamiento</th>
+          <th>Médico</th>
+          <th>Estado Cita</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entrada of expediente.entradasHistorial">
+          <td>{{ entrada.id }}</td>
+          <td>{{ entrada.fecha }}</td>
+          <td>{{ entrada.hora }}</td>
+          <td>{{ entrada.diagnostico }}</td>
+          <td>{{ entrada.tratamiento }}</td>
+          <td>{{ entrada.nombreMedico }}</td>
+          <td>{{ entrada.estadoCita }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p *ngIf="error" class="text-danger">{{ error }}</p>
+</div>

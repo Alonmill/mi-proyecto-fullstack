@@ -1,0 +1,26 @@
+############################
+# ===== BACKEND (Spring Boot) =====
+############################
+
+ProyectoSaludVital-Backend/target/
+ProyectoSaludVital-Backend/*.log
+
+############################
+# ===== FRONTEND (Angular) =====
+############################
+
+proyectSaludVital_Angular/node_modules/
+proyectSaludVital_Angular/dist/
+proyectSaludVital_Angular/.angular/
+
+############################
+# ===== GENERAL =====
+############################
+
+.env
+*.env
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+coverage/

@@ -1,0 +1,131 @@
+/* ====== FORMULARIO ====== */
+form {
+  background: #ffffff;
+  padding: 25px;
+  margin: 20px auto;
+  border-radius: 12px;
+  max-width: 700px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 22px;
+}
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: 600;
+  color: #34495e;
+  display: block;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border 0.3s;
+}
+
+input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* Botones */
+button {
+  background: #3498db;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 5px;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+button[type="button"] {
+  background: #95a5a6;
+}
+
+button[type="button"]:hover {
+  background: #7f8c8d;
+}
+
+/* ====== TABLA ====== */
+table {
+  width: 95%;
+  margin: 25px auto;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+  background: #3498db;
+  color: #fff;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+tbody tr:hover {
+  background: #eaf2f8;
+  transition: 0.2s;
+}
+
+td button {
+  font-size: 13px;
+  padding: 6px 12px;
+}
+
+/* ====== LISTAS DE ALERGIAS/ENFERMEDADES ====== */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+ul li {
+  background: #ecf0f1;
+  margin: 4px 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb;
+}

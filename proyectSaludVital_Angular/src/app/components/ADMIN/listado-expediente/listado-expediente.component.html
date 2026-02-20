@@ -1,0 +1,27 @@
+<h2>Listado de Expedientes</h2>
+
+<div *ngIf="expedientes.length > 0; else noExpedientes">
+  <table border="1" style="border-collapse: collapse; width: 100%;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Paciente</th>
+        <th>Número Identificación</th>
+        <th>Fecha Nacimiento</th>
+      </tr>
+    </thead>
+    <tbody>
+  <tr *ngFor="let e of expedientes">
+    <td data-label="ID">{{ e.id }}</td>
+    <td data-label="Paciente">{{ e.nombrePaciente }}</td>
+    <td data-label="Número Identificación">{{ e.numeroIdentificacion }}</td>
+    <td data-label="Fecha Nacimiento">{{ e.fechaNacimiento }}</td>
+  </tr>
+</tbody>
+  </table>
+</div>
+
+<ng-template #noExpedientes>
+  <p *ngIf="error">{{ error }}</p>
+  <p *ngIf="!error">No hay expedientes registrados.</p>
+</ng-template>

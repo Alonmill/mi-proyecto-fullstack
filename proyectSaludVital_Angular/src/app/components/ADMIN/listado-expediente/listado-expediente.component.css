@@ -1,0 +1,100 @@
+/* 🎨 Estilo general */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+  color: #333;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+/* 📋 Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado */
+thead {
+  background: #3498db;
+  color: #fff;
+}
+
+th {
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+/* Filas */
+td {
+  padding: 12px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Alternar color filas */
+tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* Hover fila */
+tbody tr:hover {
+  background: #eaf4fc;
+  transition: 0.3s;
+}
+
+/* 📱 Responsive tabla */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    padding: 10px;
+  }
+
+  td {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #555;
+  }
+}
+
+/* Mensajes */
+p {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 15px;
+  color: #666;
+}
+
+p.error {
+  color: #e74c3c;
+  font-weight: bold;
+}

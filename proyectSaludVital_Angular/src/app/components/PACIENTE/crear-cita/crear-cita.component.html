@@ -1,0 +1,40 @@
+<div class="container">
+
+  <!-- Mensaje de éxito o error -->
+  <div *ngIf="mensaje" 
+       [ngClass]="{'alert-success': mensaje.startsWith('✅'), 'alert-error': !mensaje.startsWith('✅')}" 
+       class="alert">
+    {{ mensaje }}
+  </div>
+
+  <h3>Crear Cita</h3>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="formulario">
+    <div class="form-group">
+      <label>ID Paciente:</label>
+      <input type="number" formControlName="idPaciente">
+    </div>
+
+    <div class="form-group">
+      <label>ID Médico:</label>
+      <input type="number" formControlName="idMedico">
+    </div>
+
+    <div class="form-group">
+      <label>Fecha:</label>
+      <input type="date" formControlName="fecha">
+    </div>
+
+    <div class="form-group">
+      <label>Hora:</label>
+      <input type="time" formControlName="hora">
+    </div>
+
+    <div class="form-group">
+      <label>Motivo:</label>
+      <input type="text" formControlName="motivo">
+    </div>
+
+    <button type="submit">Crear Cita</button>
+  </form>
+
+</div>

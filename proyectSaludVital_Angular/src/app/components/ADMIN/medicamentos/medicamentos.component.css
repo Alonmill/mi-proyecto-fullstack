@@ -1,0 +1,109 @@
+:host {
+  display: block;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Contenedor principal */
+.container {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+h2, h3 {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Formularios */
+form {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: 500;
+  color: #34495e;
+}
+
+.form-control {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 6px rgba(52, 152, 219, 0.4);
+}
+
+/* Errores */
+.text-danger small {
+  font-size: 13px;
+}
+
+/* Botones */
+button {
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  transition: all 0.2s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+.btn-primary {
+  background-color: #3498db;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-warning {
+  background-color: #f39c12;
+  border: none;
+}
+
+.btn-warning:hover {
+  background-color: #d68910;
+}
+
+/* Tabla */
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.table th {
+  background: #3498db;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+}
+
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}

@@ -1,0 +1,74 @@
+<h2>Actualizar Citas</h2>
+
+<!-- Mensajes de error -->
+<div *ngIf="mensajeError" class="alert-error">
+  {{ mensajeError }}
+</div>
+
+<!-- Listado de citas -->
+<table class="tabla-citas">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Paciente</th>
+      <th>Médico</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Motivo</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let cita of citas">
+      <td>{{ cita.id }}</td>
+      <td>{{ cita.pacienteNombre }}</td>
+      <td>{{ cita.medicoNombre }}</td>
+      <td>{{ cita.fecha }}</td>
+      <td>{{ cita.hora }}</td>
+      <td>{{ cita.motivo }}</td>
+      <td>
+        <button class="btn-actualizar" (click)="seleccionarCita(cita)">Actualizar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Formulario de actualización -->
+<div *ngIf="citaSeleccionadaId !== null" class="form-container">
+  <h3>Actualizar Cita</h3>
+  <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+   <div class="form-group">
+  <label>Medico ID:</label>
+  <input formControlName="idMedico" type="number" placeholder="ID del médico" />
+  <div class="error" *ngIf="formulario.get('idMedico')?.touched && formulario.get('idMedico')?.hasError('required')">
+    El ID del médico es obligatorio.
+  </div>
+</div>
+
+<div class="form-group">
+  <label>Fecha:</label>
+  <input formControlName="fecha" type="date" />
+  <div class="error" *ngIf="formulario.get('fecha')?.touched && formulario.get('fecha')?.hasError('required')">
+    La fecha es obligatoria.
+  </div>
+</div>
+
+<div class="form-group">
+  <label>Hora:</label>
+  <input formControlName="hora" type="time" />
+  <div class="error" *ngIf="formulario.get('hora')?.touched && formulario.get('hora')?.hasError('required')">
+    La hora es obligatoria.
+  </div>
+</div>
+
+<div class="form-group">
+  <label>Motivo:</label>
+  <input formControlName="motivo" type="text" placeholder="Motivo de la cita" />
+  <div class="error" *ngIf="formulario.get('motivo')?.touched && formulario.get('motivo')?.hasError('required')">
+    El motivo es obligatorio.
+  </div>
+</div>
+
+    <button type="submit" class="btn-guardar">Guardar cambios</button>
+  </form>
+</div>

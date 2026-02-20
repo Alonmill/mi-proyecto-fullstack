@@ -1,0 +1,26 @@
+<div class="layout-container">
+  <aside class="sidebar">
+    <h2 class="title">Administrador</h2>
+    <nav class="menu">
+       <ul>
+      <li><a routerLink="/admin/medicamento" routerLinkActive="active">Medicamentos</a></li>
+      <li><a routerLink="/admin/medico" routerLinkActive="active">Médicos</a></li>
+      <li><a routerLink="/admin/paciente" routerLinkActive="active">Pacientes</a></li>
+      <li><a routerLink="/admin/listado-receta" routerLinkActive="active">Recetas</a></li>
+
+      <!-- Citas -->
+      <li><a routerLink="/admin/actualizar-cita" routerLinkActive="active">Actualizar Cita</a></li>
+      <li><a routerLink="/admin/cancelar-cita" routerLinkActive="active">Cancelar Cita</a></li>
+      <li><a routerLink="/admin/listado-citas" routerLinkActive="active">Listado de Citas</a></li>
+
+      <!-- Expedientes solo ADMIN -->
+      <li><a routerLink="/admin/listado-expedientes" routerLinkActive="active">Listado de Expedientes</a></li>
+    </ul>
+
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

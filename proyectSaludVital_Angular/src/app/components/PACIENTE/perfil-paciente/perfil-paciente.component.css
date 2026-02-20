@@ -1,0 +1,130 @@
+/* Contenedor general */
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Título principal */
+h2 {
+  color: #007bff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Subtítulos */
+h3 {
+  color: #333;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  border-left: 5px solid #007bff;
+  padding-left: 10px;
+}
+
+/* Texto */
+p {
+  font-size: 15px;
+  color: #444;
+  margin: 5px 0;
+}
+
+strong {
+  color: #222;
+}
+
+/* Listas */
+ul {
+  list-style-type: disc;
+  margin-left: 25px;
+  padding-left: 5px;
+}
+
+ul li {
+  margin: 4px 0;
+  color: #555;
+}
+
+/* Formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  font-weight: bold;
+  color: #333;
+}
+
+input.form-control {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  transition: border 0.2s ease-in-out;
+}
+
+input.form-control:focus {
+  border: 1px solid #007bff;
+  outline: none;
+  box-shadow: 0 0 3px rgba(0,123,255,0.5);
+}
+
+/* Botones */
+button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #1e7e34;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+
+button[type="button"] {
+  margin-top: 5px;
+  background: #dc3545;
+  color: white;
+}
+
+button[type="button"]:hover {
+  background: #a71d2a;
+}
+
+/* Error */
+.text-danger {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}

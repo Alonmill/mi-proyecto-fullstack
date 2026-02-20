@@ -1,0 +1,181 @@
+:host {
+  display: block;
+  max-width: 1000px;
+  margin: 30px auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 15px;
+}
+
+/* Títulos */
+h2, h3 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+/* Inputs */
+label {
+  display: block;
+  font-weight: bold;
+  margin-top: 12px;
+  color: #34495e;
+}
+
+input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 5px;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border 0.3s;
+}
+
+input:focus {
+  border: 1px solid #3498db;
+  box-shadow: 0 0 5px rgba(52,152,219,0.3);
+  outline: none;
+}
+
+/* Medicamentos en el form */
+form div[formArrayName] > div {
+  background: #f8f9fa;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+form div[formArrayName] > div:hover {
+  background: #f1f8ff;
+}
+
+/* Botones dentro del form */
+form button {
+  margin-top: 15px;
+  margin-right: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+form button:hover {
+  transform: scale(1.05);
+}
+
+/* Botón eliminar */
+form button[type="button"] {
+  background: #e74c3c;
+  color: #fff;
+}
+
+form button[type="button"]:hover {
+  background: #c0392b;
+}
+
+/* Botón agregar */
+form > button[type="button"] {
+  background: #27ae60;
+  color: #fff;
+}
+
+form > button[type="button"]:hover {
+  background: #219150;
+}
+
+/* Botón submit */
+form > button[type="submit"] {
+  background: #3498db;
+  color: #fff;
+}
+
+form > button[type="submit"]:hover {
+  background: #2980b9;
+}
+
+/* Mensajes */
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+thead {
+  background: #3498db;
+  color: #fff;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+tbody tr:hover {
+  background: #f1f8ff;
+}
+
+/* Botones en la tabla */
+table button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: transform 0.2s, background 0.3s;
+}
+
+/* Botón ver/ocultar medicamentos */
+table td button {
+  background: #27ae60;
+  color: #fff;
+}
+
+table td button:hover {
+  background: #219150;
+  transform: scale(1.05);
+}
+
+/* Botón editar */
+td button:last-child {
+  background: #f39c12;
+  color: #fff;
+  margin-left: 8px;
+}
+
+td button:last-child:hover {
+  background: #d68910;
+}

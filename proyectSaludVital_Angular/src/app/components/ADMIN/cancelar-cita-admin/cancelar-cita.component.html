@@ -1,0 +1,40 @@
+<div *ngIf="mensaje" class="alert">{{ mensaje }}</div>
+
+<h3>Cancelar Cita</h3>
+
+<!-- Tabla de citas -->
+<table *ngIf="citas && citas.length > 0" border="1" cellpadding="5">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Paciente</th>
+      <th>Medico</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Motivo</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let cita of citas">
+      <td>{{ cita.id }}</td>
+      <td>{{ cita.pacienteNombre }}</td>
+      <td>{{ cita.medicoNombre }}</td>
+      <td>{{ cita.fecha }}</td>
+      <td>{{ cita.hora }}</td>
+      <td>{{ cita.motivo }}</td>
+      <td>{{ cita.estado || 'ACTIVA' }}</td>
+      <td>
+        <button (click)="cancelarCita(cita.id)" [disabled]="cita.estado === 'CANCELADA'">
+          Cancelar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Mensaje si no hay citas -->
+<div *ngIf="citas && citas.length === 0">
+  No hay citas disponibles para mostrar.
+</div>

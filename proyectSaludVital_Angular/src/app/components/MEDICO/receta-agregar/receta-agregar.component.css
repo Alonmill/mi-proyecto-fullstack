@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  max-width: 700px;
+  margin: 20px auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+form {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Tarjeta de cada medicamento */
+.item-card {
+  background: #f8f9fa;
+  border: 1px solid #dfe6e9;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.item-card:hover {
+  background: #f1f8ff;
+}
+
+/* Labels e inputs */
+label {
+  font-weight: bold;
+  color: #34495e;
+  display: block;
+  margin-bottom: 4px;
+}
+
+input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+input:focus {
+  border: 1px solid #3498db;
+  box-shadow: 0 0 5px rgba(52,152,219,0.3);
+}
+
+/* Botón eliminar dentro de cada tarjeta */
+.item-card button {
+  grid-column: span 2;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #e74c3c;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.item-card button:hover {
+  background: #c0392b;
+}
+
+/* Botones principales */
+form > button {
+  margin-right: 10px;
+  margin-top: 15px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+/* Botón agregar */
+form > button[type="button"] {
+  background: #27ae60;
+  color: #fff;
+}
+
+form > button[type="button"]:hover {
+  background: #219150;
+  transform: scale(1.03);
+}
+
+/* Botón guardar */
+form > button[type="submit"] {
+  background: #3498db;
+  color: #fff;
+}
+
+form > button[type="submit"]:hover {
+  background: #2980b9;
+  transform: scale(1.03);
+}
+
+/* Mensajes de error */
+.alert-error {
+  background: #f8d7da;
+  color: #842029;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #f5c2c7;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+}

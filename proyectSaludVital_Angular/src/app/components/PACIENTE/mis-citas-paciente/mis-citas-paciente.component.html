@@ -1,0 +1,36 @@
+<div class="container">
+  <h3>Todas mis Citas</h3>
+
+  <!-- Tabla de citas -->
+  <table *ngIf="citas && citas.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Paciente</th>
+        <th>Médico</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Motivo</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cita of citas">
+        <td>{{ cita.id }}</td>
+        <td>{{ cita.pacienteNombre }}</td>
+        <td>{{ cita.medicoNombre }}</td>
+        <td>{{ cita.fecha }}</td>
+        <td>{{ cita.hora }}</td>
+        <td>{{ cita.motivo }}</td>
+        <td [ngClass]="{'estado-activa': cita.estado === 'ACTIVA', 'estado-cancelada': cita.estado === 'CANCELADA'}">
+          {{ cita.estado }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mensaje si no hay citas -->
+  <div *ngIf="citas && citas.length === 0" class="no-citas">
+    No hay citas disponibles para mostrar.
+  </div>
+</div>

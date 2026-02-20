@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <h2>Gestión de Medicamentos</h2>
+
+  <!-- Formulario de registro / edición -->
+   <div *ngIf="usuario?.rol === 'ADMIN'">
+  <form [formGroup]="medicamentoForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input
+        type="text"
+        id="nombre"
+        class="form-control"
+        formControlName="nombre"
+      />
+      <div *ngIf="medicamentoForm.get('nombre')?.touched && medicamentoForm.get('nombre')?.invalid" class="text-danger">
+        <small *ngIf="medicamentoForm.get('nombre')?.errors?.['required']">El nombre es obligatorio.</small>
+        <small *ngIf="medicamentoForm.get('nombre')?.errors?.['minlength']">Mínimo 3 caracteres.</small>
+        <small *ngIf="medicamentoForm.get('nombre')?.errors?.['maxlength']">Máximo 50 caracteres.</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción</label>
+      <textarea
+        id="descripcion"
+        class="form-control"
+        formControlName="descripcion"
+      ></textarea>
+      <div *ngIf="medicamentoForm.get('descripcion')?.touched && medicamentoForm.get('descripcion')?.invalid" class="text-danger">
+        <small *ngIf="medicamentoForm.get('descripcion')?.errors?.['required']">La descripción es obligatoria.</small>
+        <small *ngIf="medicamentoForm.get('descripcion')?.errors?.['minlength']">Mínimo 5 caracteres.</small>
+        <small *ngIf="medicamentoForm.get('descripcion')?.errors?.['maxlength']">Máximo 200 caracteres.</small>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      {{ isEditMode ? 'Actualizar' : 'Registrar' }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">Cancelar</button>
+  </form>
+</div>
+  <hr />
+
+  <!-- Lista de medicamentos -->
+  <h3>Listado de Medicamentos</h3>
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let med of medicamentos">
+        <td>{{ med.id }}</td>
+        <td>{{ med.nombre }}</td>
+        <td>{{ med.descripcion }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-2" (click)="editarMedicamento(med)">Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

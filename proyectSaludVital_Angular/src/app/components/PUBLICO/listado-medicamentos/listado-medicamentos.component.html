@@ -1,0 +1,26 @@
+<div *ngIf="cargando" class="alert alert-info text-center">
+  Cargando medicamentos...
+</div>
+
+<br>
+<br>
+<table *ngIf="!cargando && medicamentos.length > 0"  border="1" cellpadding="5" cellspacing="0">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let med of medicamentos; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ med.nombre }}</td>
+      <td>{{ med.descripcion }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!cargando && medicamentos.length === 0" class="alert alert-warning text-center">
+  No hay medicamentos disponibles.
+</div>

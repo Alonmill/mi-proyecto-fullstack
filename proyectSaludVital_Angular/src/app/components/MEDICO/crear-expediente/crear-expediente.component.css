@@ -1,0 +1,99 @@
+:host {
+  display: block;
+  max-width: 600px;
+  margin: 30px auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 15px;
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+/* Formulario */
+form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* Labels */
+label {
+  display: block;
+  font-weight: bold;
+  margin-top: 12px;
+  color: #34495e;
+}
+
+/* Inputs & Textarea */
+input, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 5px;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border 0.3s;
+  resize: vertical;
+}
+
+input:focus, textarea:focus {
+  border: 1px solid #3498db;
+  box-shadow: 0 0 5px rgba(52,152,219,0.3);
+  outline: none;
+}
+
+/* Botón */
+button {
+  margin-top: 20px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #3498db;
+  color: #fff;
+  transition: transform 0.2s, background 0.3s;
+  width: 100%;
+}
+
+button:hover:enabled {
+  background: #2980b9;
+  transform: scale(1.02);
+}
+
+button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Mensajes */
+.mensaje-exito {
+  background: #d4edda;
+  color: #155724;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 20px;
+  border: 1px solid #c3e6cb;
+  text-align: center;
+}
+
+.mensaje-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 20px;
+  border: 1px solid #f5c6cb;
+  text-align: center;
+}

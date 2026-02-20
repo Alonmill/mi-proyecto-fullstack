@@ -1,0 +1,158 @@
+
+<h2>{{ editar ? 'Actualizar Médico' : 'Agregar Médico' }}</h2>
+<form [formGroup]="form" (ngSubmit)="guardar()">
+
+  <div>
+  <label for="nombre">Nombre:</label>
+  <input id="nombre" formControlName="nombre" placeholder="Nombre" />
+  <div class="error" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.hasError('required')">
+    El nombre es obligatorio.
+  </div>
+</div>
+
+<div>
+  <label for="apellido">Apellido:</label>
+  <input id="apellido" formControlName="apellido" placeholder="Apellido" />
+  <div class="error" *ngIf="form.get('apellido')?.touched && form.get('apellido')?.hasError('required')">
+    El apellido es obligatorio.
+  </div>
+</div>
+
+<div>
+  <label for="numeroLicencia">Número de Licencia:</label>
+  <input id="numeroLicencia" formControlName="numeroLicencia" placeholder="Número Licencia" />
+  <div class="error" *ngIf="form.get('numeroLicencia')?.touched">
+    <span *ngIf="form.get('numeroLicencia')?.hasError('required')">La licencia es obligatoria.</span>
+    <span *ngIf="form.get('numeroLicencia')?.hasError('minlength')">Debe tener al menos 6 caracteres.</span>
+    <span *ngIf="form.get('numeroLicencia')?.hasError('maxlength')">Máximo 10 caracteres.</span>
+  </div>
+</div>
+
+<div>
+  <label for="telefono">Teléfono:</label>
+  <input id="telefono" formControlName="telefono" placeholder="Teléfono" />
+  <div class="error" *ngIf="form.get('telefono')?.touched">
+    <span *ngIf="form.get('telefono')?.hasError('required')">El teléfono es obligatorio.</span>
+    <span *ngIf="form.get('telefono')?.hasError('pattern')">Debe ser un número de 9 dígitos.</span>
+  </div>
+</div>
+
+<div>
+  <label for="email">Email:</label>
+  <input id="email" formControlName="email" placeholder="Email" />
+  <div class="error" *ngIf="form.get('email')?.touched">
+    <span *ngIf="form.get('email')?.hasError('required')">El email es obligatorio.</span>
+    <span *ngIf="form.get('email')?.hasError('email')">Ingrese un email válido.</span>
+  </div>
+</div>
+
+<div>
+  <label for="especialidad">Especialidad:</label>
+  <input id="especialidad" formControlName="especialidad" placeholder="Especialidad" />
+  <div class="error" *ngIf="form.get('especialidad')?.touched && form.get('especialidad')?.hasError('required')">
+    La especialidad es obligatoria.
+  </div>
+</div>
+
+<div>
+  <label for="tarifaConsulta">Tarifa Consulta:</label>
+  <input id="tarifaConsulta" formControlName="tarifaConsulta" type="number" placeholder="Tarifa Consulta" />
+  <div class="error" *ngIf="form.get('tarifaConsulta')?.touched && form.get('tarifaConsulta')?.hasError('required')">
+    La tarifa de consulta es obligatoria.
+  </div>
+</div>
+
+<div>
+  <label for="estado">Estado:</label>
+  <input id="estado" formControlName="estado" type="text" placeholder="Estado" />
+  <div class="error" *ngIf="form.get('estado')?.touched && form.get('estado')?.hasError('required')">
+    El estado es obligatorio.
+  </div>
+</div>
+
+<div>
+  <label for="disponible">Disponible:</label>
+  <input id="disponible" formControlName="disponible" type="checkbox" />
+  <div class="error" *ngIf="form.get('disponible')?.touched && form.get('disponible')?.hasError('required')">
+    Debe seleccionar si está disponible.
+  </div>
+</div>
+
+<div>
+  <label for="usuarioId">Usuario Id:</label>
+  <input id="usuarioId" formControlName="usuarioId" placeholder="Usuario ID" />
+  <div class="error" *ngIf="form.get('usuarioId')?.touched">
+    <span *ngIf="form.get('usuarioId')?.hasError('required')">El usuario ID es obligatorio.</span>
+    <span *ngIf="form.get('usuarioId')?.hasError('pattern')">Solo se permiten números.</span>
+  </div>
+</div>
+
+  
+
+  <div formArrayName="horarios">
+    <div *ngFor="let h of horarios.controls; let i=index" [formGroupName]="i">
+      <label>Día:</label>
+      <input formControlName="dia" placeholder="Día" />
+      <label>Hora Inicio:</label>
+      <input formControlName="horaInicio" placeholder="Hora Inicio" />
+      <label>Hora Fin:</label>
+      <input formControlName="horaFin" placeholder="Hora Fin" />
+      <button type="button" (click)="eliminarHorario(i)">Eliminar</button>
+    </div>
+  </div>
+
+  <button type="button" (click)="agregarHorario()">Agregar Horario</button>
+
+  <button type="submit">{{ editar ? 'Actualizar' : 'Guardar' }}</button>
+</form>
+<h2>Lista de Médicos</h2>
+
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Especialidad</th>
+      <th>Licencia</th>
+      <th>Teléfono</th>
+      <th>Email</th>
+      <th>Estado</th>
+      <th>Disponible</th>
+      <th>Tarifa</th>
+      <th>Usuario ID</th>
+      <th>Horarios</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let m of medicos">
+      <td>{{ m.nombre }}</td>
+      <td>{{ m.apellido }}</td>
+      <td>{{ m.especialidad }}</td>
+      <td>{{ m.numeroLicencia }}</td>
+      <td>{{ m.telefono }}</td>
+      <td>{{ m.email }}</td>
+      <td>{{ m.estado }}</td>
+      <td>{{ m.disponible ? 'Sí' : 'No' }}</td>
+      <td>{{ m.tarifaConsulta }}</td>
+      <td>{{ m.usuarioId }}</td>
+      <td>
+        <button type="button" (click)="m.showHorarios = !m.showHorarios">
+          {{ m.showHorarios ? 'Ocultar' : 'Ver horarios' }}
+        </button>
+        <ul *ngIf="m.showHorarios">
+          <li *ngFor="let h of m.horarios">
+            {{ h.dia }}: {{ h.horaInicio }} - {{ h.horaFin }}
+          </li>
+        </ul>
+      </td>
+      <td>
+        <button type="button" (click)="editarMedico(m)">Actualizar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="mensajeError" class="alert-error">
+  {{ mensajeError }}
+</div>

@@ -1,0 +1,45 @@
+<h2>Listado de Recetas</h2>
+
+<!-- Spinner o mensaje mientras carga -->
+<div *ngIf="cargando">Cargando recetas...</div>
+
+<!-- Tabla con recetas -->
+<table *ngIf="!cargando && recetas.length > 0" border="1" width="100%" style="border-collapse: collapse; text-align: left;">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Médico</th>
+      <th>Paciente</th>
+      <th>Fecha Emisión</th>
+      <th>Fecha Caducidad</th>
+      <th>Items</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let receta of recetas">
+      <td>{{ receta.id }}</td>
+      <td>{{ receta.medicoNombre }}</td>
+      <td>{{ receta.pacienteNombre }}</td>
+      <td>{{ receta.fechaEmision | date:'shortDate' }}</td>
+      <td>{{ receta.fechaCaducidad | date:'shortDate' }}</td>
+      <td>
+        <!-- Botón para expandir items -->
+        <button type="button" (click)="receta.showItems = !receta.showItems">
+          {{ receta.showItems ? 'Ocultar' : 'Ver Items' }}
+        </button>
+
+        <!-- Lista de items -->
+        <ul *ngIf="receta.showItems">
+          <li *ngFor="let item of receta.items">
+            {{ item.medicamentoNombre }} - {{ item.dosis }} ({{ item.frecuencia }})
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Si no hay recetas -->
+<div *ngIf="!cargando && recetas.length === 0">
+  No hay recetas registradas.
+</div>

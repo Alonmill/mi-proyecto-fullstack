@@ -1,0 +1,83 @@
+<div *ngIf="paciente; else errorTemplate" class="container">
+
+  <h2>Perfil de {{ paciente.nombre }}</h2>
+
+  <!-- Vista normal -->
+  <div *ngIf="!editar" class="card">
+    <div class="card-section">
+      <h3>Datos personales</h3>
+      <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
+      <p><strong>Número de identificación:</strong> {{ paciente.numeroIdentificacion }}</p>
+      <p><strong>Fecha de nacimiento:</strong> {{ paciente.fechaNacimiento }}</p>
+      <p><strong>Usuario ID:</strong> {{ paciente.usuarioId }}</p>
+    </div>
+
+    <div class="card-section">
+      <h3>Alergias</h3>
+      <div *ngIf="paciente.alergias && paciente.alergias.length > 0; else noAlergias">
+        <div class="chip" *ngFor="let alergia of paciente.alergias">
+          {{ alergia }}
+        </div>
+      </div>
+      <ng-template #noAlergias><p>No registradas</p></ng-template>
+    </div>
+
+    <div class="card-section">
+      <h3>Enfermedades</h3>
+      <div *ngIf="paciente.enfermedades && paciente.enfermedades.length > 0; else noEnfermedades">
+        <div class="chip disease" *ngFor="let enfermedad of paciente.enfermedades">
+          {{ enfermedad }}
+        </div>
+      </div>
+      <ng-template #noEnfermedades><p>No registradas</p></ng-template>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" (click)="editarPaciente(paciente)">Actualizar</button>
+    </div>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div *ngIf="editar" class="card">
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+
+      <h3>Editar datos</h3>
+      <label>Nombre</label>
+      <input formControlName="nombre" class="form-control">
+
+      <label>Número de identificación</label>
+      <input formControlName="numeroIdentificacion" class="form-control">
+
+      <label>Fecha de nacimiento</label>
+      <input type="date" formControlName="fechaNacimiento" class="form-control">
+
+      <h3>Alergias</h3>
+      <div formArrayName="alergias" class="list-form">
+        <div *ngFor="let a of alergias.controls; let i = index" [formGroupName]="i" class="list-item">
+          <input formControlName="nombre" class="form-control">
+          <button type="button" (click)="eliminarAlergia(i)">❌</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="agregarAlergia()">➕ Agregar Alergia</button>
+
+      <h3>Enfermedades</h3>
+      <div formArrayName="enfermedades" class="list-form">
+        <div *ngFor="let e of enfermedades.controls; let i = index" [formGroupName]="i" class="list-item">
+          <input formControlName="nombre" class="form-control">
+          <button type="button" (click)="eliminarEnfermedad(i)">❌</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="agregarEnfermedad()">➕ Agregar Enfermedad</button>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-success">💾 Guardar</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Error -->
+<ng-template #errorTemplate>
+  <p class="text-danger">{{ error }}</p>
+</ng-template>

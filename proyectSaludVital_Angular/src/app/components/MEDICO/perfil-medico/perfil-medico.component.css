@@ -1,0 +1,94 @@
+:host {
+  display: block;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 15px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Tarjeta principal */
+div[ng-reflect-ng-if] {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+div[ng-reflect-ng-if]:hover {
+  transform: translateY(-3px);
+}
+
+/* Títulos */
+h2 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #34495e;
+  border-left: 4px solid #3498db;
+  padding-left: 8px;
+}
+
+/* Texto general */
+p {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+strong {
+  color: #2c3e50;
+}
+
+/* Estado y disponibilidad */
+p:nth-child(6) strong {
+  color: #8e44ad;
+}
+
+p:nth-child(7) {
+  font-weight: bold;
+  color: #27ae60;
+}
+
+p:nth-child(7):has(span:contains("No")) {
+  color: #e74c3c;
+}
+
+/* Tarifa */
+p:last-of-type {
+  font-size: 16px;
+  color: #2980b9;
+  font-weight: bold;
+}
+
+/* Lista de horarios */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+li {
+  background: #f4f6f7;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  border-left: 4px solid #3498db;
+  transition: background 0.3s;
+}
+
+li:hover {
+  background: #eaf3fb;
+}
+
+/* Mensaje de error */
+.text-danger {
+  color: #e74c3c;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}

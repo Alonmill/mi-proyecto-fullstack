@@ -1,0 +1,121 @@
+<h2>{{ editar ? 'Actualizar Paciente' : 'Agregar Paciente' }}</h2>
+<form [formGroup]="form" (ngSubmit)="guardar()">
+
+  <div>
+  <label for="nombre">Nombre:</label>
+  <input id="nombre" formControlName="nombre" placeholder="Nombre" />
+  <div class="error" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.hasError('required')">
+    El nombre es obligatorio.
+  </div>
+</div>
+
+<div>
+  <label for="numeroIdentificacion">Número de Identificación:</label>
+  <input id="numeroIdentificacion" formControlName="numeroIdentificacion" placeholder="Número Identificación" />
+  <div class="error" *ngIf="form.get('numeroIdentificacion')?.touched">
+    <span *ngIf="form.get('numeroIdentificacion')?.hasError('required')">
+      El número de identificación es obligatorio.
+    </span>
+    <span *ngIf="form.get('numeroIdentificacion')?.hasError('pattern')">
+      Debe contener exactamente 8 dígitos numéricos.
+    </span>
+  </div>
+</div>
+
+<div>
+  <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+  <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" placeholder="Fecha de Nacimiento" />
+  <div class="error" *ngIf="form.get('fechaNacimiento')?.touched && form.get('fechaNacimiento')?.hasError('required')">
+    La fecha de nacimiento es obligatoria.
+  </div>
+</div>
+
+<div>
+  <label for="usuarioId">Usuario Id:</label>
+  <input id="usuarioId" formControlName="usuarioId" placeholder="Usuario ID" />
+  <div class="error" *ngIf="form.get('usuarioId')?.touched">
+    <span *ngIf="form.get('usuarioId')?.hasError('required')">
+      El usuario ID es obligatorio.
+    </span>
+    <span *ngIf="form.get('usuarioId')?.hasError('pattern')">
+      Solo se permiten números.
+    </span>
+  </div>
+</div>
+
+  
+
+  <div formArrayName="alergias">
+  <div *ngFor="let a of alergias.controls; let i=index" [formGroupName]="i">
+    <label>Nombre Alergia:</label>
+    <input formControlName="nombre" placeholder="Nombre de alergia" />
+    <button type="button" (click)="eliminarAlergia(i)">Eliminar</button>
+  </div>
+</div>
+<button type="button" (click)="agregarAlergia()">Agregar Alergia</button>
+
+<div formArrayName="enfermedades">
+  <div *ngFor="let e of enfermedades.controls; let i=index" [formGroupName]="i">
+    <label>Nombre Enfermedad:</label>
+    <input formControlName="nombre" placeholder="Nombre de Enfermedad" />
+    <button type="button" (click)="eliminarEnfermedad(i)">Eliminar</button>
+  </div>
+</div>
+<button type="button" (click)="agregarEnfermedad()">Agregar Enfermedad</button>
+
+  <button type="submit">{{ editar ? 'Actualizar' : 'Guardar' }}</button>
+</form>
+
+<h2>Lista de Pacientes</h2>
+
+<table border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Numero Identificacion</th>
+      <th>Fecha de Nacimiento</th>
+      <th>Usuario ID</th>
+      <th>Alergias</th>
+      <th>Enfermedades</th>
+      <th>Acciones</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of pacientes">
+      <td>{{ p.nombre }}</td>
+      <td>{{ p.numeroIdentificacion }}</td>
+      <td>{{ p.fechaNacimiento}}</td>
+      <td>{{ p.usuarioId }}</td>
+      <td>
+        <button type="button" (click)="p.showAlergias = !p.showAlergias">
+          {{ p.showAlergias ? 'Ocultar' : 'Ver Alergias' }}
+        </button>
+        <ul *ngIf="p.showAlergias">
+          <li *ngFor="let a of p.alergias">
+            {{ a }}
+          </li>
+        </ul>
+      </td>
+
+      <td>
+        <button type="button" (click)="p.showEnfermedades = !p.showEnfermedades">
+          {{ p.showEnfermedades ? 'Ocultar' : 'Ver Enfermedades' }}
+        </button>
+        <ul *ngIf="p.showEnfermedades">
+          <li *ngFor="let e of p.enfermedades">
+            {{ e }}
+          </li>
+        </ul>
+      </td>
+
+      <td>
+        <button type="button" (click)="editarPaciente(p)">Actualizar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="mensajeError" class="alert-error">
+  {{ mensajeError }}
+</div>

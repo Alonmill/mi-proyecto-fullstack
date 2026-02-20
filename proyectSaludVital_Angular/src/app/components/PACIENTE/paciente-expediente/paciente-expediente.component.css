@@ -1,0 +1,82 @@
+/* Contenedor */
+:host {
+  display: block;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Títulos */
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+h3 {
+  margin-top: 25px;
+  color: #34495e;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+/* Datos del paciente */
+.datos-paciente {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.datos-paciente p {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+thead {
+  background: #3498db;
+  color: white;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+  background: #f1f9ff;
+  transition: background 0.3s;
+}
+
+tbody td[colspan] {
+  text-align: center;
+  font-style: italic;
+  color: #7f8c8d;
+  padding: 15px;
+}
+
+/* Mensajes de estado */
+p {
+  text-align: center;
+  font-size: 15px;
+}
+
+p[ng-reflect-ng-if="true"] {
+  color: #e74c3c; /* error */
+  font-weight: bold;
+}

@@ -1,0 +1,97 @@
+/* Estilos generales */
+h2, h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-family: Arial, sans-serif;
+}
+
+
+/* Tabla */
+.tabla-citas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.tabla-citas th, .tabla-citas td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+.tabla-citas th {
+  background-color: #4CAF50;
+  color: white;
+}
+.tabla-citas tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.tabla-citas tr:hover {
+  background-color: #f1f1f1;
+}
+.error {
+  color: red;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* Botón actualizar */
+.btn-actualizar {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-actualizar:hover {
+  background: #1976D2;
+}
+
+/* Contenedor del formulario */
+.form-container {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+}
+
+/* Campos del formulario */
+form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+form input {
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Botón guardar */
+.btn-guardar {
+  margin-top: 15px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+.btn-guardar:hover {
+  background: #388E3C;
+}
+
+/* Mensajes de error */
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb;
+  font-size: 14px;
+}

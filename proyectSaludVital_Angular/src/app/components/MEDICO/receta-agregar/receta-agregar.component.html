@@ -1,0 +1,26 @@
+<h2>Nueva Receta</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div *ngIf="mensajeError" class="alert-error">
+    {{ mensajeError }}
+  </div>
+
+  <div formArrayName="items">
+    <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="item-card">
+
+      <label>Medicamento ID:</label>
+      <input type="number" formControlName="medicamentoId">
+
+      <label>Dosis:</label>
+      <input type="text" formControlName="dosis">
+
+      <label>Frecuencia:</label>
+      <input type="text" formControlName="frecuencia">
+
+      <button type="button" (click)="eliminarItem(i)">Eliminar</button>
+    </div>
+  </div>
+
+  <button type="button" (click)="agregarItem()">+ Agregar Medicamento</button>
+  <button type="submit">Guardar Receta</button>
+</form>

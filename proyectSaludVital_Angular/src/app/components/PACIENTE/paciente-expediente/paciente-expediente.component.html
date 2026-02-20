@@ -1,0 +1,40 @@
+<div *ngIf="paciente; else cargando">
+  <h2>Expediente de {{ paciente.nombrePaciente }}</h2>
+
+  <div class="datos-paciente">
+    <p><strong>Número de Identificación:</strong> {{ paciente.numeroIdentificacion }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ paciente.fechaNacimiento }}</p>
+  </div>
+
+  <h3>Historial de Citas</h3>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Diagnóstico</th>
+        <th>Tratamiento</th>
+        <th>Médico</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entrada of paciente.entradasHistorial">
+        <td>{{ entrada.fecha }}</td>
+        <td>{{ entrada.hora }}</td>
+        <td>{{ entrada.diagnostico }}</td>
+        <td>{{ entrada.tratamiento }}</td>
+        <td>{{ entrada.nombreMedico }}</td>
+        <td>{{ entrada.estadoCita }}</td>
+      </tr>
+      <tr *ngIf="paciente.entradasHistorial.length === 0">
+        <td colspan="6">No hay historial disponible.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #cargando>
+  <p *ngIf="error">{{ error }}</p>
+  <p *ngIf="!error">Cargando expediente...</p>
+</ng-template>

@@ -1,0 +1,50 @@
+<div class="register-wrapper">
+  <div class="register-card">
+    <h2>Crear Cuenta 📝</h2>
+    <p class="subtitle">Completa los datos para registrarte</p>
+
+    <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" formControlName="name" />
+        <div class="error" *ngIf="submitted && f['name'].errors">
+          <small *ngIf="f['name'].errors['required']">El nombre es obligatorio</small>
+          <small *ngIf="f['name'].errors['minlength']">Mínimo 3 caracteres</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" />
+        <div class="error" *ngIf="submitted && f['email'].errors">
+          <small *ngIf="f['email'].errors['required']">El email es obligatorio</small>
+          <small *ngIf="f['email'].errors['email']">Formato inválido</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" formControlName="password" />
+        <div class="error" *ngIf="submitted && f['password'].errors">
+          <small *ngIf="f['password'].errors['required']">La contraseña es obligatoria</small>
+          <small *ngIf="f['password'].errors['minlength']">Mínimo 6 caracteres</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Rol</label>
+        <select formControlName="rol">
+          <option *ngFor="let rol of rolesDisponibles" [value]="rol">
+            {{ rol }}
+          </option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-primary">
+        Registrar
+      </button>
+
+    </form>
+  </div>
+</div>

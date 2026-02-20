@@ -1,0 +1,41 @@
+<div *ngIf="recetas.length > 0; else noReceta">
+  <div *ngFor="let receta of recetas">
+    <h2>Receta N° {{ receta.id }}</h2>
+    <p><strong>Médico:</strong> {{ receta.medicoNombre }}</p>
+    <p><strong>Paciente:</strong> {{ receta.pacienteNombre }}</p>
+    <p><strong>Fecha de emisión:</strong> {{ receta.fechaEmision }}</p>
+    <p><strong>Fecha de caducidad:</strong> {{ receta.fechaCaducidad }}</p>
+    
+    <h3>Medicamentos</h3>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Medicamento</th>
+          <th>Dosis</th>
+          <th>Frecuencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of receta.items">
+          <td>{{ item.medicamentoId }}</td>
+          <td>{{ item.medicamentoNombre }}</td>
+          <td>{{ item.dosis }}</td>
+          <td>{{ item.frecuencia }}</td>
+        </tr>
+      </tbody>
+
+    </table>
+          <br>
+          <br>
+    <hr>
+    <br>
+    <br>
+  </div>
+</div>
+
+
+<ng-template #noReceta>
+  <p *ngIf="error">{{ error }}</p>
+  <p *ngIf="!error">No tienes recetas registradas.</p>
+</ng-template>

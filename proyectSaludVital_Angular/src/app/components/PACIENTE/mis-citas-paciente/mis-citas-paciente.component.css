@@ -1,0 +1,55 @@
+/* Contenedor general */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Título */
+h3 {
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+table th {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #f1f1f1;
+  transition: background 0.2s ease-in-out;
+}
+
+/* Columna de estado con colores */
+td.estado-activa {
+  color: green;
+  font-weight: bold;
+}
+
+td.estado-cancelada {
+  color: red;
+  font-weight: bold;
+}

@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="logo">Salud Vital</div>
+
+  <ul class="menu">
+    <li *ngFor="let item of menuItems">
+
+      <a *ngIf="item.route === '/login' && !isLoggedIn"
+         [routerLink]="item.route"
+         routerLinkActive="active"
+         class="menu-link">
+        {{ item.label }}
+      </a>
+
+      <a *ngIf="item.route === '/registro' && !isLoggedIn"
+         [routerLink]="item.route"
+         routerLinkActive="active"
+         class="menu-link">
+        {{ item.label }}
+      </a>
+
+      <a *ngIf="item.route === '/acerca'"
+         [routerLink]="item.route"
+         routerLinkActive="active"
+         class="menu-link">
+        {{ item.label }}
+      </a>
+
+      <a *ngIf="item.action === 'logout' && isLoggedIn"
+         (click)="onMenuClick(item)"
+         class="menu-link">
+        {{ item.label }}
+      </a>
+
+    </li>
+  </ul>
+</nav>

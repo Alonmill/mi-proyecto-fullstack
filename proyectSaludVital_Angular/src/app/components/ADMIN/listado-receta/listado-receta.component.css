@@ -1,0 +1,62 @@
+/* Estilo general para la tabla */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Encabezado de la tabla */
+thead {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* Filas alternadas para mejor legibilidad */
+tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Hover sobre las filas */
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Botón de Ver/Ocultar Items */
+button {
+  padding: 6px 12px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Lista de items */
+ul {
+  margin: 0.5rem 0 0 1rem;
+  padding-left: 1rem;
+  list-style-type: disc;
+}
+
+li {
+  font-size: 0.95rem;
+}
+
+/* Mensajes informativos */
+div {
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  margin-top: 1rem;
+}

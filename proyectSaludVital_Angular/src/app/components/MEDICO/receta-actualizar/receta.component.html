@@ -1,0 +1,77 @@
+
+<!-- 👇 Mostrar el formulario SOLO cuando se edite -->
+<div *ngIf="editar">
+  <h3>Editar Receta</h3>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="hidden" formControlName="idReceta">
+
+    <label>Médico:</label>
+    <input type="text" formControlName="medicoNombre" readonly>
+
+    <label>Paciente:</label>
+    <input type="text" formControlName="pacienteNombre" readonly>
+
+    <label>Fecha Emisión:</label>
+    <input type="date" formControlName="fechaEmision" readonly>
+
+    <label>Fecha Caducidad:</label>
+    <input type="date" formControlName="fechaCaducidad" readonly>
+
+    <div formArrayName="items">
+      <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+        <label>Medicamento ID:</label>
+        <input type="number" formControlName="medicamentoId">
+
+        <label>Dosis:</label>
+        <input type="text" formControlName="dosis">
+
+        <label>Frecuencia:</label>
+        <input type="text" formControlName="frecuencia">
+
+        <button type="button" (click)="eliminarItem(i)">Eliminar</button>
+      </div>
+    </div>
+
+    <button type="button" (click)="agregarItem()">+ Agregar Medicamento</button>
+    <button type="submit">Guardar cambios</button>
+  </form>
+</div>
+<div *ngIf="mensajeExito" class="alert-success">{{ mensajeExito }}</div>
+<div *ngIf="mensajeError" class="alert-error">{{ mensajeError }}</div>
+
+
+<h2>Listado de Recetas</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Médico</th>
+      <th>Paciente</th>
+      <th>Fecha Emisión</th>
+      <th>Medicamentos</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let receta of recetas">
+      <td>{{ receta.id }}</td>
+      <td>{{ receta.medicoNombre }}</td>
+      <td>{{ receta.pacienteNombre }}</td>
+      <td>{{ receta.fechaEmision }}</td>
+      <td>
+        <button type="button" (click)="receta.showItems = !receta.showItems">
+          {{ receta.showItems ? 'Ocultar' : 'Ver Medicamentos' }}
+        </button>
+        <ul *ngIf="receta.showItems">
+          <li *ngFor="let h of receta.items">
+            {{ h.medicamentoNombre }}: {{ h.dosis }} - {{ h.frecuencia }}
+          </li>
+        </ul>
+      </td>
+      <td>
+        <button type="button" (click)="editarReceta(receta)">Editar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+

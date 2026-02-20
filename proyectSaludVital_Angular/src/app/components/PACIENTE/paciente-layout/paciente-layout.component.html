@@ -1,0 +1,21 @@
+<div class="layout-container">
+  <aside class="sidebar">
+    <h2 class="title">Paciente</h2>
+    <nav class="menu">
+      <ul>
+        <li><a routerLink="/paciente/perfil-paciente" routerLinkActive="active">Perfil</a></li>
+        <li><a routerLink="/paciente/expediente-paciente" routerLinkActive="active">Expediente</a></li>
+        <li><a routerLink="/paciente/mis-recetas" routerLinkActive="active">Mi receta</a></li>
+ 
+  <li><a routerLink="/paciente/crear-cita" routerLinkActive="active">Crear Cita</a></li>
+  <li><a routerLink="/paciente/actualizar-cita" routerLinkActive="active">Actualizar Cita</a></li>
+  <li><a routerLink="/paciente/cancelar-cita-paciente" routerLinkActive="active">Cancelar Cita</a></li>
+  <li><a routerLink="/paciente/mis-citas" routerLinkActive="active">Mis Citas</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
