@@ -1,49 +1,63 @@
-<h2>Crear Expediente</h2>
+<div class="expediente-card">
+  <h2>Crear Expediente</h2>
+  <p class="subtitle">Solo se muestran citas PROGRAMADAS dentro de la ventana de atención (hora inicio a +2h).</p>
 
-<form [formGroup]="formulario" (ngSubmit)="crear()">
-  <div class="form-group">
-    <label>Paciente ID:</label>
-    <input type="number" formControlName="idPaciente" placeholder="ID del paciente" />
-    <div class="error" *ngIf="formulario.get('idPaciente')?.touched && formulario.get('idPaciente')?.hasError('required')">
-      El ID del paciente es obligatorio.
+  <form [formGroup]="formulario" (ngSubmit)="crear()">
+    <div class="form-group">
+      <label>Paciente ID</label>
+      <select formControlName="idPaciente">
+        <option value="">Selecciona un paciente</option>
+        <option *ngFor="let paciente of pacientesDisponibles" [value]="paciente.id">
+          {{ paciente.id }} - {{ paciente.nombre }}
+        </option>
+      </select>
+      <div class="error" *ngIf="formulario.get('idPaciente')?.touched && formulario.get('idPaciente')?.hasError('required')">
+        El paciente es obligatorio.
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label>Cita ID:</label>
-    <input type="number" formControlName="citaId" placeholder="ID de la cita" />
-    <div class="error" *ngIf="formulario.get('citaId')?.touched && formulario.get('citaId')?.hasError('required')">
-      El ID de la cita es obligatorio.
+    <div class="form-group">
+      <label>Cita ID</label>
+      <select formControlName="citaId">
+        <option value="">Selecciona una cita</option>
+        <option *ngFor="let cita of citasFiltradas" [value]="cita.id">
+          #{{ cita.id }} - {{ formatearCita(cita) }}
+        </option>
+      </select>
+      <div class="hint" *ngIf="!cargandoCitas && citasFiltradas.length === 0">
+        No hay citas disponibles para el paciente seleccionado en este momento.
+      </div>
+      <div class="error" *ngIf="formulario.get('citaId')?.touched && formulario.get('citaId')?.hasError('required')">
+        La cita es obligatoria.
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label>Diagnóstico:</label>
-    <input type="text" formControlName="diagnostico" maxlength="200" placeholder="Diagnóstico" />
-    <div class="contador">{{ formulario.get('diagnostico')?.value?.length || 0 }}/200</div>
-    <div class="error" *ngIf="formulario.get('diagnostico')?.touched">
-      <div *ngIf="formulario.get('diagnostico')?.hasError('required')">El diagnóstico es obligatorio.</div>
-      <div *ngIf="formulario.get('diagnostico')?.hasError('maxlength')">Máximo 200 caracteres.</div>
+    <div class="form-group">
+      <label>Diagnóstico</label>
+      <input type="text" formControlName="diagnostico" maxlength="200" placeholder="Diagnóstico" />
+      <div class="contador">{{ formulario.get('diagnostico')?.value?.length || 0 }}/200</div>
+      <div class="error" *ngIf="formulario.get('diagnostico')?.touched">
+        <div *ngIf="formulario.get('diagnostico')?.hasError('required')">El diagnóstico es obligatorio.</div>
+        <div *ngIf="formulario.get('diagnostico')?.hasError('maxlength')">Máximo 200 caracteres.</div>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label>Tratamiento:</label>
-    <textarea formControlName="tratamiento" maxlength="200" placeholder="Tratamiento"></textarea>
-    <div class="contador">{{ formulario.get('tratamiento')?.value?.length || 0 }}/200</div>
-    <div class="error" *ngIf="formulario.get('tratamiento')?.touched">
-      <div *ngIf="formulario.get('tratamiento')?.hasError('required')">El tratamiento es obligatorio.</div>
-      <div *ngIf="formulario.get('tratamiento')?.hasError('maxlength')">Máximo 200 caracteres.</div>
+    <div class="form-group">
+      <label>Tratamiento</label>
+      <textarea formControlName="tratamiento" maxlength="200" placeholder="Tratamiento"></textarea>
+      <div class="contador">{{ formulario.get('tratamiento')?.value?.length || 0 }}/200</div>
+      <div class="error" *ngIf="formulario.get('tratamiento')?.touched">
+        <div *ngIf="formulario.get('tratamiento')?.hasError('required')">El tratamiento es obligatorio.</div>
+        <div *ngIf="formulario.get('tratamiento')?.hasError('maxlength')">Máximo 200 caracteres.</div>
+      </div>
     </div>
+
+    <button type="submit" [disabled]="formulario.invalid || cargandoCitas">Crear expediente</button>
+  </form>
+
+  <div *ngIf="cargandoCitas" class="hint">Cargando citas atendibles...</div>
+
+  <div *ngIf="mensaje" [ngClass]="{ 'mensaje-exito': tipoMensaje === 'exito', 'mensaje-error': tipoMensaje === 'error' }">
+    {{ mensaje }}
   </div>
-
-  <button type="submit" [disabled]="formulario.invalid">Crear</button>
-</form>
-
-<!-- Mensajes -->
-<div *ngIf="mensaje" [ngClass]="{
-  'mensaje-exito': tipoMensaje === 'exito',
-  'mensaje-error': tipoMensaje === 'error'
-}">
-  {{ mensaje }}
 </div>

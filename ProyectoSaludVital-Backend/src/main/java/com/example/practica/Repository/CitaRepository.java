@@ -32,4 +32,6 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     // Listar citas PROGRAMADAS de un paciente específico (para PACIENTE)
     List<Cita> findByPaciente_UsuarioAndEstado(Usuario usuario, EstadoCita estado);
 
+    List<Cita> findByMedicoAndEstado(Medico medico, EstadoCita estado);
+
 }

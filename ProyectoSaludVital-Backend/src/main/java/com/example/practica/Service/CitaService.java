@@ -294,17 +294,51 @@ public class CitaService {
         return citas.stream().map(this::mapListaCita).toList();
     }
 
+
+    @Transactional
+    public List<ListaCitaPaciente> listarCitasAtendiblesMedicoActual() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!usuario.tieneRol("MEDICO")) {
+            throw new RuntimeException("No tienes permisos para ver citas atendibles");
+        }
+
+        Medico medico = medicorepo.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
+
+        List<Cita> citas = citarepo.findByMedicoAndEstado(medico, EstadoCita.PROGRAMADA);
+        citas.forEach(this::normalizarEstadoSiVencida);
+
+        return citas.stream()
+                .filter(this::estaDentroDeVentanaDeAtencion)
+                .map(this::mapListaCita)
+                .toList();
+    }
+
     private ListaCitaPaciente mapListaCita(Cita c) {
         ListaCitaPaciente dto = new ListaCitaPaciente();
         dto.setId(c.getId());
         dto.setFecha(c.getFecha());
         dto.setHora(c.getHora());
         dto.setMotivo(c.getMotivo());
+        dto.setPacienteId(c.getPaciente().getId());
         dto.setPacienteNombre(c.getPaciente().getNombre());
         dto.setMedicoNombre(c.getMedico().getNombre());
         dto.setTarifa(c.getTarifaAplicada());
         dto.setEstado(c.getEstado().name());
         return dto;
+    }
+
+    private boolean estaDentroDeVentanaDeAtencion(Cita cita) {
+        LocalDateTime inicio = cita.getFecha().atTime(cita.getHora());
+        LocalDateTime fin = inicio.plusHours(2);
+        LocalDateTime ahora = LocalDateTime.now();
+
+        return !ahora.isBefore(inicio) && !ahora.isAfter(fin);
     }
 
     private void normalizarEstadoSiVencida(Cita cita) {

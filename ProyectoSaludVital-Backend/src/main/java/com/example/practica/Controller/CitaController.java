@@ -65,6 +65,12 @@ public class CitaController {
         return ResponseEntity.ok(citas);
     }
 	
+	@GetMapping("/atendibles")
+	@PreAuthorize("hasRole('MEDICO')")
+	public ResponseEntity<List<ListaCitaPaciente>> listarCitasAtendibles() {
+	    return ResponseEntity.ok(citaservice.listarCitasAtendiblesMedicoActual());
+	}
+
 	@GetMapping("/listado")
 	@PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
 	public ResponseEntity<List<ListaCitaPaciente>> listadoDeCitas() {
