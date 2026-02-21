@@ -26,6 +26,10 @@ export class MedicoService{
  actualizar(id: number, medico: any): Observable<any> {
     return this.apiService.put<any>(`${this.endpoint}/editar/${id}`, medico);
   }
+
+  actualizarPerfil(medico: any): Observable<any> {
+    return this.apiService.put<any>(`${this.endpoint}/perfil`, medico);
+  }
 // Obtener perfil del medico (solo con token MEDICO)
       getPerfil(): Observable<ObtenerMedicoDTO> {
       return this.apiService.get<ObtenerMedicoDTO>(`${this.endpoint}/perfil`);

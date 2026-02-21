@@ -166,6 +166,44 @@ public class MedicoService {
 
 
     
+
+    public ObtenerMedicoDTO actualizarPerfil(ActualizarMedicoDTO request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        Usuario usuario = usuarioRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Medico medico = medicoRepo.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Medico no encontrado"));
+
+        medico.setNombre(request.getNombre());
+        medico.setApellido(request.getApellido());
+        medico.setNumeroLicencia(request.getNumeroLicencia());
+        medico.setTelefono(request.getTelefono());
+        medico.setEmail(request.getEmail());
+        medico.setEspecialidad(request.getEspecialidad());
+        medico.setTarifaConsulta(request.getTarifaConsulta());
+
+        if (request.getHorarios() != null) {
+            medico.getHorarios().clear();
+            List<HorarioAtencion> horarios = request.getHorarios().stream()
+                    .map(h -> {
+                        HorarioAtencion horario = new HorarioAtencion();
+                        horario.setDia(h.getDia());
+                        horario.setHoraInicio(LocalTime.parse(h.getHoraInicio()));
+                        horario.setHoraFin(LocalTime.parse(h.getHoraFin()));
+                        horario.setMedico(medico);
+                        return horario;
+                    })
+                    .toList();
+            medico.getHorarios().addAll(horarios);
+        }
+
+        Medico guardado = medicoRepo.save(medico);
+        return mapToDTO(guardado);
+    }
+
     public ObtenerMedicoDTO verPerfil() {
     	 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		    String email = auth.getName();

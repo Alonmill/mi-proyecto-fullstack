@@ -1,19 +1,28 @@
-<div *ngIf="medico; else errorTemplate">
-  <h2>Perfil de {{ medico.nombre }} {{ medico.apellido }}</h2>
-  <p><strong>Licencia:</strong> {{ medico.numeroLicencia }}</p>
-  <p><strong>Email:</strong> {{ medico.email }}</p>
-  <p><strong>Teléfono:</strong> {{ medico.telefono }}</p>
-  <p><strong>Especialidad:</strong> {{ medico.especialidad }}</p>
-  <p><strong>Estado:</strong> {{ medico.estado }}</p>
-  <p><strong>Disponible:</strong> {{ medico.disponible ? 'Sí' : 'No' }}</p>
-  <p><strong>Tarifa:</strong> {{ medico.tarifaConsulta | currency }}</p>
+<div *ngIf="medico; else errorTemplate" class="perfil-container">
+  <div class="perfil-card">
+    <h2>Perfil de {{ medico.nombre }} {{ medico.apellido }}</h2>
 
-  <h3>Horarios</h3>
-  <ul>
-    <li *ngFor="let h of medico.horarios">
-      {{ h.dia }}: {{ h.horaInicio }} - {{ h.horaFin }}
-    </li>
-  </ul>
+    <div class="perfil-grid">
+      <p><strong>Licencia:</strong> {{ medico.numeroLicencia }}</p>
+      <p><strong>Email:</strong> {{ medico.email }}</p>
+      <p><strong>Teléfono:</strong> {{ medico.telefono }}</p>
+      <p><strong>Especialidad:</strong> {{ medico.especialidad }}</p>
+      <p><strong>Estado:</strong> {{ medico.estado }}</p>
+      <p><strong>Disponible:</strong> {{ medico.disponible ? 'Sí' : 'No' }}</p>
+      <p><strong>Tarifa:</strong> {{ medico.tarifaConsulta | currency }}</p>
+    </div>
+
+    <h3>Horarios</h3>
+    <ul class="horarios-lista">
+      <li *ngFor="let h of medico.horarios">
+        {{ h.dia }}: {{ h.horaInicio }} - {{ h.horaFin }}
+      </li>
+    </ul>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" (click)="irActualizarPerfil()">Actualizar</button>
+    </div>
+  </div>
 </div>
 
 <ng-template #errorTemplate>

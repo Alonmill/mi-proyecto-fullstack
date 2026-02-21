@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="card">
+    <h2>Actualizar Perfil Médico</h2>
+
+    <p *ngIf="mensaje" [class]="mensajeError ? 'text-danger' : 'text-success'">{{ mensaje }}</p>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      <label>Nombre</label>
+      <input formControlName="nombre" class="form-control" />
+
+      <label>Apellido</label>
+      <input formControlName="apellido" class="form-control" />
+
+      <label>Número de licencia</label>
+      <input formControlName="numeroLicencia" class="form-control" />
+
+      <label>Teléfono</label>
+      <input formControlName="telefono" class="form-control" />
+
+      <label>Email</label>
+      <input formControlName="email" class="form-control" />
+
+      <label>Especialidad</label>
+      <select formControlName="especialidad" class="form-control">
+        <option value="" disabled>Selecciona una especialidad</option>
+        <option *ngFor="let e of especialidades" [value]="e">{{ e }}</option>
+      </select>
+
+      <label>Tarifa de consulta</label>
+      <input type="number" formControlName="tarifaConsulta" class="form-control" />
+
+      <div class="actions">
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

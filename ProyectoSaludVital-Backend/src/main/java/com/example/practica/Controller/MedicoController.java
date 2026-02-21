@@ -46,6 +46,13 @@ public class MedicoController {
         return ResponseEntity.ok(perfil);
     }
 
+    @PreAuthorize("hasRole('MEDICO')")
+    @PutMapping("/perfil")
+    public ResponseEntity<ObtenerMedicoDTO> actualizarPerfil(@RequestBody ActualizarMedicoDTO request) {
+        ObtenerMedicoDTO perfilActualizado = medicoService.actualizarPerfil(request);
+        return ResponseEntity.ok(perfilActualizado);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','PACIENTE')")
     @GetMapping("/listado")   //  http://localhost:8080/medicos/listado
     public ResponseEntity<List<ObtenerMedicoDTO>> listarMedicos() {

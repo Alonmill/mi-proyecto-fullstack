@@ -26,6 +26,7 @@ import { CrearCitaComponent } from './components/PACIENTE/crear-cita/crear-cita.
 import { CancelarCitaPacienteComponent } from './components/PACIENTE/cancelar-cita-paciente/cancelar-cita-paciente.component';
 import { MisCitasPacienteComponent } from './components/PACIENTE/mis-citas-paciente/mis-citas-paciente.component';
 import { PerfilMedicoComponent } from './components/MEDICO/perfil-medico/perfil-medico.component';
+import { ActualizarPerfilMedicoComponent } from './components/MEDICO/actualizar-perfil-medico/actualizar-perfil-medico.component';
 import { CrearExpedienteComponent } from './components/MEDICO/crear-expediente/crear-expediente.component';
 import { CancelarCitaComponent } from './components/ADMIN/cancelar-cita-admin/cancelar-cita.component';
 import { ListadoCitasComponent } from './components/ADMIN/listado-citas/listado-citas.component';
@@ -69,6 +70,7 @@ export const routes: Routes = [
   children: [
     { path: '',redirectTo: "perfil-medico" , pathMatch: "full" },
     { path: 'perfil-medico', component: PerfilMedicoComponent },
+    { path: 'perfil-medico/actualizar', component: ActualizarPerfilMedicoComponent },
     { path: 'receta-agregar', component: RecetaAgregarComponent },
     { path: 'receta-agregar/:idPaciente', component: RecetaAgregarComponent },
     { path: 'receta-actualizar', component: RecetaActualizarComponent },
