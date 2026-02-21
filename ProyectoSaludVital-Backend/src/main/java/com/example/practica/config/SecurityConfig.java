@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 import com.example.practica.security.CustomUserDetailsService;
 import com.example.practica.security.JwtFilter;
@@ -70,7 +71,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
     	 http
     	 .cors(cors ->{}) // <-- habilita CORS
-         .csrf(csrf -> csrf.disable()).csrf(csrf -> csrf.disable())
+          .csrf(csrf -> csrf.disable())
     	 .authorizeHttpRequests(auth -> auth
     			    // --- PÚBLICO ---
     			    .requestMatchers("/login", "/register", "/access-denied", "/", "/ayuda", "/medicamentos/listado").permitAll()
@@ -89,7 +90,7 @@ public class SecurityConfig {
     			 
     			    .requestMatchers("/editar/registros/usuarios/**").hasRole("ADMIN")
     			    .requestMatchers( "/pacientes/nuevo").hasRole("ADMIN")
-    			    .requestMatchers("/medicos/listado", "/medicos/nuevo", "/medicos/editar/**").hasRole("ADMIN")
+    			    .requestMatchers( "/medicos/nuevo", "/medicos/editar/**").hasRole("ADMIN")
     			    .requestMatchers("/medicamentos/editar/**", "/medicamentos/nuevo").hasRole("ADMIN")
     			    .requestMatchers("/admin/dashboard", "/admin/usuarios", "/admin/configuracion").hasRole("ADMIN")
     			    
@@ -106,6 +107,7 @@ public class SecurityConfig {
     			    .requestMatchers("/expedientes/ver/**").hasAnyRole("MEDICO", "PACIENTE")
     			    .requestMatchers("/citas/listado").hasAnyRole("ADMIN","MEDICO")
     			    .requestMatchers("/recetas/ver/**").hasAnyRole("ADMIN","MEDICO")
+    			    .requestMatchers("/medicos/listado").hasAnyRole("PACIENTE","ADMIN")
 
     			    // --- NAVEGACIÓN ---
     			    .requestMatchers("/home").authenticated()
@@ -114,7 +116,8 @@ public class SecurityConfig {
     			    .anyRequest().authenticated()
     			)
                 .formLogin(form -> form.disable())  // usamos JWT, no login con formulario
-                .sessionManagement(session -> session.disable()); // sin sesiones
+                .sessionManagement(session -> session.disable());
+
 
         // Agregar filtro de JWT
         http.addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);

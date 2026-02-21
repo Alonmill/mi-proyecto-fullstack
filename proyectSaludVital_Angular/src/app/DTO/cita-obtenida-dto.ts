@@ -6,4 +6,5 @@ export interface CitaObtenidaDTO {
   pacienteNombre: string;
   medicoNombre: string;
   medicoId: number;
+  estado?: string;
 }

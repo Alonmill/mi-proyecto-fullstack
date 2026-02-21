@@ -46,7 +46,7 @@ public class MedicoController {
         return ResponseEntity.ok(perfil);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','PACIENTE')")
     @GetMapping("/listado")   //  http://localhost:8080/medicos/listado
     public ResponseEntity<List<ObtenerMedicoDTO>> listarMedicos() {
         return ResponseEntity.ok(medicoService.listarMedicos());

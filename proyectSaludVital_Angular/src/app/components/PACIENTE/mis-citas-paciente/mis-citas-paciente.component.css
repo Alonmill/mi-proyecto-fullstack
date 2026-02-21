@@ -1,55 +1,113 @@
 /* Contenedor general */
 .container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
+
+   max-width: 980px;
+  margin: 24px auto;
+  padding: 24px;
   font-family: Arial, sans-serif;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 /* Título */
 h3 {
-  color: #333;
-  margin-bottom: 15px;
+
+   color: #1f2937;
+  margin-bottom: 6px;
   text-align: center;
+  font-size: 1.6rem;
 }
 
+.subtitle {
+  margin: 0 0 20px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
 /* Tabla */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 15px 0;
+  margin: 0;
   font-size: 14px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-table th, table td {
-  border: 1px solid #ddd;
-  padding: 10px;
+table th,
+table td {
+  border-bottom: 1px solid #eef2f7;
+  padding: 12px;
   text-align: center;
+  vertical-align: middle;
 }
 
 table th {
   background: #007bff;
-  color: white;
-  font-weight: bold;
+    color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  position: sticky;
+  top: 0;
 }
 
 table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #fafafa;
 }
 
 table tr:hover {
-  background-color: #f1f1f1;
-  transition: background 0.2s ease-in-out;
+  background-color: #f3f6fb;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.estado-badge {
+  display: inline-block;
+  min-width: 105px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border: 1px solid transparent;
 }
 
 /* Columna de estado con colores */
-td.estado-activa {
-  color: green;
-  font-weight: bold;
+.estado-completada {
+  color: #166534;
+  background: #dcfce7;
+  border-color: #86efac;
 }
 
-td.estado-cancelada {
-  color: red;
-  font-weight: bold;
+.estado-programada {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #fde047;
+}
+
+.estado-cancelada {
+  color: #991b1b;
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.estado-default {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.no-citas {
+  margin-top: 14px;
+  background: #f8fafc;
+  color: #475569;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
 }

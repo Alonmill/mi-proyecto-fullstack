@@ -24,4 +24,21 @@ export class MisCitasPacienteComponent implements OnInit {
       error: err => console.error('Error al obtener mis citas', err)
     });
   }
+  obtenerClaseEstado(estado?: string): string {
+    const estadoNormalizado = (estado || '').toUpperCase();
+
+    if (estadoNormalizado === 'COMPLETADA') {
+      return 'estado-completada';
+    }
+
+    if (estadoNormalizado === 'PROGRAMADA' || estadoNormalizado === 'ACTIVA') {
+      return 'estado-programada';
+    }
+
+    if (estadoNormalizado === 'CANCELADA') {
+      return 'estado-cancelada';
+    }
+
+    return 'estado-default';
+  }
 }

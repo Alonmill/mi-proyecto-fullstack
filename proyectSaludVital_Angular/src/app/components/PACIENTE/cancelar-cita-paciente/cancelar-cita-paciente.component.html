@@ -1,16 +1,16 @@
 <div class="container">
 
   <!-- Mensaje -->
-  <div *ngIf="mensaje" 
-       [ngClass]="{'alert-success': mensaje.startsWith('✅'), 'alert-error': !mensaje.startsWith('✅')}" 
+  <div *ngIf="mensaje"
+       [ngClass]="{'alert-success': mensaje.startsWith('✅'), 'alert-error': !mensaje.startsWith('✅')}"
        class="alert">
     {{ mensaje }}
   </div>
 
   <h3>Cancelar Cita</h3>
 
-  <!-- Tabla de citas -->
-  <table *ngIf="citas && citas.length > 0">
+  <!-- Tabla de citas cancelables -->
+  <table *ngIf="citas.length > 0; else sinCitasCancelables">
     <thead>
       <tr>
         <th>ID</th>
@@ -31,9 +31,9 @@
         <td>{{ cita.fecha }}</td>
         <td>{{ cita.hora }}</td>
         <td>{{ cita.motivo }}</td>
-        <td>{{ cita.estado || 'ACTIVA' }}</td>
+        <td>{{ cita.estado }}</td>
         <td>
-          <button (click)="cancelarCita(cita.id)" [disabled]="cita.estado === 'CANCELADA'">
+           <button (click)="cancelarCita(cita.id)">
             Cancelar
           </button>
         </td>
@@ -41,9 +41,10 @@
     </tbody>
   </table>
 
-  <!-- Mensaje si no hay citas -->
-  <div *ngIf="citas && citas.length === 0" class="no-citas">
-    No hay citas disponibles para mostrar.
-  </div>
+ <ng-template #sinCitasCancelables>
+    <div class="no-citas">
+      No tienes citas programadas con al menos 2 horas de anticipación para cancelar.
+    </div>
+  </ng-template>
 
 </div>

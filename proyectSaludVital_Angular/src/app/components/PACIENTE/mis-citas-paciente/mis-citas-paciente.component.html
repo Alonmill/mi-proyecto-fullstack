@@ -1,8 +1,10 @@
 <div class="container">
-  <h3>Todas mis Citas</h3>
+  <h3>Mis citas</h3>
+  <p class="subtitle">Aquí puedes ver el estado actual de todas tus citas.</p>
 
   <!-- Tabla de citas -->
-  <table *ngIf="citas && citas.length > 0">
+    <div class="table-wrapper" *ngIf="citas && citas.length > 0">
+  <table>
     <thead>
       <tr>
         <th>ID</th>
@@ -22,12 +24,15 @@
         <td>{{ cita.fecha }}</td>
         <td>{{ cita.hora }}</td>
         <td>{{ cita.motivo }}</td>
-        <td [ngClass]="{'estado-activa': cita.estado === 'ACTIVA', 'estado-cancelada': cita.estado === 'CANCELADA'}">
-          {{ cita.estado }}
+        <td>
+          <span class="estado-badge" [ngClass]="obtenerClaseEstado(cita.estado)">
+            {{ cita.estado || 'SIN ESTADO' }}
+          </span>
         </td>
       </tr>
     </tbody>
   </table>
+  </div>
 
   <!-- Mensaje si no hay citas -->
   <div *ngIf="citas && citas.length === 0" class="no-citas">

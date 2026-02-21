@@ -10,18 +10,26 @@
   <h3>Crear Cita</h3>
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="formulario">
     <div class="form-group">
-      <label>ID Paciente:</label>
-      <input type="number" formControlName="idPaciente">
+        <label>Médico:</label>
+    <select formControlName="idMedico">
+      <option [ngValue]="null">Selecciona un médico</option>
+      <option *ngFor="let medico of medicos" [ngValue]="medico.id">
+        {{ medico.nombre }} {{ medico.apellido }} - {{ medico.especialidad }}
+      </option>
+    </select>
     </div>
-
-    <div class="form-group">
-      <label>ID Médico:</label>
-      <input type="number" formControlName="idMedico">
+    <div class="horarios" *ngIf="medicoSeleccionado">
+      <h4>Horarios</h4>
+      <ul>
+        <li *ngFor="let h of medicoSeleccionado.horarios">
+          {{ h.dia }}: {{ h.horaInicio }} - {{ h.horaFin }}
+        </li>
+      </ul>
     </div>
 
     <div class="form-group">
       <label>Fecha:</label>
-      <input type="date" formControlName="fecha">
+      <input type="date" formControlName="fecha" [min]="fechaMin">
     </div>
 
     <div class="form-group">

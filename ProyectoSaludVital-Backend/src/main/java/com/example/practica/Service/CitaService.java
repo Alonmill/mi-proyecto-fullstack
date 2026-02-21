@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+
 import com.example.practica.DTO.ActualizarCita;
 import com.example.practica.DTO.CitaObtenida;
 import com.example.practica.DTO.CrearCita;
@@ -37,10 +38,16 @@ public class CitaService {
 	 private final UsuarioRepository usuarioRepository;
 
 	
-	 @Transactional
+	@Transactional
 	 public CitaObtenida crearCita(CrearCita citaDTO) {
-	     Paciente paciente = pacienterepo.findById(citaDTO.getIdPaciente())
-	             .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
+	     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			String email = auth.getName();
+
+			Usuario usuario = usuarioRepository.findByEmail(email)
+				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+			Paciente paciente = pacienterepo.findByUsuario(usuario)
+				.orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
 	     Medico medico = medicorepo.findById(citaDTO.getIdMedico())
 	             .orElseThrow(() -> new IllegalArgumentException("Medico no encontrado"));
 
@@ -50,21 +57,33 @@ public class CitaService {
 	         throw new IllegalArgumentException("El paciente ya tiene 3 citas en un día");
 	     }
 
-	     // Validar que el horario no esté ocupado
+	     	
 	     if (citarepo.existsByMedico_IdAndFechaAndHora(medico.getId(), citaDTO.getFecha(), citaDTO.getHora())) {
 	         throw new IllegalArgumentException("El horario ya está ocupado por otro médico");
 	     }
 
 	     // Validar que la hora esté dentro del horario del médico
-	     DiaSemana diaSemana = DiaEnEspañol(citaDTO.getFecha().getDayOfWeek());
-	     boolean dentroHorario = medico.getHorarios().stream().anyMatch(h ->
-	             h.getDia() == diaSemana &&
-	             !citaDTO.getHora().isBefore(h.getHoraInicio()) &&
-	             !citaDTO.getHora().isAfter(h.getHoraFin())
-	     );
-	     if (!dentroHorario) {
-	         throw new IllegalArgumentException("La cita está fuera del horario de atención del médico.");
-	     }
+	    DiaSemana diaSemana = DiaEnEspañol(citaDTO.getFecha().getDayOfWeek());
+
+// Filtramos los horarios del médico que coinciden con el día de la cita
+var horariosDelDia = medico.getHorarios().stream()
+        .filter(h -> h.getDia() == diaSemana)
+        .toList();
+
+// Si no hay horarios ese día, el médico no atiende
+if (horariosDelDia.isEmpty()) {
+    throw new IllegalArgumentException("El médico no atiende el día seleccionado.");
+}
+
+// Verificamos que la hora de la cita esté dentro de alguno de los rangos
+boolean horaValida = horariosDelDia.stream().anyMatch(h ->
+        !citaDTO.getHora().isBefore(h.getHoraInicio()) &&
+        !citaDTO.getHora().isAfter(h.getHoraFin())
+);
+
+if (!horaValida) {
+    throw new IllegalArgumentException("La hora seleccionada está fuera del horario de atención del médico.");
+}
 
 	     // Crear y guardar la cita
 	     Cita nuevaCita = Cita.builder()
@@ -90,6 +109,7 @@ public class CitaService {
 	             medico.getId()// idem aquí
 	     );
 	 }
+	
 	
 	 @Transactional
 	 public CitaObtenida cancelarCita(long citaId) {

@@ -16,6 +16,8 @@ export class PerfilPacienteComponent implements OnInit {
   paciente: ObtenerPacienteDTO | null = null;
   form: FormGroup;
   error: string = '';
+    mensaje: string = '';
+  mensajeError: boolean = false;
  editar: boolean = false;
     pacienteSeleccionadoId: number | null = null;
   constructor(
@@ -28,7 +30,7 @@ export class PerfilPacienteComponent implements OnInit {
       fechaNacimiento: ['', Validators.required],
       alergias: this.fb.array([]), 
       enfermedades: this.fb.array([]), 
-      usuarioId: [null, Validators.required] 
+      usuarioId: [null] 
   });
   }
 
@@ -68,6 +70,7 @@ get alergias(): FormArray{
 
   cancelarEdicion() {
   this.editar = false;
+    this.mensaje = '';
   this.form.reset();
 }
 
@@ -98,7 +101,14 @@ get alergias(): FormArray{
   }
 
   guardar() {
-  if (this.form.invalid) return;
+  this.mensaje = '';
+
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    this.mensajeError = true;
+    this.mensaje = '❌ Revisa los campos del formulario antes de guardar';
+    return;
+  }
 
   // Convertimos alergias y enfermedades a arrays de strings
   const pacienteData = {
@@ -112,6 +122,8 @@ get alergias(): FormArray{
     this.pacienteService.actualizar(this.pacienteSeleccionadoId, pacienteData).subscribe({
       next: res => {
         console.log('Paciente actualizado', res);
+        this.mensajeError = false;
+        this.mensaje = '✅ Paciente actualizado correctamente';
 
         // --- REFRESCAR PERFIL ---
         this.pacienteService.getPerfil().subscribe({
@@ -126,22 +138,29 @@ get alergias(): FormArray{
         this.editar = false;
         this.pacienteSeleccionadoId = null;
       },
-      error: err => console.error(err)
+      error: err => {
+        console.error(err);
+        this.mensajeError = true;
+        this.mensaje = err?.error?.message || '❌ No se pudo actualizar el paciente';
+      }
     });
   } else {
     // Agregar paciente nuevo (si alguna vez lo necesitas)
     this.pacienteService.agregar(pacienteData).subscribe({
       next: res => {
         console.log('Paciente agregado', res);
+        this.mensajeError = false;
+        this.mensaje = '✅ Paciente agregado correctamente';
         this.form.reset();
         this.alergias.clear();
         this.enfermedades.clear();
       },
-      error: err => console.error(err)
+      error: err => {
+        console.error(err);
+        this.mensajeError = true;
+        this.mensaje = err?.error?.message || '❌ No se pudo guardar el paciente';
+      } 
     });
   }
 }
-
-
-
 }

@@ -3,7 +3,7 @@
   <h2>Perfil de {{ paciente.nombre }}</h2>
 
   <!-- Vista normal -->
-  <div *ngIf="!editar" class="card">
+  <div *ngIf="!editar" class="card perfil-card">
     <div class="card-section">
       <h3>Datos personales</h3>
       <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
@@ -41,15 +41,26 @@
   <div *ngIf="editar" class="card">
     <form [formGroup]="form" (ngSubmit)="guardar()">
 
+      <p *ngIf="mensaje" [class]="mensajeError ? 'text-danger' : 'text-success'">{{ mensaje }}</p>
+
       <h3>Editar datos</h3>
       <label>Nombre</label>
       <input formControlName="nombre" class="form-control">
+        <small class="text-danger" *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+          El nombre es obligatorio.
+        </small>
 
       <label>Número de identificación</label>
       <input formControlName="numeroIdentificacion" class="form-control">
+        <small class="text-danger" *ngIf="form.get('numeroIdentificacion')?.invalid && form.get('numeroIdentificacion')?.touched">
+          Debe contener exactamente 8 dígitos.
+        </small>
 
       <label>Fecha de nacimiento</label>
       <input type="date" formControlName="fechaNacimiento" class="form-control">
+        <small class="text-danger" *ngIf="form.get('fechaNacimiento')?.invalid && form.get('fechaNacimiento')?.touched">
+          La fecha de nacimiento es obligatoria.
+        </small>
 
       <h3>Alergias</h3>
       <div formArrayName="alergias" class="list-form">

@@ -1,3 +1,51 @@
+/* Tarjeta de perfil (solo vista, no formulario) */
+.perfil-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid #e4eefc;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.perfil-card .card-section {
+  background: #ffffff;
+  border: 1px solid #edf2fb;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 2px 8px rgba(15, 52, 96, 0.06);
+}
+
+.perfil-card .card-section p {
+  margin: 10px 0;
+  line-height: 1.55;
+}
+
+.perfil-card .chip {
+  display: inline-block;
+  margin: 6px 8px 0 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #e8f1ff;
+  color: #1c4f91;
+}
+
+.perfil-card .chip.disease {
+  background: #fff3e8;
+  color: #9a4c11;
+}
+
+.perfil-card .actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+}
+
+
+
 /* Contenedor general */
 .container {
   max-width: 800px;
@@ -113,13 +161,15 @@ button {
 }
 
 button[type="button"] {
-  margin-top: 5px;
+  margin-top: 8px;
   background: #dc3545;
   color: white;
+   margin-left: 4px;
 }
 
 button[type="button"]:hover {
   background: #a71d2a;
+ 
 }
 
 /* Error */
@@ -127,4 +177,16 @@ button[type="button"]:hover {
   color: red;
   font-weight: bold;
   text-align: center;
+}
+
+.text-success {
+  color: #1e7e34;
+  font-weight: bold;
+  text-align: center;
+}
+
+small.text-danger {
+  margin-top: -8px;
+  display: block;
+  font-size: 12px;
 }

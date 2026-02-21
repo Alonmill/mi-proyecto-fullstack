@@ -84,3 +84,38 @@ input {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+
+.no-citas {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  margin-top: 16px;
+}
+
+select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.horarios {
+  background: #f7fbff;
+  border: 1px solid #d8e8ff;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.horarios h4 {
+  margin: 0 0 8px 0;
+  color: #184a8b;
+}
+
+.horarios ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.horarios li {
+  margin: 4px 0;
+}

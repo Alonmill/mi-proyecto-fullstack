@@ -13,10 +13,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CrearCita {
-	
-	@NotNull
-	private long idPaciente;
-	
 	@NotNull
 	private long idMedico;
 	
