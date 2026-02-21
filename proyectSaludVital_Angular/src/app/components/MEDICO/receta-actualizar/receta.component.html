@@ -85,8 +85,34 @@
 
         <button *ngIf="receta.estado === 'VENCIDA'" type="button" class="btn-primary" (click)="renovarReceta(receta)">Renovar</button>
 
-        <span *ngIf="receta.estado === 'ANULADA' || receta.estado === 'DISPENSADA'">Solo Ver</span>
+        <button
+          *ngIf="receta.estado === 'ANULADA' || receta.estado === 'DISPENSADA'"
+          type="button"
+          class="btn-secondary"
+          (click)="verReceta(receta)">
+          Ver detalle
+        </button>
       </td>
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="recetaDetalle" class="detalle-overlay" (click)="cerrarDetalle()">
+  <div class="detalle-modal" (click)="$event.stopPropagation()">
+    <h3>Detalle de receta #{{ recetaDetalle.id }}</h3>
+    <p><strong>Médico:</strong> {{ recetaDetalle.medicoNombre }}</p>
+    <p><strong>Paciente:</strong> {{ recetaDetalle.pacienteNombre }}</p>
+    <p><strong>Estado:</strong> <span class="badge" [ngClass]="obtenerClaseEstado(recetaDetalle.estado)">{{ recetaDetalle.estado }}</span></p>
+    <p><strong>Fecha Emisión:</strong> {{ recetaDetalle.fechaEmision | date:'shortDate' }}</p>
+    <p><strong>Fecha Vencimiento:</strong> {{ recetaDetalle.fechaCaducidad | date:'shortDate' }}</p>
+
+    <h4>Medicamentos</h4>
+    <ul>
+      <li *ngFor="let item of recetaDetalle.items">
+        {{ item.medicamentoNombre }}: {{ item.dosis }} - {{ item.frecuencia }}
+      </li>
+    </ul>
+
+    <button type="button" class="btn-primary" (click)="cerrarDetalle()">Cerrar</button>
+  </div>
+</div>

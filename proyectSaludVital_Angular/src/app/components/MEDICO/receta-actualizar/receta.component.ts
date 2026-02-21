@@ -21,6 +21,7 @@ export class RecetaActualizarComponent {
   mensajeExito = '';
   mensajeError = '';
   cargando = false;
+  recetaDetalle: ObtenerRecetaDTO | null = null;
 
   constructor(
     private recetaService: RecetaService,
@@ -166,6 +167,14 @@ export class RecetaActualizarComponent {
       },
       error: err => (this.mensajeError = err?.error?.message || 'No se pudo renovar la receta.')
     });
+  }
+
+  verReceta(receta: ObtenerRecetaDTO) {
+    this.recetaDetalle = receta;
+  }
+
+  cerrarDetalle() {
+    this.recetaDetalle = null;
   }
 
   obtenerClaseEstado(estado: EstadoReceta): string {
