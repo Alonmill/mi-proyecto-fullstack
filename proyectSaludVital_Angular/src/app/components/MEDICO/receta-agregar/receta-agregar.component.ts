@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RecetaService } from '../../../services/receta.service';
 import { AgregarRecetaDTO } from '../../../DTO/agregar-receta-dto';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -22,7 +22,7 @@ export class RecetaAgregarComponent implements OnInit {
     private recetaService: RecetaService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    
+    private router: Router
   ) {
     this.form = this.fb.group({ 
       items: this.fb.array([])
@@ -32,7 +32,10 @@ export class RecetaAgregarComponent implements OnInit {
   ngOnInit(): void {
     // obtenemos idPaciente desde la URL
     this.route.params.subscribe(params => {
-      this.idPaciente = +params['idPaciente']; // 👈 ejemplo: /recetas/nueva/5
+      this.idPaciente = +params['idPaciente'];
+      if (!this.idPaciente) {
+        this.mensajeError = 'Debe iniciar la receta desde una atención con expediente.';
+      }
     });
 
     // inicializamos con un item vacío
@@ -58,6 +61,11 @@ export class RecetaAgregarComponent implements OnInit {
   // enviar al backend
   onSubmit() {
   this.mensajeError = null; // resetear errores previos
+  if (!this.idPaciente) {
+    this.mensajeError = "Debe indicar un paciente válido para emitir la receta.";
+    return;
+  }
+
   if (this.form.valid) {
     const receta: AgregarRecetaDTO = this.form.value;
     this.recetaService.agregar(this.idPaciente, receta).subscribe({
@@ -65,7 +73,8 @@ export class RecetaAgregarComponent implements OnInit {
         alert('Receta creada con éxito ✅');
         this.form.reset();
         this.items.clear();
-        this.agregarItem(); // dejamos al menos 1 item vacío
+        this.agregarItem();
+        this.router.navigate(['/medico/lista-recetas']);
       },
       error: err => {
         console.error('Error al crear receta', err);

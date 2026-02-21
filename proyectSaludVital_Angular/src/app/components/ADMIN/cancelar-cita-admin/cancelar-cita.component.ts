@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -32,8 +32,8 @@ export class CancelarCitaComponent implements OnInit {
   const cita = this.citas.find(c => c.id === citaId);
   if (!cita) return;
 
-  if (cita.estado === 'COMPLETADA') {
-    this.mensaje = '❌ No se puede cancelar una cita COMPLETADA';
+  if (cita.estado === 'ATENDIDA') {
+    this.mensaje = '❌ No se puede cancelar una cita ATENDIDA';
     return;
   }
 

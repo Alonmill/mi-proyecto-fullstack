@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-
 import com.example.practica.DTO.ActualizarCita;
 import com.example.practica.DTO.CitaObtenida;
 import com.example.practica.DTO.CrearCita;
@@ -31,305 +30,304 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CitaService {
-	
-	private final CitaRepository citarepo;
-	private final PacienteRepository pacienterepo;
-	private final MedicoRepository medicorepo;
-	 private final UsuarioRepository usuarioRepository;
 
-	
-	@Transactional
-	 public CitaObtenida crearCita(CrearCita citaDTO) {
-	     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			String email = auth.getName();
+    private final CitaRepository citarepo;
+    private final PacienteRepository pacienterepo;
+    private final MedicoRepository medicorepo;
+    private final UsuarioRepository usuarioRepository;
 
-			Usuario usuario = usuarioRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    @Transactional
+    public CitaObtenida crearCita(CrearCita citaDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
 
-			Paciente paciente = pacienterepo.findByUsuario(usuario)
-				.orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
-	     Medico medico = medicorepo.findById(citaDTO.getIdMedico())
-	             .orElseThrow(() -> new IllegalArgumentException("Medico no encontrado"));
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-	     // Validar máximo de 3 citas por paciente en el mismo día
-	     List<Cita> numCitas = citarepo.findByPaciente_IdAndFecha(paciente.getId(), citaDTO.getFecha());
-	     if (numCitas.size() >= 3) {
-	         throw new IllegalArgumentException("El paciente ya tiene 3 citas en un día");
-	     }
+        Paciente paciente = pacienterepo.findByUsuario(usuario)
+                .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
+        Medico medico = medicorepo.findById(citaDTO.getIdMedico())
+                .orElseThrow(() -> new IllegalArgumentException("Medico no encontrado"));
 
-	     	
-	     if (citarepo.existsByMedico_IdAndFechaAndHora(medico.getId(), citaDTO.getFecha(), citaDTO.getHora())) {
-	         throw new IllegalArgumentException("El horario ya está ocupado por otro médico");
-	     }
+        List<Cita> numCitas = citarepo.findByPaciente_IdAndFecha(paciente.getId(), citaDTO.getFecha());
+        if (numCitas.size() >= 3) {
+            throw new IllegalArgumentException("El paciente ya tiene 3 citas en un día");
+        }
 
-	     // Validar que la hora esté dentro del horario del médico
-	    DiaSemana diaSemana = DiaEnEspañol(citaDTO.getFecha().getDayOfWeek());
+        if (citarepo.existsByMedico_IdAndFechaAndHora(medico.getId(), citaDTO.getFecha(), citaDTO.getHora())) {
+            throw new IllegalArgumentException("El horario ya está ocupado por otro médico");
+        }
 
-// Filtramos los horarios del médico que coinciden con el día de la cita
-var horariosDelDia = medico.getHorarios().stream()
-        .filter(h -> h.getDia() == diaSemana)
-        .toList();
+        DiaSemana diaSemana = diaEnEspanol(citaDTO.getFecha().getDayOfWeek());
+        var horariosDelDia = medico.getHorarios().stream()
+                .filter(h -> h.getDia() == diaSemana)
+                .toList();
 
-// Si no hay horarios ese día, el médico no atiende
-if (horariosDelDia.isEmpty()) {
-    throw new IllegalArgumentException("El médico no atiende el día seleccionado.");
-}
+        if (horariosDelDia.isEmpty()) {
+            throw new IllegalArgumentException("El médico no atiende el día seleccionado.");
+        }
 
-// Verificamos que la hora de la cita esté dentro de alguno de los rangos
-boolean horaValida = horariosDelDia.stream().anyMatch(h ->
-        !citaDTO.getHora().isBefore(h.getHoraInicio()) &&
-        !citaDTO.getHora().isAfter(h.getHoraFin())
-);
+        boolean horaValida = horariosDelDia.stream().anyMatch(h ->
+                !citaDTO.getHora().isBefore(h.getHoraInicio()) &&
+                !citaDTO.getHora().isAfter(h.getHoraFin()));
 
-if (!horaValida) {
-    throw new IllegalArgumentException("La hora seleccionada está fuera del horario de atención del médico.");
-}
+        if (!horaValida) {
+            throw new IllegalArgumentException("La hora seleccionada está fuera del horario de atención del médico.");
+        }
 
-	     // Crear y guardar la cita
-	     Cita nuevaCita = Cita.builder()
-	             .fecha(citaDTO.getFecha())
-	             .hora(citaDTO.getHora())
-	             .paciente(paciente)
-	             .medico(medico)
-	             .estado(EstadoCita.PROGRAMADA)
-	             .motivo(citaDTO.getMotivo())
-	             .tarifaAplicada(medico.getTarifaConsulta())
-	             .build();
+        Cita guardada = citarepo.save(Cita.builder()
+                .fecha(citaDTO.getFecha())
+                .hora(citaDTO.getHora())
+                .paciente(paciente)
+                .medico(medico)
+                .estado(EstadoCita.PROGRAMADA)
+                .motivo(citaDTO.getMotivo())
+                .tarifaAplicada(medico.getTarifaConsulta())
+                .build());
 
-	     Cita guardada = citarepo.save(nuevaCita);
+        return new CitaObtenida(
+                guardada.getId(),
+                guardada.getFecha(),
+                guardada.getHora(),
+                guardada.getMotivo(),
+                paciente.getNombre(),
+                medico.getNombre(),
+                medico.getId());
+    }
 
-	     // Convertir la entidad a DTO de salida
-	     return new CitaObtenida(
-	             guardada.getId(),
-	             guardada.getFecha(),
-	             guardada.getHora(),
-	             guardada.getMotivo(),
-	             paciente.getNombre(),  // asegúrate que el campo sea "nombre"
-	             medico.getNombre(),
-	             medico.getId()// idem aquí
-	     );
-	 }
-	
-	
-	 @Transactional
-	 public CitaObtenida cancelarCita(long citaId) {
-	     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	     String email = auth.getName();
+    @Transactional
+    public CitaObtenida cancelarCita(long citaId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
 
-	     Usuario usuario = usuarioRepository.findByEmail(email)
-	             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-	     // Obtengo la cita
-	     Cita cita = citarepo.findById(citaId)
-	             .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
+        Cita cita = citarepo.findById(citaId)
+                .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
 
-	     boolean esPacienteDeLaCita = pacienterepo.findByUsuario(usuario)
-	             .map(p -> p.getId().equals(cita.getPaciente().getId()))
-	             .orElse(false);
+        normalizarEstadoSiVencida(cita);
 
-	     boolean esAdmin = usuario.tieneRol("ADMIN");
+        boolean esPacienteDeLaCita = pacienterepo.findByUsuario(usuario)
+                .map(p -> p.getId().equals(cita.getPaciente().getId()))
+                .orElse(false);
 
-	     // ✅ Solo permitir cancelar si es ADMIN o si es el paciente dueño de la cita
-	     if (!(esPacienteDeLaCita || esAdmin)) {
-	         throw new RuntimeException("Solo el paciente o un administrador pueden cancelar esta cita");
-	     }
+        boolean esAdmin = usuario.tieneRol("ADMIN");
+        if (!(esPacienteDeLaCita || esAdmin)) {
+            throw new RuntimeException("Solo el paciente o un administrador pueden cancelar esta cita");
+        }
 
-	     // ✅ Restricción de cancelación con 2 horas de anticipación
-	     LocalDateTime fechaHoraCita = cita.getFecha().atTime(cita.getHora());
-	     if (LocalDateTime.now().isAfter(fechaHoraCita.minusHours(2))) {
-	         throw new IllegalArgumentException("La cita solo puede cancelarse con al menos 2 horas de anticipación.");
-	     }
+        if (cita.getEstado() != EstadoCita.PROGRAMADA) {
+            throw new IllegalArgumentException("Solo se pueden cancelar citas PROGRAMADAS");
+        }
 
-	     cita.setEstado(EstadoCita.CANCELADA);
-	     Cita guardada = citarepo.save(cita);
+        LocalDateTime fechaHoraCita = cita.getFecha().atTime(cita.getHora());
+        if (LocalDateTime.now().isAfter(fechaHoraCita.minusHours(2))) {
+            throw new IllegalArgumentException("La cita solo puede cancelarse con al menos 2 horas de anticipación.");
+        }
 
-	     return new CitaObtenida(
-	             guardada.getId(),
-	             guardada.getFecha(),
-	             guardada.getHora(),
-	             guardada.getMotivo(),
-	             guardada.getPaciente().getNombre(),
-	             guardada.getMedico().getNombre(),
-	             guardada.getMedico().getId()
-	     );
-	 }
+        cita.setEstado(EstadoCita.CANCELADA);
+        Cita guardada = citarepo.save(cita);
 
-	 @Transactional
-	 public CitaObtenida actualizarCita(long citaId, ActualizarCita actualizarDTO) {
-	     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	     String email = auth.getName();
+        return new CitaObtenida(
+                guardada.getId(),
+                guardada.getFecha(),
+                guardada.getHora(),
+                guardada.getMotivo(),
+                guardada.getPaciente().getNombre(),
+                guardada.getMedico().getNombre(),
+                guardada.getMedico().getId());
+    }
 
-	     Usuario usuario = usuarioRepository.findByEmail(email)
-	             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    @Transactional
+    public CitaObtenida actualizarCita(long citaId, ActualizarCita actualizarDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
 
-	     // Obtengo la cita
-	     Cita cita = citarepo.findById(citaId)
-	             .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-	     // ❌ Solo permitir actualizar citas PROGRAMADAS
-	     if (cita.getEstado() != EstadoCita.PROGRAMADA) {
-	         throw new IllegalArgumentException("Solo se pueden actualizar citas PROGRAMADAS");
-	     }
+        Cita cita = citarepo.findById(citaId)
+                .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
 
-	     boolean esPacienteDeLaCita = pacienterepo.findByUsuario(usuario)
-	             .map(p -> p.getId().equals(cita.getPaciente().getId()))
-	             .orElse(false);
+        normalizarEstadoSiVencida(cita);
 
-	     boolean esAdmin = usuario.tieneRol("ADMIN");
+        if (cita.getEstado() != EstadoCita.PROGRAMADA) {
+            throw new IllegalArgumentException("Solo se pueden actualizar citas PROGRAMADAS");
+        }
 
-	     if (!(esPacienteDeLaCita || esAdmin)) {
-	         throw new RuntimeException("No tienes permisos para modificar esta cita");
-	     }
+        boolean esPacienteDeLaCita = pacienterepo.findByUsuario(usuario)
+                .map(p -> p.getId().equals(cita.getPaciente().getId()))
+                .orElse(false);
+        boolean esAdmin = usuario.tieneRol("ADMIN");
 
-	     // Validar límite de tiempo (mínimo 2 horas antes)
-	     LocalDateTime FechaHoraOriginal = cita.getFecha().atTime(cita.getHora());
-	     if (LocalDateTime.now().isAfter(FechaHoraOriginal.minusHours(2))) {
-	         throw new IllegalArgumentException("La modificación solo se puede hacer con 2 horas de anticipación");
-	     }
+        if (!(esPacienteDeLaCita || esAdmin)) {
+            throw new RuntimeException("No tienes permisos para modificar esta cita");
+        }
 
-	     // 🔎 Verificar si realmente cambió médico, fecha o hora
-	     boolean cambioMedico = !cita.getMedico().getId().equals(actualizarDTO.getIdMedico());
-	     boolean cambioFecha = !cita.getFecha().equals(actualizarDTO.getFecha());
-	     boolean cambioHora = !cita.getHora().equals(actualizarDTO.getHora());
+        LocalDateTime fechaHoraOriginal = cita.getFecha().atTime(cita.getHora());
+        if (LocalDateTime.now().isAfter(fechaHoraOriginal.minusHours(2))) {
+            throw new IllegalArgumentException("La modificación solo se puede hacer con 2 horas de anticipación");
+        }
 
-	     if (cambioMedico || cambioFecha || cambioHora) {
-	         Medico medicoNue = medicorepo.findById(actualizarDTO.getIdMedico())
-	                 .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado"));
+        boolean cambioMedico = !cita.getMedico().getId().equals(actualizarDTO.getIdMedico());
+        boolean cambioFecha = !cita.getFecha().equals(actualizarDTO.getFecha());
+        boolean cambioHora = !cita.getHora().equals(actualizarDTO.getHora());
 
-	         long citasPacienteXDia = citarepo.countByPaciente_IdAndFechaAndEstado(
-	                 cita.getPaciente().getId(),
-	                 actualizarDTO.getFecha(),
-	                 EstadoCita.PROGRAMADA
-	         );
+        if (cambioMedico || cambioFecha || cambioHora) {
+            Medico medicoNue = medicorepo.findById(actualizarDTO.getIdMedico())
+                    .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado"));
 
-	         if (cita.getFecha().equals(actualizarDTO.getFecha()) && cita.getEstado() == EstadoCita.PROGRAMADA) {
-	             citasPacienteXDia = Math.max(0, citasPacienteXDia - 1);
-	         }
+            long citasPacienteXDia = citarepo.countByPaciente_IdAndFechaAndEstado(
+                    cita.getPaciente().getId(),
+                    actualizarDTO.getFecha(),
+                    EstadoCita.PROGRAMADA);
 
-	         if (citasPacienteXDia >= 3) {
-	             throw new IllegalArgumentException("El paciente ya tiene 3 citas programadas para ese día");
-	         }
+            if (cita.getFecha().equals(actualizarDTO.getFecha()) && cita.getEstado() == EstadoCita.PROGRAMADA) {
+                citasPacienteXDia = Math.max(0, citasPacienteXDia - 1);
+            }
 
-	         boolean medicoOcupado = citarepo.existsByMedico_IdAndFechaAndHoraAndIdNot(
-	                 medicoNue.getId(),
-	                 actualizarDTO.getFecha(),
-	                 actualizarDTO.getHora(),
-	                 cita.getId()
-	         );
-	         if (medicoOcupado) {
-	             throw new IllegalArgumentException("El médico ya tiene una cita en ese horario");
-	         }
+            if (citasPacienteXDia >= 3) {
+                throw new IllegalArgumentException("El paciente ya tiene 3 citas programadas para ese día");
+            }
 
-	         DiaSemana diaSemana = DiaEnEspañol(actualizarDTO.getFecha().getDayOfWeek());
-	         boolean dentroHorario = medicoNue.getHorarios().stream().anyMatch(h ->
-	                 h.getDia() == diaSemana &&
-	                 !actualizarDTO.getHora().isBefore(h.getHoraInicio()) &&
-	                 !actualizarDTO.getHora().isAfter(h.getHoraFin())
-	         );
-	         if (!dentroHorario) {
-	             throw new IllegalArgumentException("La cita está fuera del horario de atención del médico.");
-	         }
+            boolean medicoOcupado = citarepo.existsByMedico_IdAndFechaAndHoraAndIdNot(
+                    medicoNue.getId(),
+                    actualizarDTO.getFecha(),
+                    actualizarDTO.getHora(),
+                    cita.getId());
+            if (medicoOcupado) {
+                throw new IllegalArgumentException("El médico ya tiene una cita en ese horario");
+            }
 
-	         // ✅ Actualizar solo si cambió médico/fecha/hora
-	         cita.setMedico(medicoNue);
-	         cita.setFecha(actualizarDTO.getFecha());
-	         cita.setHora(actualizarDTO.getHora());
-	         cita.setTarifaAplicada(medicoNue.getTarifaConsulta());
-	     }
+            DiaSemana diaSemana = diaEnEspanol(actualizarDTO.getFecha().getDayOfWeek());
+            boolean dentroHorario = medicoNue.getHorarios().stream().anyMatch(h ->
+                    h.getDia() == diaSemana &&
+                    !actualizarDTO.getHora().isBefore(h.getHoraInicio()) &&
+                    !actualizarDTO.getHora().isAfter(h.getHoraFin()));
+            if (!dentroHorario) {
+                throw new IllegalArgumentException("La cita está fuera del horario de atención del médico.");
+            }
 
-	     // ✅ Actualizar motivo si se envía
-	     if (actualizarDTO.getMotivo() != null && !actualizarDTO.getMotivo().isBlank()) {
-	         cita.setMotivo(actualizarDTO.getMotivo());
-	     }
+            cita.setMedico(medicoNue);
+            cita.setFecha(actualizarDTO.getFecha());
+            cita.setHora(actualizarDTO.getHora());
+            cita.setTarifaAplicada(medicoNue.getTarifaConsulta());
+        }
 
-	     Cita guardada = citarepo.save(cita);
+        if (actualizarDTO.getMotivo() != null && !actualizarDTO.getMotivo().isBlank()) {
+            cita.setMotivo(actualizarDTO.getMotivo());
+        }
 
-	     return new CitaObtenida(
-	             guardada.getId(),
-	             guardada.getFecha(),
-	             guardada.getHora(),
-	             guardada.getMotivo(),
-	             guardada.getPaciente().getNombre(),
-	             guardada.getMedico().getNombre(),
-	             guardada.getMedico().getId()
-	     );
-	 }
+        Cita guardada = citarepo.save(cita);
 
-	 
-	 @Transactional
-	 public List<CitaObtenida> listarCitasProgramadas() {
-	     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	     String email = auth.getName();
+        return new CitaObtenida(
+                guardada.getId(),
+                guardada.getFecha(),
+                guardada.getHora(),
+                guardada.getMotivo(),
+                guardada.getPaciente().getNombre(),
+                guardada.getMedico().getNombre(),
+                guardada.getMedico().getId());
+    }
 
-	     Usuario usuario = usuarioRepository.findByEmail(email)
-	             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    @Transactional
+    public List<CitaObtenida> listarCitasProgramadas() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
 
-	     boolean esAdmin = usuario.tieneRol("ADMIN");
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-	     List<Cita> citas;
-	     if (esAdmin) {
-	         citas = citarepo.findByEstado(EstadoCita.PROGRAMADA); // solo PROGRAMADAS
-	     } else {
-	         citas = citarepo.findByPaciente_UsuarioAndEstado(usuario, EstadoCita.PROGRAMADA);
-	     }
+        boolean esAdmin = usuario.tieneRol("ADMIN");
 
-	     return citas.stream()
-	             .map(c -> new CitaObtenida(
-	                     c.getId(),
-	                     c.getFecha(),
-	                     c.getHora(),
-	                     c.getMotivo(),
-	                     c.getPaciente().getNombre(),
-	                     c.getMedico().getNombre(),
-	                     c.getMedico().getId()
-	             ))
-	             .collect(Collectors.toList());
-	 }
+        List<Cita> citas = esAdmin
+                ? citarepo.findByEstado(EstadoCita.PROGRAMADA)
+                : citarepo.findByPaciente_UsuarioAndEstado(usuario, EstadoCita.PROGRAMADA);
 
-	
-	
-	 public List<ListaCitaPaciente> obtenerCitasPacienteActual() {
-		    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String email = auth.getName();
+        citas.forEach(this::normalizarEstadoSiVencida);
 
-		    Usuario usuario = usuarioRepository.findByEmail(email)
-		            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return citas.stream()
+                .filter(c -> c.getEstado() == EstadoCita.PROGRAMADA)
+                .map(c -> new CitaObtenida(
+                        c.getId(),
+                        c.getFecha(),
+                        c.getHora(),
+                        c.getMotivo(),
+                        c.getPaciente().getNombre(),
+                        c.getMedico().getNombre(),
+                        c.getMedico().getId()))
+                .collect(Collectors.toList());
+    }
 
-		    Paciente paciente = pacienterepo.findByUsuario(usuario)
-		            .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+    @Transactional
+    public List<ListaCitaPaciente> obtenerCitasPacienteActual() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
 
-		    List<Cita> citas = citarepo.findByPaciente_Id(paciente.getId());
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-		    return citas.stream()
-		            .map(c -> {
-		            	ListaCitaPaciente dto = new ListaCitaPaciente();
-		                dto.setId(c.getId());
-		                dto.setFecha(c.getFecha());
-		                dto.setHora(c.getHora());
-		                dto.setMotivo(c.getMotivo());
-		                dto.setPacienteNombre(c.getPaciente().getNombre());
-		                dto.setMedicoNombre(c.getMedico().getNombre());
-		                dto.setTarifa(c.getTarifaAplicada());
-		                dto.setEstado(c.getEstado().name());
-		                return dto;
-		            })
-		            .toList();
-		}
-	
-        
-        
-        private DiaSemana DiaEnEspañol(DayOfWeek semanaIngles) {
-            return switch (semanaIngles) {
-                case MONDAY -> DiaSemana.LUNES;
-                case TUESDAY -> DiaSemana.MARTES;
-                case WEDNESDAY -> DiaSemana.MIERCOLES;
-                case THURSDAY -> DiaSemana.JUEVES;
-                case FRIDAY -> DiaSemana.VIERNES;
-                case SATURDAY -> DiaSemana.SABADO;
-                case SUNDAY -> DiaSemana.DOMINGO;
-            };
-        
-        
-	}
-	
+        Paciente paciente = pacienterepo.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+
+        List<Cita> citas = citarepo.findByPaciente_Id(paciente.getId());
+        citas.forEach(this::normalizarEstadoSiVencida);
+
+        return citas.stream().map(this::mapListaCita).toList();
+    }
+
+    @Transactional
+    public List<ListaCitaPaciente> listarTodas() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!(usuario.tieneRol("ADMIN") || usuario.tieneRol("MEDICO"))) {
+            throw new RuntimeException("No tienes permisos para listar citas");
+        }
+
+        List<Cita> citas = citarepo.findAll();
+        citas.forEach(this::normalizarEstadoSiVencida);
+        return citas.stream().map(this::mapListaCita).toList();
+    }
+
+    private ListaCitaPaciente mapListaCita(Cita c) {
+        ListaCitaPaciente dto = new ListaCitaPaciente();
+        dto.setId(c.getId());
+        dto.setFecha(c.getFecha());
+        dto.setHora(c.getHora());
+        dto.setMotivo(c.getMotivo());
+        dto.setPacienteNombre(c.getPaciente().getNombre());
+        dto.setMedicoNombre(c.getMedico().getNombre());
+        dto.setTarifa(c.getTarifaAplicada());
+        dto.setEstado(c.getEstado().name());
+        return dto;
+    }
+
+    private void normalizarEstadoSiVencida(Cita cita) {
+        if (cita.getEstado() != EstadoCita.PROGRAMADA) {
+            return;
+        }
+
+        LocalDateTime limite = cita.getFecha().atTime(cita.getHora()).plusHours(2);
+        if (LocalDateTime.now().isAfter(limite)) {
+            cita.setEstado(EstadoCita.VENCIDA);
+            citarepo.save(cita);
+        }
+    }
+
+    private DiaSemana diaEnEspanol(DayOfWeek semanaIngles) {
+        return switch (semanaIngles) {
+            case MONDAY -> DiaSemana.LUNES;
+            case TUESDAY -> DiaSemana.MARTES;
+            case WEDNESDAY -> DiaSemana.MIERCOLES;
+            case THURSDAY -> DiaSemana.JUEVES;
+            case FRIDAY -> DiaSemana.VIERNES;
+            case SATURDAY -> DiaSemana.SABADO;
+            case SUNDAY -> DiaSemana.DOMINGO;
+        };
+    }
 }

@@ -27,8 +27,8 @@ export class MisCitasPacienteComponent implements OnInit {
   obtenerClaseEstado(estado?: string): string {
     const estadoNormalizado = (estado || '').toUpperCase();
 
-    if (estadoNormalizado === 'COMPLETADA') {
-      return 'estado-completada';
+    if (estadoNormalizado === 'ATENDIDA') {
+      return 'estado-atendida';
     }
 
     if (estadoNormalizado === 'PROGRAMADA' || estadoNormalizado === 'ACTIVA') {
@@ -37,6 +37,10 @@ export class MisCitasPacienteComponent implements OnInit {
 
     if (estadoNormalizado === 'CANCELADA') {
       return 'estado-cancelada';
+    }
+
+    if (estadoNormalizado === 'VENCIDA') {
+      return 'estado-vencida';
     }
 
     return 'estado-default';

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../services/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-expediente',
@@ -15,7 +16,7 @@ export class CrearExpedienteComponent {
   mensaje: string = '';
   tipoMensaje: string = '';
 
-  constructor(private fb: FormBuilder, private api: ApiService) {
+  constructor(private fb: FormBuilder, private api: ApiService, private router: Router) {
    this.formulario = this.fb.group({
   idPaciente: ['', Validators.required],
   citaId: ['', Validators.required],
@@ -35,6 +36,7 @@ export class CrearExpedienteComponent {
         this.mensaje = 'Expediente creado correctamente';
         this.tipoMensaje = 'exito';
         this.formulario.reset();
+        this.router.navigate(['/medico/receta-agregar', idPaciente]);
       },
       error: err => {
         console.error(err);

@@ -76,10 +76,10 @@ public class RecetaService {
         Paciente paciente = pacienteRepo.findById(dto.getPacienteId())
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
 
-        boolean tieneCitaCompletada = citaRepo.existsByPacienteAndMedicoAndEstado(paciente, medico, EstadoCita.COMPLETADA);
+        boolean tieneCitaCompletada = citaRepo.existsByPacienteAndMedicoAndEstado(paciente, medico, EstadoCita.ATENDIDA);
 
         if (!tieneCitaCompletada) {
-            throw new RuntimeException("Solo se pueden emitir recetas si el paciente tiene una cita COMPLETADA con este médico");
+            throw new RuntimeException("Solo se pueden emitir recetas si el paciente tiene una cita ATENDIDA con este médico");
         }
 
         Receta receta = Receta.builder()

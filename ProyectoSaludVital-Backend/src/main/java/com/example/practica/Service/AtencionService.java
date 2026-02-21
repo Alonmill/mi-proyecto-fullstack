@@ -2,6 +2,7 @@ package com.example.practica.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import org.springframework.security.core.Authentication;
@@ -74,16 +75,22 @@ public class AtencionService {
             throw new RuntimeException("Solo se pueden atender citas PROGRAMADAS");
         }
 
-        // 🔹 Validación de fecha y hora
         LocalDate hoy = LocalDate.now();
         LocalTime ahora = LocalTime.now();
 
-        if (cita.getFecha().isAfter(hoy)) {
-            throw new RuntimeException("La atención no puede registrarse antes del día de la cita");
+        LocalDateTime fechaHoraCita = cita.getFecha().atTime(cita.getHora());
+        LocalDateTime inicioVentana = fechaHoraCita;
+        LocalDateTime finVentana = fechaHoraCita.plusHours(2);
+        LocalDateTime ahoraDateTime = LocalDateTime.now();
+
+        if (ahoraDateTime.isBefore(inicioVentana)) {
+            throw new RuntimeException("La atención solo puede registrarse desde la hora programada de la cita");
         }
 
-        if (ahora.isBefore(cita.getHora())) {
-            throw new RuntimeException("La atención no puede registrarse antes de la hora programada");
+        if (ahoraDateTime.isAfter(finVentana)) {
+            cita.setEstado(EstadoCita.VENCIDA);
+            citaRepo.save(cita);
+            throw new RuntimeException("La cita venció. Solo podía atenderse hasta 2 horas después de la hora programada");
         }
 
         // 🔹 Validación de que la cita está dentro del horario del médico
@@ -112,8 +119,8 @@ public class AtencionService {
         entrada.setMedico(cita.getMedico());
         entrada.setCita(cita);
 
-        // 5. Cambiar estado de la cita
-        cita.setEstado(EstadoCita.COMPLETADA);
+        // 5. Crear expediente = atender cita
+        cita.setEstado(EstadoCita.ATENDIDA);
         citaRepo.save(cita);
 
         // 6. Guardar entrada

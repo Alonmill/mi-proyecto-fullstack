@@ -24,8 +24,8 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
             select distinct c.paciente 
             from Cita c 
             where c.medico.usuario.email = :email 
-              and c.estado = 'COMPLETADA'
+              and c.estado = 'ATENDIDA'
             """)
-     List<Paciente> findPacientesCompletadosPorMedico(@Param("email") String email);
+     List<Paciente> findPacientesAtendidosPorMedico(@Param("email") String email);
  
 }

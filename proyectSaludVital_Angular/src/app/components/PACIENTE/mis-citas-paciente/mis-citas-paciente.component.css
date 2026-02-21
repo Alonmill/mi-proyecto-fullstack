@@ -78,7 +78,7 @@ table tr:hover {
 }
 
 /* Columna de estado con colores */
-.estado-completada {
+.estado-atendida {
   color: #166534;
   background: #dcfce7;
   border-color: #86efac;
@@ -94,6 +94,12 @@ table tr:hover {
   color: #991b1b;
   background: #fee2e2;
   border-color: #fca5a5;
+}
+
+.estado-vencida {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fdba74;
 }
 
 .estado-default {

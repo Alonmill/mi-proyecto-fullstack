@@ -54,7 +54,7 @@ public class PacienteService {
         if (esAdmin) {
             pacientes = pacirepo.findAll();
         } else {
-            pacientes = pacirepo.findPacientesCompletadosPorMedico(email);
+            pacientes = pacirepo.findPacientesAtendidosPorMedico(email);
         }
 
         return pacientes.stream()

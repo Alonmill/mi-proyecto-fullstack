@@ -2,22 +2,12 @@
   <aside class="sidebar">
     <h2 class="title">Médico</h2>
     <nav class="menu">
-<ul>
-      <li><a routerLink="/medico/perfil-medico" routerLinkActive="active">Perfil Médico</a></li>
-
-      <!-- Recetas -->
-      <li *ngFor="let paciente of pacientes">
-        <a [routerLink]="['/medico/receta-agregar', paciente.id]" routerLinkActive="active">
-          Agregar Receta a {{ paciente.nombre }}
-        </a>
-      </li>
-      <li><a routerLink="/medico/lista-recetas" routerLinkActive="active">Lista de Recetas</a></li>
-
-      <!-- Expedientes solo MEDICO -->
-      <li><a routerLink="/medico/crear-expediente" routerLinkActive="active">Crear Expediente</a></li>
-      <li><a routerLink="/medico/ver-expediente/1" routerLinkActive="active">Ver Expediente</a></li>
-
-    </ul>
+      <ul>
+        <li><a routerLink="/medico/perfil-medico" routerLinkActive="active">Perfil Médico</a></li>
+        <li><a routerLink="/medico/crear-expediente" routerLinkActive="active">Crear Expediente</a></li>
+        <li><a routerLink="/medico/lista-recetas" routerLinkActive="active">Lista de Recetas</a></li>
+        <li><a routerLink="/medico/ver-expediente/1" routerLinkActive="active">Ver Expediente</a></li>
+      </ul>
     </nav>
   </aside>
 

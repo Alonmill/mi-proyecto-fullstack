@@ -17,7 +17,6 @@ import com.example.practica.DTO.CitaObtenida;
 import com.example.practica.DTO.CrearCita;
 import com.example.practica.DTO.ListaCitaPaciente;
 import com.example.practica.Service.CitaService;
-import com.example.practica.Repository.CitaRepository;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CitaController {
 	private final CitaService citaservice;
-	private final CitaRepository citarepo;
 	
 	@PostMapping("/nueva")     //   http://localhost:8080/citas/nueva
 	@PreAuthorize("hasRole('PACIENTE')")
@@ -70,21 +68,6 @@ public class CitaController {
 	@GetMapping("/listado")
 	@PreAuthorize("hasAnyRole('ADMIN','MEDICO')")
 	public ResponseEntity<List<ListaCitaPaciente>> listadoDeCitas() {
-	    List<ListaCitaPaciente> citas = citarepo.findAll()
-	        .stream()
-	        .map(c -> {
-	            ListaCitaPaciente dto = new ListaCitaPaciente();
-	            dto.setId(c.getId());
-	            dto.setFecha(c.getFecha());
-	            dto.setHora(c.getHora());
-	            dto.setMotivo(c.getMotivo());
-	            dto.setPacienteNombre(c.getPaciente().getNombre());
-	            dto.setMedicoNombre(c.getMedico().getNombre());
-	            dto.setTarifa(c.getTarifaAplicada());
-	            dto.setEstado(c.getEstado().name());
-	            return dto;
-	        })
-	        .toList();
-	    return ResponseEntity.ok(citas);
+	    return ResponseEntity.ok(citaservice.listarTodas());
 	}
 }

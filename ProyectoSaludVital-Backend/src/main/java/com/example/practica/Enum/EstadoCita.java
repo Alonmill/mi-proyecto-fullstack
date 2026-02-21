@@ -1,5 +1,8 @@
 package com.example.practica.Enum;
 
 public enum EstadoCita {
-    PROGRAMADA, CANCELADA, COMPLETADA
+    PROGRAMADA,
+    ATENDIDA,
+    VENCIDA,
+    CANCELADA
 }
