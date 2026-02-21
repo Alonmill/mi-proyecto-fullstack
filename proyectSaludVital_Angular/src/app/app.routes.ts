@@ -74,6 +74,7 @@ export const routes: Routes = [
     { path: 'receta-agregar', component: RecetaAgregarComponent },
     { path: 'receta-agregar/:idPaciente', component: RecetaAgregarComponent },
     { path: 'receta-actualizar', component: RecetaActualizarComponent },
+    { path: 'lista-recetas', component: RecetaActualizarComponent },
 
     // Expedientes solo MEDICO
     { path: 'crear-expediente', component: CrearExpedienteComponent },

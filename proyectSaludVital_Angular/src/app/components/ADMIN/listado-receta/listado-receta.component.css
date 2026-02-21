@@ -1,4 +1,3 @@
-/* Estilo general para la tabla */
 table {
   border-collapse: collapse;
   width: 100%;
@@ -10,53 +9,33 @@ th, td {
   padding: 12px;
   border: 1px solid #ddd;
   text-align: left;
+  vertical-align: top;
 }
 
-/* Encabezado de la tabla */
-thead {
-  background-color: #f4f4f4;
-  color: #333;
-}
+thead { background-color: #f4f4f4; }
 
-/* Filas alternadas para mejor legibilidad */
-tbody tr:nth-child(even) {
-  background-color: #fafafa;
-}
+tbody tr:nth-child(even) { background-color: #fafafa; }
 
-/* Hover sobre las filas */
-tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-/* Botón de Ver/Ocultar Items */
 button {
   padding: 6px 12px;
   background-color: #007bff;
   border: none;
   color: white;
   cursor: pointer;
-  font-size: 0.9rem;
   border-radius: 4px;
 }
 
-button:hover {
-  background-color: #0056b3;
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
 }
 
-/* Lista de items */
-ul {
-  margin: 0.5rem 0 0 1rem;
-  padding-left: 1rem;
-  list-style-type: disc;
-}
-
-li {
-  font-size: 0.95rem;
-}
-
-/* Mensajes informativos */
-div {
-  font-family: Arial, sans-serif;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
+.badge-borrador { background: #6c757d; }
+.badge-emitida { background: #0d6efd; }
+.badge-dispensada { background: #198754; }
+.badge-anulada { background: #dc3545; }
+.badge-vencida { background: #fd7e14; }

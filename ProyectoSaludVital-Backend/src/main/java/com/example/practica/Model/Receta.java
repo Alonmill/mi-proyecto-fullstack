@@ -1,5 +1,6 @@
 package com.example.practica.Model;
 
+import com.example.practica.Enum.EstadoReceta;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -18,6 +19,10 @@ public class Receta {
 
     private LocalDate fechaEmision;
     private LocalDate fechaCaducidad;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoReceta estado;
 
     @ManyToOne
     @JoinColumn(name = "paciente_id")

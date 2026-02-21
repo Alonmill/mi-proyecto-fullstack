@@ -2,7 +2,6 @@ package com.example.practica.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,13 +12,19 @@ import com.example.practica.DTO.AgregarRecetaDTO;
 import com.example.practica.DTO.ItemRecetaDTO;
 import com.example.practica.DTO.ObtenerRecetaDTO;
 import com.example.practica.Enum.EstadoCita;
+import com.example.practica.Enum.EstadoReceta;
+import com.example.practica.Model.ItemReceta;
+import com.example.practica.Model.Medicamento;
+import com.example.practica.Model.Medico;
+import com.example.practica.Model.Paciente;
+import com.example.practica.Model.Receta;
+import com.example.practica.Model.Usuario;
 import com.example.practica.Repository.CitaRepository;
 import com.example.practica.Repository.MedicamentoRepository;
 import com.example.practica.Repository.MedicoRepository;
 import com.example.practica.Repository.PacienteRepository;
 import com.example.practica.Repository.RecetaRepository;
 import com.example.practica.Repository.UsuarioRepository;
-import com.example.practica.Model.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,34 +39,17 @@ public class RecetaService {
     private final MedicamentoRepository medicamentoRepo;
     private final CitaRepository citaRepo;
 
-   
- // En tu RecetaService o el Service correspondiente
     public List<ObtenerRecetaDTO> listarRecetas() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
+        Usuario usuario = getUsuarioActual();
 
-        Usuario usuario = usuarioRepo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        boolean esAdmin = usuario.getRoles().stream()
-                .anyMatch(r -> r.getName().equals("ADMIN"));
-
-        List<Receta> recetas;
-
-        if (esAdmin) {
-            // Admin ve todas
-            recetas = recetaRepo.findAll();
-        } else {
-            // Médico ve solo las que él emitió
-            recetas = recetaRepo.findByMedicoUsuarioEmail(email);
-        }
+        List<Receta> recetas = usuario.tieneRol("ADMIN")
+                ? recetaRepo.findAll()
+                : recetaRepo.findByMedicoUsuarioEmail(usuario.getEmail());
 
         return recetas.stream()
-                .map(this::mapToDTO)
+                .map(this::normalizarEstadoYMapear)
                 .toList();
     }
-
-
 
     public List<ObtenerRecetaDTO> verMisRecetas() {
         Usuario usuarioActual = getUsuarioActual();
@@ -75,130 +63,101 @@ public class RecetaService {
 
         return recetaRepo.findByPaciente(paciente)
                 .stream()
-                .map(this::mapToDTO)
+                .map(this::normalizarEstadoYMapear)
                 .toList();
     }
 
-    
-
     public ObtenerRecetaDTO emitirReceta(AgregarRecetaDTO dto) {
-        // 🔹 Usuario autenticado
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
+        Usuario usuario = getUsuarioActual();
 
-        Usuario usuario = usuarioRepo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // 🔹 Verificar que es médico
         Medico medico = medicoRepo.findByUsuario(usuario)
                 .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
 
-        // 🔹 Paciente desde el DTO
         Paciente paciente = pacienteRepo.findById(dto.getPacienteId())
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
 
-        // 🔹 Validar que exista al menos una cita COMPLETADA entre el paciente y el médico autenticado
         boolean tieneCitaCompletada = citaRepo.existsByPacienteAndMedicoAndEstado(paciente, medico, EstadoCita.COMPLETADA);
 
         if (!tieneCitaCompletada) {
             throw new RuntimeException("Solo se pueden emitir recetas si el paciente tiene una cita COMPLETADA con este médico");
         }
 
-        // 🔹 Crear receta
         Receta receta = Receta.builder()
                 .fechaEmision(LocalDate.now())
                 .fechaCaducidad(LocalDate.now().plusDays(30))
+                .estado(EstadoReceta.EMITIDA)
                 .paciente(paciente)
                 .medico(medico)
                 .build();
 
-        // 🔹 Items de receta
-        List<ItemReceta> items = dto.getItems().stream().map(itemDto -> {
-            Medicamento medicamento = medicamentoRepo.findById(itemDto.getMedicamentoId())
-                    .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
-
-            boolean alergico = paciente.getAlergias().stream()
-                    .anyMatch(alergia -> alergia.getNombre().equalsIgnoreCase(medicamento.getNombre()));
-            if (alergico) {
-                throw new RuntimeException("El paciente es alérgico a " + medicamento.getNombre());
-            }
-
-            return ItemReceta.builder()
-                    .dosis(itemDto.getDosis())
-                    .frecuencia(itemDto.getFrecuencia())
-                    .medicamento(medicamento)
-                    .receta(receta)
-                    .build();
-        }).toList();
-
-        receta.setItems(items);
+        receta.setItems(crearItems(dto.getItems(), receta, paciente));
         recetaRepo.save(receta);
 
         return mapToDTO(receta);
     }
 
-    
     public ObtenerRecetaDTO actualizarReceta(ActualizarRecetaDTO dto) {
-        // 🔹 Usuario autenticado
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
+        Medico medico = obtenerMedicoActual();
 
-        Usuario usuario = usuarioRepo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // 🔹 Verificar que es médico
-        boolean esMedico = usuario.tieneRol("MEDICO");
-        if (!esMedico) {
-            throw new RuntimeException("No tienes permisos para actualizar recetas");
-        }
-
-        // 🔹 Obtener el médico a partir del usuario autenticado
-        Medico medico = medicoRepo.findByUsuario(usuario)
-                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
-
-        // 🔹 Obtener la receta existente
         Receta receta = recetaRepo.findById(dto.getIdReceta())
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        // 🔹 Verificar que el médico que actualiza es el mismo que creó la receta
-        if (!receta.getMedico().equals(medico)) {
-            throw new RuntimeException("No puedes actualizar recetas de otro médico");
-        }
+        validarPropietario(receta, medico);
+        validarEditable(receta);
 
-        // 🔹 Obtener el paciente
-        Paciente paciente = receta.getPaciente();
-
-        // 🔹 Crear los nuevos items
-        List<ItemReceta> items = dto.getItems().stream().map(itemDto -> {
-            Medicamento medicamento = medicamentoRepo.findById(itemDto.getMedicamentoId())
-                    .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
-
-            boolean alergico = paciente.getAlergias().stream()
-                    .anyMatch(alergia -> alergia.getNombre().equalsIgnoreCase(medicamento.getNombre()));
-            if (alergico) {
-                throw new RuntimeException("El paciente es alérgico a " + medicamento.getNombre());
-            }
-
-            return ItemReceta.builder()
-                    .dosis(itemDto.getDosis())
-                    .frecuencia(itemDto.getFrecuencia())
-                    .medicamento(medicamento)
-                    .receta(receta)
-                    .build();
-        }).toList();
-
-        // 🔹 Reemplazar los items antiguos por los nuevos sin romper la referencia
         receta.getItems().clear();
-        receta.getItems().addAll(items);
+        receta.getItems().addAll(crearItems(dto.getItems(), receta, receta.getPaciente()));
 
-        // 🔹 Guardar cambios
         recetaRepo.save(receta);
 
         return mapToDTO(receta);
     }
 
+    public ObtenerRecetaDTO anularReceta(Long idReceta) {
+        Medico medico = obtenerMedicoActual();
+        Receta receta = recetaRepo.findById(idReceta)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
+        validarPropietario(receta, medico);
 
+        if (receta.getEstado() != EstadoReceta.EMITIDA) {
+            throw new RuntimeException("Solo se pueden anular recetas en estado EMITIDA");
+        }
+
+        receta.setEstado(EstadoReceta.ANULADA);
+        recetaRepo.save(receta);
+        return mapToDTO(receta);
+    }
+
+    public ObtenerRecetaDTO duplicarReceta(Long idReceta) {
+        Medico medico = obtenerMedicoActual();
+        Receta recetaOriginal = recetaRepo.findById(idReceta)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+
+        validarPropietario(recetaOriginal, medico);
+        normalizarEstado(recetaOriginal);
+
+        if (recetaOriginal.getEstado() != EstadoReceta.EMITIDA) {
+            throw new RuntimeException("Solo se pueden duplicar recetas en estado EMITIDA");
+        }
+
+        return crearRecetaDesdeExistente(recetaOriginal, medico);
+    }
+
+    public ObtenerRecetaDTO renovarReceta(Long idReceta) {
+        Medico medico = obtenerMedicoActual();
+        Receta recetaOriginal = recetaRepo.findById(idReceta)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+
+        validarPropietario(recetaOriginal, medico);
+        normalizarEstado(recetaOriginal);
+
+        if (recetaOriginal.getEstado() != EstadoReceta.VENCIDA) {
+            throw new RuntimeException("Solo se pueden renovar recetas en estado VENCIDA");
+        }
+
+        return crearRecetaDesdeExistente(recetaOriginal, medico);
+    }
 
     public ObtenerRecetaDTO verReceta(Long idReceta) {
         Usuario usuarioActual = getUsuarioActual();
@@ -206,27 +165,99 @@ public class RecetaService {
         Receta receta = recetaRepo.findById(idReceta)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
 
-        // Si es MEDICO, solo puede ver sus propias recetas
-        if (usuarioActual.tieneRol("MEDICO")) {
-            if (!receta.getMedico().getUsuario().getId().equals(usuarioActual.getId())) {
-                throw new RuntimeException("No puedes ver recetas emitidas por otro médico");
-            }
+        if (usuarioActual.tieneRol("MEDICO") && !receta.getMedico().getUsuario().getId().equals(usuarioActual.getId())) {
+            throw new RuntimeException("No puedes ver recetas emitidas por otro médico");
         }
 
-        // Si es ADMIN, puede ver cualquier receta (no validamos nada extra)
         if (!(usuarioActual.tieneRol("MEDICO") || usuarioActual.tieneRol("ADMIN"))) {
             throw new RuntimeException("No tienes permisos para ver esta receta");
         }
 
-        return mapToDTO(receta);
+        return normalizarEstadoYMapear(receta);
     }
 
+    private ObtenerRecetaDTO crearRecetaDesdeExistente(Receta original, Medico medico) {
+        Receta nueva = Receta.builder()
+                .fechaEmision(LocalDate.now())
+                .fechaCaducidad(LocalDate.now().plusDays(30))
+                .estado(EstadoReceta.EMITIDA)
+                .medico(medico)
+                .paciente(original.getPaciente())
+                .build();
+
+        List<ItemRecetaDTO> itemsDto = original.getItems().stream()
+                .map(item -> ItemRecetaDTO.builder()
+                        .medicamentoId(item.getMedicamento().getId())
+                        .dosis(item.getDosis())
+                        .frecuencia(item.getFrecuencia())
+                        .build())
+                .toList();
+
+        nueva.setItems(crearItems(itemsDto, nueva, original.getPaciente()));
+        recetaRepo.save(nueva);
+        return mapToDTO(nueva);
+    }
+
+    private List<ItemReceta> crearItems(List<ItemRecetaDTO> itemsDto, Receta receta, Paciente paciente) {
+        return itemsDto.stream().map(itemDto -> {
+            Medicamento medicamento = medicamentoRepo.findById(itemDto.getMedicamentoId())
+                    .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
+
+            boolean alergico = paciente.getAlergias().stream()
+                    .anyMatch(alergia -> alergia.getNombre().equalsIgnoreCase(medicamento.getNombre()));
+            if (alergico) {
+                throw new RuntimeException("El paciente es alérgico a " + medicamento.getNombre());
+            }
+
+            return ItemReceta.builder()
+                    .dosis(itemDto.getDosis())
+                    .frecuencia(itemDto.getFrecuencia())
+                    .medicamento(medicamento)
+                    .receta(receta)
+                    .build();
+        }).toList();
+    }
+
+    private void validarEditable(Receta receta) {
+        normalizarEstado(receta);
+        if (receta.getEstado() != EstadoReceta.BORRADOR) {
+            throw new RuntimeException("Solo se puede editar una receta en estado BORRADOR");
+        }
+    }
+
+    private void validarPropietario(Receta receta, Medico medico) {
+        if (!receta.getMedico().equals(medico)) {
+            throw new RuntimeException("No puedes modificar recetas de otro médico");
+        }
+    }
+
+    private void normalizarEstado(Receta receta) {
+        if (receta.getEstado() == EstadoReceta.EMITIDA && receta.getFechaCaducidad() != null
+                && receta.getFechaCaducidad().isBefore(LocalDate.now())) {
+            receta.setEstado(EstadoReceta.VENCIDA);
+            recetaRepo.save(receta);
+        }
+    }
+
+    private ObtenerRecetaDTO normalizarEstadoYMapear(Receta receta) {
+        normalizarEstado(receta);
+        return mapToDTO(receta);
+    }
 
     private Usuario getUsuarioActual() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         return usuarioRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
+    private Medico obtenerMedicoActual() {
+        Usuario usuario = getUsuarioActual();
+        if (!usuario.tieneRol("MEDICO")) {
+            throw new RuntimeException("No tienes permisos para modificar recetas");
+        }
+        return medicoRepo.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
     }
 
     private ObtenerRecetaDTO mapToDTO(Receta receta) {
@@ -236,6 +267,7 @@ public class RecetaService {
                 .fechaCaducidad(receta.getFechaCaducidad())
                 .medicoNombre(receta.getMedico().getNombre())
                 .pacienteNombre(receta.getPaciente().getNombre())
+                .estado(receta.getEstado().name())
                 .items(
                         receta.getItems().stream()
                                 .map(item -> ItemRecetaDTO.builder()
@@ -243,9 +275,8 @@ public class RecetaService {
                                         .medicamentoNombre(item.getMedicamento().getNombre())
                                         .dosis(item.getDosis())
                                         .frecuencia(item.getFrecuencia())
-                                        .build()
-                                ).toList()
-                )
+                                        .build())
+                                .toList())
                 .build();
     }
 }

@@ -17,6 +17,7 @@ public class ObtenerRecetaDTO {
 
     private String medicoNombre;
     private String pacienteNombre;
+    private String estado;
 
     private List<ItemRecetaDTO> items;
     

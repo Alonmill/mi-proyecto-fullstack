@@ -1,7 +1,8 @@
+<div *ngIf="mensajeExito" class="alert-success">{{ mensajeExito }}</div>
+<div *ngIf="mensajeError" class="alert-error">{{ mensajeError }}</div>
 
-<!-- 👇 Mostrar el formulario SOLO cuando se edite -->
-<div *ngIf="editar">
-  <h3>Editar Receta</h3>
+<div *ngIf="editar" class="panel-edicion">
+  <h3>Editar Receta (BORRADOR)</h3>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <input type="hidden" formControlName="idReceta">
 
@@ -14,11 +15,11 @@
     <label>Fecha Emisión:</label>
     <input type="date" formControlName="fechaEmision" readonly>
 
-    <label>Fecha Caducidad:</label>
+    <label>Fecha Vencimiento:</label>
     <input type="date" formControlName="fechaCaducidad" readonly>
 
     <div formArrayName="items">
-      <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+      <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="item-edicion">
         <label>Medicamento ID:</label>
         <input type="number" formControlName="medicamentoId">
 
@@ -28,26 +29,30 @@
         <label>Frecuencia:</label>
         <input type="text" formControlName="frecuencia">
 
-        <button type="button" (click)="eliminarItem(i)">Eliminar</button>
+        <button type="button" class="btn-danger" (click)="eliminarItem(i)">Eliminar</button>
       </div>
     </div>
 
-    <button type="button" (click)="agregarItem()">+ Agregar Medicamento</button>
-    <button type="submit">Guardar cambios</button>
+    <button type="button" class="btn-success" (click)="agregarItem()">+ Agregar Medicamento</button>
+    <button type="submit" class="btn-primary">Guardar cambios</button>
   </form>
 </div>
-<div *ngIf="mensajeExito" class="alert-success">{{ mensajeExito }}</div>
-<div *ngIf="mensajeError" class="alert-error">{{ mensajeError }}</div>
 
+<h2>Lista de Recetas</h2>
+<div *ngIf="cargando">Cargando recetas...</div>
+<div *ngIf="!cargando && recetas.length === 0" class="empty-state">
+  No hay recetas para actualizar por el momento.
+</div>
 
-<h2>Listado de Recetas</h2>
-<table>
+<table *ngIf="!cargando && recetas.length > 0">
   <thead>
     <tr>
       <th>ID</th>
       <th>Médico</th>
       <th>Paciente</th>
       <th>Fecha Emisión</th>
+      <th>Fecha Vencimiento</th>
+      <th>Estado</th>
       <th>Medicamentos</th>
       <th>Acciones</th>
     </tr>
@@ -57,9 +62,11 @@
       <td>{{ receta.id }}</td>
       <td>{{ receta.medicoNombre }}</td>
       <td>{{ receta.pacienteNombre }}</td>
-      <td>{{ receta.fechaEmision }}</td>
+      <td>{{ receta.fechaEmision | date:'shortDate' }}</td>
+      <td>{{ receta.fechaCaducidad | date:'shortDate' }}</td>
+      <td><span class="badge" [ngClass]="obtenerClaseEstado(receta.estado)">{{ receta.estado }}</span></td>
       <td>
-        <button type="button" (click)="receta.showItems = !receta.showItems">
+        <button type="button" class="btn-success" (click)="receta.showItems = !receta.showItems">
           {{ receta.showItems ? 'Ocultar' : 'Ver Medicamentos' }}
         </button>
         <ul *ngIf="receta.showItems">
@@ -69,9 +76,17 @@
         </ul>
       </td>
       <td>
-        <button type="button" (click)="editarReceta(receta)">Editar</button>
+        <button *ngIf="receta.estado === 'BORRADOR'" type="button" class="btn-warning" (click)="editarReceta(receta)">Editar</button>
+
+        <ng-container *ngIf="receta.estado === 'EMITIDA'">
+          <button type="button" class="btn-danger" (click)="anularReceta(receta)">Anular</button>
+          <button type="button" class="btn-primary" (click)="duplicarReceta(receta)">Duplicar</button>
+        </ng-container>
+
+        <button *ngIf="receta.estado === 'VENCIDA'" type="button" class="btn-primary" (click)="renovarReceta(receta)">Renovar</button>
+
+        <span *ngIf="receta.estado === 'ANULADA' || receta.estado === 'DISPENSADA'">Solo Ver</span>
       </td>
     </tr>
   </tbody>
 </table>
-
