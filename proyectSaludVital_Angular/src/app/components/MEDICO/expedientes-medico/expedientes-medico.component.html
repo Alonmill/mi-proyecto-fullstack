@@ -1,9 +1,21 @@
 <div class="container">
   <h2>Ver Expediente Médico</h2>
 
-  <label>ID Expediente:</label>
-  <input type="number" [(ngModel)]="idBuscar">
-  <button (click)="buscar()">Buscar</button>
+  <div class="search-card">
+    <h3>Buscar expediente por paciente</h3>
+
+    <label for="pacienteSelect">Paciente:</label>
+    <select id="pacienteSelect" [(ngModel)]="idBuscar">
+      <option [ngValue]="null" disabled selected>Selecciona un paciente...</option>
+      <option *ngFor="let exp of expedientesDisponibles" [ngValue]="exp.id">
+        {{ exp.nombrePaciente }}
+      </option>
+    </select>
+
+    <button (click)="buscar()" [disabled]="!idBuscar || cargandoExpedientes">Buscar</button>
+
+    <small *ngIf="cargandoExpedientes">Cargando pacientes...</small>
+  </div>
 
   <div *ngIf="expediente" class="card">
     <h3>Paciente: {{ expediente.nombrePaciente }}</h3>

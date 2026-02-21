@@ -1,33 +1,62 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExpedienteMedicoDTO } from '../../../DTO/Expediente-medico-dto';
-import { ApiService } from '../../../services/api.service';
+import { ExpedienteService } from '../../../services/expediente.service';
+
+interface ExpedienteOption {
+  id: number;
+  nombrePaciente: string;
+}
 
 @Component({
   selector: 'app-expedientes-medico',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './expedientes-medico.component.html',
   styleUrl: './expedientes-medico.component.css'
 })
-export class VerExpedienteMedicoComponent {
+export class VerExpedienteMedicoComponent implements OnInit {
   expediente: ExpedienteMedicoDTO | null = null;
   idBuscar: number | null = null;
-  error: string = '';
+  expedientesDisponibles: ExpedienteOption[] = [];
+  cargandoExpedientes = false;
+  error = '';
 
-  constructor(private api: ApiService) {}
+  constructor(private expedienteService: ExpedienteService) {}
+
+  ngOnInit(): void {
+    this.cargandoExpedientes = true;
+    this.expedienteService.getExpedientes().subscribe({
+      next: (data) => {
+        this.expedientesDisponibles = data.map((expediente) => ({
+          id: expediente.id,
+          nombrePaciente: expediente.nombrePaciente
+        }));
+        this.cargandoExpedientes = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'No se pudo cargar la lista de pacientes con expedientes.';
+        this.cargandoExpedientes = false;
+      }
+    });
+  }
 
   buscar() {
-    if (!this.idBuscar) return;
+    if (!this.idBuscar) {
+      return;
+    }
 
-    this.api.get<ExpedienteMedicoDTO>(`expedientes/ver/${this.idBuscar}`)
-      .subscribe({
-        next: data => this.expediente = data,
-        error: err => {
-          console.error(err);
-          this.error = 'No se pudo cargar el expediente';
-        }
-      });
+    this.error = '';
+    this.expediente = null;
+
+    this.expedienteService.getExpedienteById(this.idBuscar).subscribe({
+      next: (data) => (this.expediente = data),
+      error: (err) => {
+        console.error(err);
+        this.error = 'No se pudo cargar el expediente';
+      }
+    });
   }
 }

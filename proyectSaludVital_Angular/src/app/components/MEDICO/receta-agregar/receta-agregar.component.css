@@ -46,7 +46,8 @@ label {
   margin-bottom: 4px;
 }
 
-input {
+input,
+:host ::ng-deep .ng-select {
   width: 100%;
   padding: 8px 10px;
   border: 1px solid #bdc3c7;
@@ -123,4 +124,16 @@ form > button[type="submit"]:hover {
   margin-bottom: 15px;
   font-weight: bold;
   text-align: center;
+}
+
+
+:host ::ng-deep .ng-select .ng-select-container {
+  min-height: 38px;
+  border-radius: 6px;
+  border: 1px solid #bdc3c7;
+}
+
+:host ::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border: 1px solid #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
 }
