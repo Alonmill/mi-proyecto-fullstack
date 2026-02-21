@@ -1,40 +1,43 @@
-/* Estilos generales */
+.page-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
 h2, h3 {
   color: #333;
   margin-bottom: 15px;
   font-family: Arial, sans-serif;
 }
 
-
-/* Tabla */
 .tabla-citas {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
   font-size: 14px;
 }
-.tabla-citas th, .tabla-citas td {
+
+.tabla-citas th,
+.tabla-citas td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
 }
+
 .tabla-citas th {
   background-color: #4CAF50;
   color: white;
 }
+
 .tabla-citas tr:nth-child(even) {
   background-color: #f9f9f9;
 }
-.tabla-citas tr:hover {
-  background-color: #f1f1f1;
-}
+
 .error {
   color: red;
   font-size: 13px;
   margin-top: 2px;
 }
 
-/* Botón actualizar */
 .btn-actualizar {
   background: #2196F3;
   color: white;
@@ -43,49 +46,54 @@ h2, h3 {
   border-radius: 4px;
   cursor: pointer;
 }
-.btn-actualizar:hover {
-  background: #1976D2;
-}
 
-/* Contenedor del formulario */
 .form-container {
   background: #f8f9fa;
   border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 400px;
+  padding: 24px;
+  border-radius: 10px;
+  max-width: 520px;
+  margin: 0 auto;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* Campos del formulario */
+.form-group {
+  margin-bottom: 14px;
+}
+
 form label {
   display: block;
-  margin-top: 10px;
+  margin-bottom: 6px;
   font-weight: bold;
 }
-form input {
+
+form input,
+form select {
   width: 100%;
-  padding: 6px;
-  margin-top: 5px;
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-/* Botón guardar */
-.btn-guardar {
-  margin-top: 15px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-}
-.btn-guardar:hover {
-  background: #388E3C;
+.acciones-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
 }
 
-/* Mensajes de error */
+.btn-guardar,
+.btn-cancelar {
+  flex: 1;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.btn-guardar { background: #4CAF50; }
+.btn-cancelar { background: #7f8c8d; }
+
 .alert-error {
   background: #f8d7da;
   color: #721c24;
@@ -104,4 +112,5 @@ form input {
   margin-bottom: 15px;
   border: 1px solid #b6dcff;
   font-size: 14px;
+  text-align: center;
 }

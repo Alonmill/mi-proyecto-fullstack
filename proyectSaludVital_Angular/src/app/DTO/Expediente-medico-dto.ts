@@ -6,5 +6,6 @@ export interface ExpedienteMedicoDTO {
   nombrePaciente: string;
   numeroIdentificacion: string;
   fechaNacimiento: string;
+  nombreMedico: string;
   entradasHistorial: EntradaHistorialDTO[];
 }

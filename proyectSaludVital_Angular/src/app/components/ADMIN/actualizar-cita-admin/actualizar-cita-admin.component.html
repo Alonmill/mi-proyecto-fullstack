@@ -1,77 +1,71 @@
-<h2>Actualizar Citas</h2>
+<div class="page-wrap">
+  <h2>Actualizar Citas</h2>
 
-<!-- Mensajes -->
-<div *ngIf="mensajeInfo" class="alert-info">{{ mensajeInfo }}</div>
+  <div *ngIf="mensajeInfo" class="alert-info">{{ mensajeInfo }}</div>
+  <div *ngIf="mensajeError" class="alert-error">{{ mensajeError }}</div>
 
-<!-- Mensajes de error -->
-<div *ngIf="mensajeError" class="alert-error">
-  {{ mensajeError }}
-</div>
+  <table class="tabla-citas" *ngIf="citas.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Paciente</th>
+        <th>Médico</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Motivo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cita of citas">
+        <td>{{ cita.id }}</td>
+        <td>{{ cita.pacienteNombre }}</td>
+        <td>{{ cita.medicoNombre }}</td>
+        <td>{{ cita.fecha }}</td>
+        <td>{{ cita.hora }}</td>
+        <td>{{ cita.motivo }}</td>
+        <td>
+          <button class="btn-actualizar" (click)="seleccionarCita(cita)">Actualizar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-<!-- Listado de citas -->
-<table class="tabla-citas">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Paciente</th>
-      <th>Médico</th>
-      <th>Fecha</th>
-      <th>Hora</th>
-      <th>Motivo</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let cita of citas">
-      <td>{{ cita.id }}</td>
-      <td>{{ cita.pacienteNombre }}</td>
-      <td>{{ cita.medicoNombre }}</td>
-      <td>{{ cita.fecha }}</td>
-      <td>{{ cita.hora }}</td>
-      <td>{{ cita.motivo }}</td>
-      <td>
-        <button class="btn-actualizar" (click)="seleccionarCita(cita)">Actualizar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <div *ngIf="citaSeleccionadaId !== null" class="form-container">
+    <h3>Actualizar Cita</h3>
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Médico:</label>
+        <select formControlName="idMedico">
+          <option [ngValue]="null" disabled>Seleccione un médico</option>
+          <option *ngFor="let medico of medicos" [ngValue]="medico.id">
+            {{ medico.nombre }} {{ medico.apellido }}
+          </option>
+        </select>
+        <div class="error" *ngIf="formulario.get('idMedico')?.touched && formulario.get('idMedico')?.hasError('required')">
+          El médico es obligatorio.
+        </div>
+      </div>
 
-<!-- Formulario de actualización -->
-<div *ngIf="citaSeleccionadaId !== null" class="form-container">
-  <h3>Actualizar Cita</h3>
-  <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
-   <div class="form-group">
-  <label>Medico ID:</label>
-  <input formControlName="idMedico" type="number" placeholder="ID del médico" />
-  <div class="error" *ngIf="formulario.get('idMedico')?.touched && formulario.get('idMedico')?.hasError('required')">
-    El ID del médico es obligatorio.
+      <div class="form-group">
+        <label>Fecha:</label>
+        <input formControlName="fecha" type="date" />
+      </div>
+
+      <div class="form-group">
+        <label>Hora:</label>
+        <input formControlName="hora" type="time" />
+      </div>
+
+      <div class="form-group">
+        <label>Motivo:</label>
+        <input formControlName="motivo" type="text" placeholder="Motivo de la cita" />
+      </div>
+
+      <div class="acciones-form">
+        <button type="submit" class="btn-guardar">Guardar cambios</button>
+        <button type="button" class="btn-cancelar" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </form>
   </div>
-</div>
-
-<div class="form-group">
-  <label>Fecha:</label>
-  <input formControlName="fecha" type="date" />
-  <div class="error" *ngIf="formulario.get('fecha')?.touched && formulario.get('fecha')?.hasError('required')">
-    La fecha es obligatoria.
-  </div>
-</div>
-
-<div class="form-group">
-  <label>Hora:</label>
-  <input formControlName="hora" type="time" />
-  <div class="error" *ngIf="formulario.get('hora')?.touched && formulario.get('hora')?.hasError('required')">
-    La hora es obligatoria.
-  </div>
-</div>
-
-<div class="form-group">
-  <label>Motivo:</label>
-  <input formControlName="motivo" type="text" placeholder="Motivo de la cita" />
-  <div class="error" *ngIf="formulario.get('motivo')?.touched && formulario.get('motivo')?.hasError('required')">
-    El motivo es obligatorio.
-  </div>
-</div>
-
-    <button type="submit" class="btn-guardar">Guardar cambios</button>
-  </form>
 </div>

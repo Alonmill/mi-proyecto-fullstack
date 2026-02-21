@@ -70,7 +70,7 @@
   </div>
 </div>
 
-<div>
+<div class="disponible-row">
   <label for="disponible">Disponible:</label>
   <input id="disponible" formControlName="disponible" type="checkbox" />
   <div class="error" *ngIf="form.get('disponible')?.touched && form.get('disponible')?.hasError('required')">
@@ -82,7 +82,7 @@
   <label for="emailUsuario">Buscar usuario por email:</label>
   <div class="usuario-search-row">
     <input id="emailUsuario" [(ngModel)]="emailBusquedaUsuario" [ngModelOptions]="{standalone: true}" placeholder="correo@dominio.com" />
-    <button type="button" (click)="buscarUsuarioPorEmail()">Buscar ID</button>
+    <button class="btn-buscar-id" type="button" (click)="buscarUsuarioPorEmail()">Buscar ID</button>
   </div>
 </div>
 

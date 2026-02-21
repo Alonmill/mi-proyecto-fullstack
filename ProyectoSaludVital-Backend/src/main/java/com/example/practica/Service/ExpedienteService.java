@@ -52,6 +52,7 @@ public class ExpedienteService {
                         exp.getPaciente().getNombre(),
                         exp.getPaciente().getNumeroIdentificacion(),
                         exp.getPaciente().getFechaNacimiento(),
+                        obtenerNombreMedicoPrincipal(exp),
                         exp.getEntradas().stream()
                             .map(entrada -> new EntradaHistorialDTO(
                                     entrada.getId(),
@@ -69,6 +70,14 @@ public class ExpedienteService {
     }
 
 
+
+
+    private String obtenerNombreMedicoPrincipal(ExpedienteMedico expediente) {
+        return expediente.getEntradas().stream()
+                .findFirst()
+                .map(e -> e.getMedico().getNombre())
+                .orElse("Sin médico asignado");
+    }
 
     // Ver expediente por ID (PACIENTE y MEDICO)
     public ExpedienteMedicoDTO verExpediente(Long id) {
@@ -102,6 +111,7 @@ public class ExpedienteService {
                 expediente.getPaciente().getNombre(),
                 expediente.getPaciente().getNumeroIdentificacion(),
                 expediente.getPaciente().getFechaNacimiento(),
+                obtenerNombreMedicoPrincipal(expediente),
                 expediente.getEntradas().stream()
                         .map(entrada -> new EntradaHistorialDTO(
                                 entrada.getId(),
@@ -157,6 +167,7 @@ public class ExpedienteService {
                 guardado.getPaciente().getNombre(),
                 guardado.getPaciente().getNumeroIdentificacion(),
                 guardado.getPaciente().getFechaNacimiento(),
+                obtenerNombreMedicoPrincipal(guardado),
                 guardado.getEntradas().stream()
                         .map(eh -> new EntradaHistorialDTO(
                                 eh.getId(),

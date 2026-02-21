@@ -21,4 +21,15 @@ export class ListadoCitasComponent implements OnInit {
       error: err => console.error('Error al obtener listado de citas', err)
     });
   }
+
+  obtenerClaseEstado(estado: string): string {
+    const clases: Record<string, string> = {
+      CANCELADA: 'estado-cancelada',
+      VENCIDA: 'estado-vencida',
+      ATENDIDA: 'estado-atendida',
+      PROGRAMADA: 'estado-programada'
+    };
+
+    return clases[estado] || 'estado-default';
+  }
 }

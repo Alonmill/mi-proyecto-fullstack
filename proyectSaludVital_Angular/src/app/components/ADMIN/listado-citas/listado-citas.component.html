@@ -19,7 +19,7 @@
     <td data-label="Fecha">{{ cita.fecha }}</td>
     <td data-label="Hora">{{ cita.hora }}</td>
     <td data-label="Motivo">{{ cita.motivo }}</td>
-    <td data-label="Estado">{{ cita.estado }}</td>
+    <td data-label="Estado"><span class="estado-badge" [ngClass]="obtenerClaseEstado(cita.estado)">{{ cita.estado }}</span></td>
   </tr>
 </tbody>
 </table>

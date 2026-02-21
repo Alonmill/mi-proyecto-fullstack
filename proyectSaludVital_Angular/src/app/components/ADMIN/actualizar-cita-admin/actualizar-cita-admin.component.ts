@@ -3,6 +3,8 @@ import { CitaService } from '../../../services/cita.service';
 import { CitaObtenidaDTO } from '../../../DTO/cita-obtenida-dto';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MedicoService } from '../../../services/medico.service';
+import { ObtenerMedicoDTO } from '../../../DTO/obtener-medico-dto';
 
 @Component({
   selector: 'app-actualizar-cita-admin',
@@ -13,12 +15,17 @@ import { CommonModule } from '@angular/common';
 })
 export class ActualizarCitaAdminComponent implements OnInit {
   citas: CitaObtenidaDTO[] = [];
+  medicos: ObtenerMedicoDTO[] = [];
   formulario: FormGroup;
   citaSeleccionadaId: number | null = null;
   mensajeError: string | null = null;
   mensajeInfo: string | null = null;
 
-  constructor(private citaService: CitaService, private fb: FormBuilder) {
+  constructor(
+    private citaService: CitaService,
+    private medicoService: MedicoService,
+    private fb: FormBuilder
+  ) {
     this.formulario = this.fb.group({
       idMedico: [null, Validators.required],
       fecha: [null, Validators.required],
@@ -29,6 +36,7 @@ export class ActualizarCitaAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCitas();
+    this.cargarMedicos();
   }
 
   private tieneDosHorasAnticipacion(cita: CitaObtenidaDTO): boolean {
@@ -40,12 +48,17 @@ export class ActualizarCitaAdminComponent implements OnInit {
   cargarCitas() {
     this.citaService.listarProgramadas().subscribe((res) => {
       this.citas = (res || []).filter((cita) => this.tieneDosHorasAnticipacion(cita));
+      this.mensajeInfo =
+        this.citas.length === 0
+          ? 'No hay citas disponibles para actualizar con al menos 2 horas de anticipación.'
+          : null;
+    });
+  }
 
-      if (this.citas.length === 0) {
-        this.mensajeInfo = 'No hay citas disponibles para actualizar con al menos 2 horas de anticipación.';
-      } else {
-        this.mensajeInfo = null;
-      }
+  cargarMedicos() {
+    this.medicoService.listar().subscribe({
+      next: (data) => (this.medicos = data),
+      error: (err) => console.error('Error al cargar médicos', err)
     });
   }
 
@@ -59,6 +72,12 @@ export class ActualizarCitaAdminComponent implements OnInit {
     });
   }
 
+  cancelarEdicion() {
+    this.citaSeleccionadaId = null;
+    this.formulario.reset();
+    this.mensajeError = null;
+  }
+
   onSubmit() {
     if (this.formulario.invalid || this.citaSeleccionadaId === null) return;
 
@@ -67,8 +86,7 @@ export class ActualizarCitaAdminComponent implements OnInit {
     this.citaService.actualizar(this.citaSeleccionadaId, this.formulario.value).subscribe({
       next: () => {
         alert('✅ Cita actualizada correctamente');
-        this.formulario.reset();
-        this.citaSeleccionadaId = null;
+        this.cancelarEdicion();
         this.cargarCitas();
       },
       error: (err) => {

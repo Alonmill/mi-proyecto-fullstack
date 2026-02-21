@@ -311,6 +311,7 @@ public class PacienteService {
                 expediente.getPaciente().getNombre(),
                 expediente.getPaciente().getNumeroIdentificacion(),
                 expediente.getPaciente().getFechaNacimiento(),
+                entradas.stream().findFirst().map(EntradaHistorialDTO::getNombreMedico).orElse("Sin médico asignado"),
                 entradas
         );
 

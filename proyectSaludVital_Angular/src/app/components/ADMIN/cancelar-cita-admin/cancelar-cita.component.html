@@ -1,6 +1,7 @@
 <div *ngIf="mensaje" class="alert">{{ mensaje }}</div>
 
 <h3>Cancelar Cita</h3>
+<div *ngIf="mensajeInfo" class="empty-info">{{ mensajeInfo }}</div>
 
 <!-- Tabla de citas -->
 <table *ngIf="citas && citas.length > 0" border="1" cellpadding="5">
@@ -34,7 +35,4 @@
   </tbody>
 </table>
 
-<!-- Mensaje si no hay citas -->
-<div *ngIf="citas && citas.length === 0">
-  No hay citas disponibles para mostrar.
-</div>
+

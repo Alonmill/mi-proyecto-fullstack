@@ -14,5 +14,6 @@ public class ExpedienteMedicoDTO {
     private String nombrePaciente;
     private String numeroIdentificacion;
     private LocalDate fechaNacimiento;
+    private String nombreMedico;
     private List<EntradaHistorialDTO> entradasHistorial;
 }

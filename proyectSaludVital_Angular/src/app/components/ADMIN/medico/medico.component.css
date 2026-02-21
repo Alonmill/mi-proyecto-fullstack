@@ -161,3 +161,33 @@ td button {
 .usuario-search-row input {
   flex: 1;
 }
+
+.disponible-row {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 10px;
+}
+
+.disponible-row label {
+  margin-bottom: 0;
+  min-width: 90px;
+}
+
+.disponible-row input[type='checkbox'] {
+  margin-top: 0;
+}
+
+.usuario-search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.usuario-search-row input {
+  width: 100%;
+}
+
+.btn-buscar-id {
+  white-space: nowrap;
+}
