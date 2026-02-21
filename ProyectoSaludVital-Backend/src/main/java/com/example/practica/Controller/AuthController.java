@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.practica.DTO.Login;
 import com.example.practica.DTO.ObtenerToken;
 import com.example.practica.DTO.Registrar;
+import com.example.practica.DTO.UsuarioBusquedaDTO;
 import com.example.practica.Model.Role;
 import com.example.practica.Model.Usuario;
 import com.example.practica.Repository.RoleRepository;
@@ -79,7 +80,27 @@ public class AuthController {
         return ResponseEntity.ok(new ObtenerToken(token));
     }
     
-    @PutMapping("/editar/registros/usuarios/{id}")
+
+    @GetMapping("/admin/usuarios/buscar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsuarioBusquedaDTO> buscarUsuarioPorEmail(@RequestParam String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        String rol = usuario.getRoles().stream()
+                .findFirst()
+                .map(Role::getName)
+                .orElse("SIN_ROL");
+
+        return ResponseEntity.ok(new UsuarioBusquedaDTO(
+                usuario.getId(),
+                usuario.getName(),
+                usuario.getEmail(),
+                rol
+        ));
+    }
+
+        @PutMapping("/editar/registros/usuarios/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> editarUsuario(@PathVariable Long id, @RequestBody Registrar request) {
         Usuario usuario = usuarioRepository.findById(id)

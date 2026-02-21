@@ -1,5 +1,8 @@
 <h2>Actualizar Citas</h2>
 
+<!-- Mensajes -->
+<div *ngIf="mensajeInfo" class="alert-info">{{ mensajeInfo }}</div>
+
 <!-- Mensajes de error -->
 <div *ngIf="mensajeError" class="alert-error">
   {{ mensajeError }}

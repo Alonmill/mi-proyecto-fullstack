@@ -31,6 +31,14 @@
 </div>
 
 <div>
+  <label for="emailUsuario">Buscar usuario por email:</label>
+  <div class="usuario-search-row">
+    <input id="emailUsuario" [(ngModel)]="emailBusquedaUsuario" [ngModelOptions]="{standalone: true}" placeholder="correo@dominio.com" />
+    <button type="button" (click)="buscarUsuarioPorEmail()">Buscar ID</button>
+  </div>
+</div>
+
+<div>
   <label for="usuarioId">Usuario Id:</label>
   <input id="usuarioId" formControlName="usuarioId" placeholder="Usuario ID" />
   <div class="error" *ngIf="form.get('usuarioId')?.touched">
@@ -64,6 +72,7 @@
 <button type="button" (click)="agregarEnfermedad()">Agregar Enfermedad</button>
 
   <button type="submit">{{ editar ? 'Actualizar' : 'Guardar' }}</button>
+  <button *ngIf="editar" type="button" (click)="cancelarEdicion()">Cancelar</button>
 </form>
 
 <h2>Lista de Pacientes</h2>

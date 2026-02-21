@@ -152,3 +152,12 @@ td button {
   margin-bottom: 15px;
   border: 1px solid #f5c6cb;
 }   
+.usuario-search-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.usuario-search-row input {
+  flex: 1;
+}

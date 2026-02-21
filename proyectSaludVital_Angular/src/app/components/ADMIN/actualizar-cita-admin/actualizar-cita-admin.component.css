@@ -95,3 +95,13 @@ form input {
   border: 1px solid #f5c6cb;
   font-size: 14px;
 }
+
+.alert-info {
+  background: #e7f3ff;
+  color: #0b5394;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border: 1px solid #b6dcff;
+  font-size: 14px;
+}
