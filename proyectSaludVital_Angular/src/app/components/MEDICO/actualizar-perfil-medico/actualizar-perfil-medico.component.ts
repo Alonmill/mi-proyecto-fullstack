@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ObtenerMedicoDTO } from '../../../DTO/obtener-medico-dto';
 import { MedicoService } from '../../../services/medico.service';
@@ -26,6 +26,8 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
     'NEUROLOGIA'
   ];
 
+  readonly diasSemana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'];
+
   constructor(
     private medicoService: MedicoService,
     private fb: FormBuilder,
@@ -38,8 +40,13 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
       telefono: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       especialidad: ['', Validators.required],
-      tarifaConsulta: [0, [Validators.required, Validators.min(0)]]
+      tarifaConsulta: [0, [Validators.required, Validators.min(0)]],
+      horarios: this.fb.array([])
     });
+  }
+
+  get horarios(): FormArray {
+    return this.form.get('horarios') as FormArray;
   }
 
   ngOnInit(): void {
@@ -55,6 +62,15 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
           especialidad: data.especialidad,
           tarifaConsulta: data.tarifaConsulta
         });
+
+        this.horarios.clear();
+        data.horarios?.forEach((horario) => {
+          this.horarios.push(this.crearHorarioFormGroup(horario.dia, horario.horaInicio, horario.horaFin));
+        });
+
+        if (this.horarios.length === 0) {
+          this.agregarHorario();
+        }
       },
       error: () => {
         this.mensajeError = true;
@@ -62,6 +78,34 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
       }
     });
   }
+
+  private crearHorarioFormGroup(dia = 'LUNES', horaInicio = '08:00', horaFin = '12:00'): FormGroup {
+    return this.fb.group({
+      dia: [dia, Validators.required],
+      horaInicio: [horaInicio, Validators.required],
+      horaFin: [horaFin, Validators.required]
+    });
+  }
+
+  agregarHorario(): void {
+    this.horarios.push(this.crearHorarioFormGroup());
+  }
+
+  eliminarHorario(index: number): void {
+    this.horarios.removeAt(index);
+    if (this.horarios.length === 0) {
+      this.agregarHorario();
+    }
+  }
+
+  private horariosSonValidos(): boolean {
+    return this.horarios.controls.every((horarioControl) => {
+      const horaInicio = horarioControl.get('horaInicio')?.value;
+      const horaFin = horarioControl.get('horaFin')?.value;
+      return !!horaInicio && !!horaFin && horaInicio < horaFin;
+    });
+  }
+
 
   guardar(): void {
     this.mensaje = '';
@@ -73,12 +117,18 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
       return;
     }
 
+    if (!this.horariosSonValidos()) {
+      this.form.markAllAsTouched();
+      this.mensajeError = true;
+      this.mensaje = '❌ Verifica que cada horario tenga hora de inicio menor a hora de fin';
+      return;
+    }
+
     const payload = {
       ...this.form.value,
       estado: this.medico.estado,
       disponible: this.medico.disponible,
-      usuarioId: this.medico.usuarioId,
-      horarios: this.medico.horarios
+      usuarioId: this.medico.usuarioId
     };
 
     this.medicoService.actualizarPerfil(payload).subscribe({

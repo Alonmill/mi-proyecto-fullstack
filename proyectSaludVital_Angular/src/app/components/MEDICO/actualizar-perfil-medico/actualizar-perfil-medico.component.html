@@ -29,6 +29,24 @@
       <label>Tarifa de consulta</label>
       <input type="number" formControlName="tarifaConsulta" class="form-control" />
 
+      <div class="horarios-header">
+        <label>Horarios de atención</label>
+        <button type="button" class="btn btn-primary btn-sm" (click)="agregarHorario()">+ Agregar horario</button>
+      </div>
+
+      <div formArrayName="horarios" class="horarios-wrapper">
+        <div class="horario-row" *ngFor="let horario of horarios.controls; let i = index" [formGroupName]="i">
+          <select formControlName="dia" class="form-control">
+            <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
+          </select>
+
+          <input type="time" formControlName="horaInicio" class="form-control" />
+          <input type="time" formControlName="horaFin" class="form-control" />
+
+          <button type="button" class="btn btn-danger btn-sm" (click)="eliminarHorario(i)">Quitar</button>
+        </div>
+      </div>
+
       <div class="actions">
         <button type="submit" class="btn btn-success">Guardar</button>
         <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>

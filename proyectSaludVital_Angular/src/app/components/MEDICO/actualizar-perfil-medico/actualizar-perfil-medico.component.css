@@ -33,6 +33,27 @@ label {
   padding: 10px;
 }
 
+.horarios-header {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.horarios-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.horario-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
 .actions {
   margin-top: 14px;
   display: flex;
@@ -48,12 +69,25 @@ label {
   color: #fff;
 }
 
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
 .btn-success {
   background: #198754;
 }
 
 .btn-secondary {
   background: #6c757d;
+}
+
+.btn-primary {
+  background: #0d6efd;
+}
+
+.btn-danger {
+  background: #dc3545;
 }
 
 .text-danger {
@@ -64,4 +98,10 @@ label {
 .text-success {
   color: #198754;
   font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .horario-row {
+    grid-template-columns: 1fr;
+  }
 }
