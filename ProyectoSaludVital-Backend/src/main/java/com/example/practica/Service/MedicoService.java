@@ -1,6 +1,7 @@
 package com.example.practica.Service;
 
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import com.example.practica.Model.HorarioAtencion;
 import com.example.practica.Model.Medico;
 import com.example.practica.Model.Usuario;
 import com.example.practica.Repository.MedicoRepository;
+import com.example.practica.Repository.RoleRepository;
 import com.example.practica.Repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class MedicoService {
 
     private final MedicoRepository medicoRepo;
     private final UsuarioRepository usuarioRepo;
+    private final RoleRepository roleRepo;
 
     // Listado de medicos - solo ADMIN
     public List<ObtenerMedicoDTO> listarMedicos() {
@@ -88,7 +91,13 @@ public class MedicoService {
         if (request.getUsuarioId() != null) {
             Usuario usuario = usuarioRepo.findById(request.getUsuarioId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-            medicoNuevo.setUsuario(usuario);
+
+            usuario.setRoles(Collections.singleton(
+                    roleRepo.findByName("MEDICO")
+                            .orElseThrow(() -> new RuntimeException("Rol MEDICO no encontrado"))
+            ));
+
+            medicoNuevo.setUsuario(usuarioRepo.save(usuario));
         }
 
         // Agregar horarios

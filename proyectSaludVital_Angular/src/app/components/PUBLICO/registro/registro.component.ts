@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { Router } from '@angular/router';
 import { RegistroService } from '../../../services/registro.service';
 
 @Component({
@@ -16,20 +15,16 @@ export class RegistroComponent implements OnInit {
   registroForm!: FormGroup;
   submitted = false;
 
-  rolesDisponibles: string[] = ['ADMIN', 'PACIENTE', 'MEDICO']; // 👈 los 3 roles
-
   constructor(
     private fb: FormBuilder,
-    private registroService: RegistroService,
-    private router: Router
+    private registroService: RegistroService
   ) {}
 
   ngOnInit(): void {
     this.registroForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(2)]],
-      rol: ['PACIENTE', Validators.required] // 👈 rol por defecto
+      password: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
 
@@ -46,7 +41,7 @@ export class RegistroComponent implements OnInit {
       name: this.registroForm.value.name,
       email: this.registroForm.value.email,
       password: this.registroForm.value.password,
-      role: this.registroForm.value.rol // 👈 backend espera Set<Role>
+      role: 'PACIENTE'
     };
 
     this.registroService.registrarUsuario(userData).subscribe({

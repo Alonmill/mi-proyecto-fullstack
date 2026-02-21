@@ -3,6 +3,7 @@ package com.example.practica.Service;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import com.example.practica.Model.Usuario;
 import com.example.practica.Repository.ExpedienteMedicoRepository;
 import com.example.practica.Repository.MedicoRepository;
 import com.example.practica.Repository.PacienteRepository;
+import com.example.practica.Repository.RoleRepository;
 import com.example.practica.Repository.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
@@ -37,6 +39,7 @@ public class PacienteService {
     private final ExpedienteMedicoRepository expedienteRepo;
     private final UsuarioRepository usuarioRepo;
     private final MedicoRepository medicoRepo;
+    private final RoleRepository roleRepo;
 
 
     public List<PacienteObtenido> listarPacientes() {
@@ -112,6 +115,12 @@ public class PacienteService {
 
         Usuario usu = usuarioRepo.findById(pacienteDTO.getUsuarioId())
                   .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usu.setRoles(Collections.singleton(
+                roleRepo.findByName("PACIENTE")
+                        .orElseThrow(() -> new RuntimeException("Rol PACIENTE no encontrado"))
+        ));
+        usu = usuarioRepo.save(usu);
 
         // Crear paciente
         Paciente pacienteNuevo = Paciente.builder()

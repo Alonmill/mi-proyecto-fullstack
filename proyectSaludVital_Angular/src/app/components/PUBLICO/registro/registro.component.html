@@ -32,14 +32,7 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Rol</label>
-        <select formControlName="rol">
-          <option *ngFor="let rol of rolesDisponibles" [value]="rol">
-            {{ rol }}
-          </option>
-        </select>
-      </div>
+      <p class="subtitle">El registro público crea cuentas únicamente con rol PACIENTE.</p>
 
       <button type="submit" class="btn-primary">
         Registrar

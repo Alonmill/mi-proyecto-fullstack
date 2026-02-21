@@ -41,8 +41,10 @@ public class AuthController {
             return ResponseEntity.badRequest().body("El email ya está registrado");
         }
 
-        Role role = roleRepository.findByName(request.getRole())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        // Seguridad: el registro público siempre crea PACIENTE,
+        // aunque el frontend/envío incluya otro rol.
+        Role role = roleRepository.findByName("PACIENTE")
+                .orElseThrow(() -> new RuntimeException("Rol PACIENTE no encontrado"));
 
         Usuario usuario = Usuario.builder()
                 .name(request.getName())
