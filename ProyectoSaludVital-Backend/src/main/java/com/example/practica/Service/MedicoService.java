@@ -1,6 +1,7 @@
 package com.example.practica.Service;
 
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Collections;
 import java.util.List;
 
@@ -92,10 +93,10 @@ public class MedicoService {
             Usuario usuario = usuarioRepo.findById(request.getUsuarioId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            usuario.setRoles(Collections.singleton(
+            usuario.setRoles(new HashSet<>(Collections.singleton(
                     roleRepo.findByName("MEDICO")
                             .orElseThrow(() -> new RuntimeException("Rol MEDICO no encontrado"))
-            ));
+            )));
 
             medicoNuevo.setUsuario(usuarioRepo.save(usuario));
         }

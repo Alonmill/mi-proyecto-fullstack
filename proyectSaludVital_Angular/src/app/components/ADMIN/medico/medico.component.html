@@ -105,13 +105,27 @@
   
 
   <div formArrayName="horarios">
-    <div *ngFor="let h of horarios.controls; let i=index" [formGroupName]="i">
-      <label>Día:</label>
-      <input formControlName="dia" placeholder="Día" />
-      <label>Hora Inicio:</label>
-      <input formControlName="horaInicio" placeholder="Hora Inicio" />
-      <label>Hora Fin:</label>
-      <input formControlName="horaFin" placeholder="Hora Fin" />
+    <div class="horario-item" *ngFor="let h of horarios.controls; let i=index" [formGroupName]="i">
+      <div class="campo-horario">
+        <label>Día:</label>
+        <select formControlName="dia">
+          <option value="" disabled>Selecciona un día</option>
+          <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
+        </select>
+      </div>
+
+      <div class="campo-horario">
+        <label>Hora Inicio:</label>
+        <input formControlName="horaInicio" type="time" step="60" placeholder="HH:mm" />
+        <small class="hint-hora">Formato 24h: HH:mm</small>
+      </div>
+
+      <div class="campo-horario">
+        <label>Hora Fin:</label>
+        <input formControlName="horaFin" type="time" step="60" placeholder="HH:mm" />
+        <small class="hint-hora">Formato 24h: HH:mm</small>
+      </div>
+
       <button type="button" (click)="eliminarHorario(i)">Eliminar</button>
     </div>
   </div>

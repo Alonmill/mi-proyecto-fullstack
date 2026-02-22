@@ -103,12 +103,23 @@ button[type="button"]:nth-child(odd):hover {
   background: #f9f9f9;
 }
 
-[formArrayName="horarios"] div {
+.horario-item {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;
   gap: 12px;
-  align-items: center;
+  align-items: end;
   margin-bottom: 12px;
+}
+
+.campo-horario {
+  display: flex;
+  flex-direction: column;
+}
+
+.hint-hora {
+  margin-top: 4px;
+  color: #6c757d;
+  font-size: 12px;
 }
 
 /* ====== Tabla de médicos ====== */

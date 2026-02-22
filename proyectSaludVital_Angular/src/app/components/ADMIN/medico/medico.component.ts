@@ -24,6 +24,7 @@ export class MedicoComponent implements OnInit {
   sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
 
   especialidades = ['CARDIOLOGIA', 'PEDIATRIA', 'DERMATOLOGIA', 'GINECOLOGIA', 'NEUROLOGIA'];
+  diasSemana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'];
 
   constructor(
     private medicoService: MedicoService,
