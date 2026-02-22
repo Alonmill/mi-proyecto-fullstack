@@ -91,10 +91,20 @@ export class PacienteComponent {
 
   resolveImageUrl(path?: string): string {
     if (!path) return '/images/no-image-person.svg';
-    if (path.startsWith('http')) return path;
-    if (path.startsWith('/files/')) return `${this.apiUrl}${path}`;
-    if (path.startsWith('files/')) return `${this.apiUrl}/${path}`;
-    return `${this.apiUrl}/files/${path.replace(/^\/+/, '')}`;
+
+    const normalized = path.trim().replace(/\\/g, '/');
+    if (!normalized) return '/images/no-image-person.svg';
+    if (normalized.startsWith('http')) return normalized;
+
+    if (normalized.startsWith('/files/')) return `${this.apiUrl}${encodeURI(normalized)}`;
+    if (normalized.startsWith('files/')) return `${this.apiUrl}/${encodeURI(normalized)}`;
+
+    const uploadsIndex = normalized.indexOf('/uploads/');
+    if (uploadsIndex >= 0) {
+      return `${this.apiUrl}/files/${encodeURI(normalized.substring(uploadsIndex + 1))}`;
+    }
+
+    return `${this.apiUrl}/files/${encodeURI(normalized.replace(/^\/+/, ''))}`;
   }
 
   listarPacientes() {
