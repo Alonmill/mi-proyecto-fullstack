@@ -22,6 +22,7 @@ public class ActualizarMedicoDTO {
     private Boolean disponible;
     private BigDecimal tarifaConsulta;
     private Long usuarioId;  
+    private String imagenUrl;
     private List<HorarioDTO> horarios;
     
 

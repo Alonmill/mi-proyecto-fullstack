@@ -16,5 +16,6 @@ export interface ObtenerMedicoDTO {
   disponible?: boolean;
   tarifaConsulta: number;
   usuarioId: number;
+  imagenUrl?: string;
   horarios: HorarioDTO[];
 }

@@ -12,6 +12,7 @@ import { PacienteService } from '../../../services/paciente.service';
 export class PacienteLayoutComponent implements OnInit {
   nombrePaciente = 'Paciente';
   inicialesPaciente = 'PA';
+  imagenPacienteUrl = '';
 
   constructor(private pacienteService: PacienteService) {}
 
@@ -23,8 +24,14 @@ export class PacienteLayoutComponent implements OnInit {
 
         this.nombrePaciente = nombre;
         this.inicialesPaciente = this.generarInicialesPaciente(nombre);
+        this.imagenPacienteUrl = (paciente as any).imagenUrl || '';
       }
     });
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = '/images/no-image-person.svg';
   }
 
   private generarInicialesPaciente(nombreCompleto: string): string {

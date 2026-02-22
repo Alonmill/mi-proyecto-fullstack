@@ -2,6 +2,8 @@
   <div class="perfil-card">
     <h2>Perfil de {{ medico.nombre }} {{ medico.apellido }}</h2>
 
+    <img class="thumb" [src]="medico.imagenUrl || '/images/no-image-person.svg'" alt="Foto médico">
+
     <div class="perfil-grid">
       <p><strong>Licencia:</strong> {{ medico.numeroLicencia }}</p>
       <p><strong>Email:</strong> {{ medico.email }}</p>

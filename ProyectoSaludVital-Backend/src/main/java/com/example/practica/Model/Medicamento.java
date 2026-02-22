@@ -18,4 +18,6 @@ public class Medicamento {
     private String nombre;
 
     private String descripcion;
+
+    private String imagenUrl;
 }

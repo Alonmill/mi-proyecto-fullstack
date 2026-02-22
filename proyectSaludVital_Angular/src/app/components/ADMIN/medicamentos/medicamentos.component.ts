@@ -57,7 +57,8 @@ export class MedicamentosComponent implements OnInit {
     // Inicializar formulario
     this.medicamentoForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      descripcion: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]]
+      descripcion: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      imagenUrl: ['']
     });
 
     // Cargar lista de medicamentos
@@ -106,7 +107,8 @@ export class MedicamentosComponent implements OnInit {
     this.editarId = medicamento.id;
     this.medicamentoForm.patchValue({
       nombre: medicamento.nombre,
-      descripcion: medicamento.descripcion
+      descripcion: medicamento.descripcion,
+      imagenUrl: medicamento.imagenUrl || ''
     });
   }
 

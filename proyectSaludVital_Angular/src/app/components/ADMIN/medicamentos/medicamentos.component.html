@@ -26,6 +26,11 @@
           </div>
         </div>
 
+        <div class="field">
+          <label for="imagenUrl">URL de Imagen</label>
+          <input type="text" id="imagenUrl" class="form-control" formControlName="imagenUrl" />
+        </div>
+
         <div class="actions-row">
           <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Actualizar' : 'Registrar' }}</button>
           <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancelar</button>
@@ -42,6 +47,7 @@
               <th>ID</th>
               <th>Nombre</th>
               <th>Descripción</th>
+              <th>Imagen</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -50,6 +56,7 @@
               <td>{{ med.id }}</td>
               <td>{{ med.nombre }}</td>
               <td>{{ med.descripcion }}</td>
+              <td><img class="thumb" [src]="med.imagenUrl || '/images/no-image-medicamento.svg'" alt="Imagen medicamento"></td>
               <td>
                 <div class="table-actions">
                   <button class="btn btn-sm btn-warning" (click)="editarMedicamento(med)">Editar</button>

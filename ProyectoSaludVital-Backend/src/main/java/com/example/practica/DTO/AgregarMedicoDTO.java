@@ -19,6 +19,7 @@ public class AgregarMedicoDTO {
     private Especialidad especialidad;
     private BigDecimal tarifaConsulta;
     private Long usuarioId;
+    private String imagenUrl;
     
     private List<HorarioDTO> horarios;
 }

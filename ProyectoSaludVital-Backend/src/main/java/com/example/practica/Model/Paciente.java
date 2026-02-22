@@ -24,6 +24,8 @@ public class Paciente {
 
     private LocalDate fechaNacimiento;
 
+    private String imagenUrl;
+
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;

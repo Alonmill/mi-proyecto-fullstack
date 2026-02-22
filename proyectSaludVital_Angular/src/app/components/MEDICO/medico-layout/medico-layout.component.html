@@ -1,7 +1,7 @@
 <div class="layout-container">
   <aside class="sidebar">
     <div class="medico-profile">
-      <div class="avatar">{{ inicialesMedico }}</div>
+      <img class="avatar avatar-img" [src]="imagenMedicoUrl || '/images/no-image-person.svg'" (error)="onImageError($event)" alt="Foto médico">
       <div class="profile-text">
         <h2 class="title">{{ nombreMedico }}</h2>
         <p class="specialty">Medicina General</p>

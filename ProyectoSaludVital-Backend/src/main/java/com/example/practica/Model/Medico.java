@@ -48,6 +48,8 @@ public class Medico {
 
     private BigDecimal tarifaConsulta;
 
+    private String imagenUrl;
+
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;

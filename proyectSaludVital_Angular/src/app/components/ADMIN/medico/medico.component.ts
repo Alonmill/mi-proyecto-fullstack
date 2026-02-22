@@ -44,6 +44,7 @@ export class MedicoComponent implements OnInit {
       especialidad: ['', Validators.required],
       tarifaConsulta: [0, Validators.required],
       usuarioId: [null, Validators.required],
+      imagenUrl: [''],
       disponible: [null, Validators.required],
       estado: ['ACTIVO', Validators.required],
       horarios: this.fb.array([])
@@ -145,6 +146,7 @@ export class MedicoComponent implements OnInit {
       especialidad: medico.especialidad,
       tarifaConsulta: medico.tarifaConsulta,
       usuarioId: medico.usuarioId,
+      imagenUrl: (medico as any).imagenUrl || '',
       estado: medico.estado,
       disponible: medico.disponible
     });

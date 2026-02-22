@@ -83,7 +83,8 @@ public class PacienteService {
                 paciente.getFechaNacimiento(),
                 nombresAlergias,
                 nombresEnfermedades,
-                paciente.getUsuario().getId()
+                paciente.getUsuario().getId(),
+                paciente.getImagenUrl()
         );
     }
     
@@ -128,6 +129,7 @@ public class PacienteService {
                 .numeroIdentificacion(pacienteDTO.getNumeroIdentificacion())
                 .fechaNacimiento(fechaNaci)
                 .nombre(pacienteDTO.getNombre())
+                .imagenUrl(pacienteDTO.getImagenUrl())
                 .usuario(usu)
                 .build();
 
@@ -175,7 +177,8 @@ public class PacienteService {
                 guardado.getFechaNacimiento(),
                 nombresAlergias,
                 nombresEnfermedades,
-                guardado.getUsuario().getId()
+                guardado.getUsuario().getId(),
+                guardado.getImagenUrl()
         );
     }
 
@@ -201,6 +204,7 @@ public class PacienteService {
         paciente.setNombre(pacienteDTO.getNombre());
         paciente.setNumeroIdentificacion(pacienteDTO.getNumeroIdentificacion());
         paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
+        paciente.setImagenUrl(pacienteDTO.getImagenUrl());
 
         // Actualizar alergias: eliminamos las anteriores y agregamos las nuevas
         paciente.getAlergias().clear();
@@ -245,7 +249,8 @@ public class PacienteService {
                  guardado.getFechaNacimiento(),
                  nombresAlergias,
                  nombresEnfermedades,
-                 guardado.getUsuario().getId()
+                 guardado.getUsuario().getId(),
+                 guardado.getImagenUrl()
         );
     }
 
@@ -275,7 +280,8 @@ public class PacienteService {
                 paciente.getFechaNacimiento(),
                 nombresAlergias,
                 nombresEnfermedades,
-                paciente.getUsuario().getId()
+                paciente.getUsuario().getId(),
+                paciente.getImagenUrl()
         );
     }
 

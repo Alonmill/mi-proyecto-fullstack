@@ -60,7 +60,13 @@
 
   
 
-  <div class="grupo-seccion" formArrayName="alergias">
+  
+<div>
+  <label for="imagenUrl">URL de Imagen:</label>
+  <input id="imagenUrl" formControlName="imagenUrl" placeholder="https://..." />
+</div>
+
+<div class="grupo-seccion" formArrayName="alergias">
   <h3>Alergias</h3>
   <div class="item-seccion" *ngFor="let a of alergias.controls; let i=index" [formGroupName]="i">
     <label>Nombre Alergia:</label>
@@ -95,6 +101,7 @@
       <th>Numero Identificacion</th>
       <th>Fecha de Nacimiento</th>
       <th>Usuario ID</th>
+      <th>Foto</th>
       <th>Alergias</th>
       <th>Enfermedades</th>
       <th>Acciones</th>
@@ -107,6 +114,7 @@
       <td>{{ p.numeroIdentificacion }}</td>
       <td>{{ p.fechaNacimiento}}</td>
       <td>{{ p.usuarioId }}</td>
+      <td><img class="thumb" [src]="p.imagenUrl || '/images/no-image-person.svg'" alt="Foto paciente"></td>
       <td>
         <button type="button" (click)="p.showAlergias = !p.showAlergias">
           {{ p.showAlergias ? 'Ocultar' : 'Ver Alergias' }}

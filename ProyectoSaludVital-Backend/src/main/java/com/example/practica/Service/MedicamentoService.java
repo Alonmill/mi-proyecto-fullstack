@@ -40,6 +40,7 @@ public class MedicamentoService {
 	   
 	    medicamento.setNombre(datosMedicamento.getNombre());
 	    medicamento.setDescripcion(datosMedicamento.getDescripcion());
+    medicamento.setImagenUrl(datosMedicamento.getImagenUrl());
 
 	    return medicamenRepo.save(medicamento);
 	}

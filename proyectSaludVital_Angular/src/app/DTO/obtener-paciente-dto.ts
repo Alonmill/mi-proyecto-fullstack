@@ -14,4 +14,5 @@ export interface ObtenerPacienteDTO{
   alergias: string[];
   enfermedades: string[];
   usuarioId: number; // Long en Java se mapea como number en TypeScript
+  imagenUrl?: string;
 }

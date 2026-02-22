@@ -64,7 +64,8 @@ export class PacienteComponent {
       fechaNacimiento: ['', Validators.required],
       alergias: this.fb.array([]),
       enfermedades: this.fb.array([]),
-      usuarioId: [null, [Validators.required, Validators.pattern(/^\d+$/)]]
+      usuarioId: [null, [Validators.required, Validators.pattern(/^\d+$/)]],
+      imagenUrl: ['']
     });
   }
 
@@ -134,7 +135,8 @@ export class PacienteComponent {
       nombre: paciente.nombre,
       numeroIdentificacion: paciente.numeroIdentificacion,
       fechaNacimiento: paciente.fechaNacimiento,
-      usuarioId: paciente.usuarioId
+      usuarioId: paciente.usuarioId,
+      imagenUrl: (paciente as any).imagenUrl || ''
     });
 
     this.alergias.clear();

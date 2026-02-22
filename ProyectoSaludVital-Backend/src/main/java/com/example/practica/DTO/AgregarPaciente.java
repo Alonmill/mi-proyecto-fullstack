@@ -27,5 +27,6 @@ public class AgregarPaciente {
 	private List<String> enfermedades;
 	
 	private Long usuarioId;
+	private String imagenUrl;
 	
 }

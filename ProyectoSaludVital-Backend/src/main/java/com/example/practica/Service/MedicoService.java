@@ -59,6 +59,7 @@ public class MedicoService {
                             m.isDisponible(),
                             m.getTarifaConsulta(),
                             m.getUsuario() != null ? m.getUsuario().getId() : null,
+                            m.getImagenUrl(),
                             horariosDTO
                     );
                 })
@@ -87,6 +88,7 @@ public class MedicoService {
         medicoNuevo.setEstado(EstadoDoctor.ACTIVO);
         medicoNuevo.setDisponible(true);
         medicoNuevo.setTarifaConsulta(request.getTarifaConsulta());
+        medicoNuevo.setImagenUrl(request.getImagenUrl());
 
         // Relacionar usuario si se proporciona
         if (request.getUsuarioId() != null) {
@@ -149,6 +151,7 @@ public class MedicoService {
             medico.setDisponible(request.getDisponible());
         }
         medico.setTarifaConsulta(request.getTarifaConsulta());
+        medico.setImagenUrl(request.getImagenUrl());
         if (request.getUsuarioId() != null) {
             Usuario usuario = usuarioRepo.findById(request.getUsuarioId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -194,6 +197,7 @@ public class MedicoService {
         medico.setEmail(request.getEmail());
         medico.setEspecialidad(request.getEspecialidad());
         medico.setTarifaConsulta(request.getTarifaConsulta());
+        medico.setImagenUrl(request.getImagenUrl());
 
         if (request.getHorarios() != null) {
             medico.getHorarios().clear();
@@ -247,6 +251,7 @@ public class MedicoService {
     	        m.isDisponible(),
     	        m.getTarifaConsulta(),
     	        m.getUsuario().getId(),
+    	        m.getImagenUrl(),
     	        horariosDTO
     	);
     }

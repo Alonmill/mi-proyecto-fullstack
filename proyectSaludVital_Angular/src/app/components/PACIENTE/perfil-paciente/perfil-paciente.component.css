@@ -190,3 +190,4 @@ small.text-danger {
   display: block;
   font-size: 12px;
 }
+.thumb { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid #d0d7de; margin-top: 8px; }

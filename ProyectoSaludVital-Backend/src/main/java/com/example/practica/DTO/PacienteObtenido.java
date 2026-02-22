@@ -19,4 +19,5 @@ public class PacienteObtenido {
 	private List<String> alergias;
 	private List<String> enfermedades;
     private Long usuarioId;
+    private String imagenUrl;
 }

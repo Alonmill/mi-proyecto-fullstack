@@ -10,6 +10,7 @@
       <p><strong>Número de identificación:</strong> {{ paciente.numeroIdentificacion }}</p>
       <p><strong>Fecha de nacimiento:</strong> {{ paciente.fechaNacimiento }}</p>
       <p><strong>Usuario ID:</strong> {{ paciente.usuarioId }}</p>
+      <img class="thumb" [src]="paciente.imagenUrl || '/images/no-image-person.svg'" alt="Foto paciente">
     </div>
 
     <div class="card-section">

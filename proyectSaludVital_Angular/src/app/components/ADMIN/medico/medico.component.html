@@ -68,6 +68,12 @@
   </div>
 </div>
 
+
+<div>
+  <label for="imagenUrl">URL de Imagen:</label>
+  <input id="imagenUrl" formControlName="imagenUrl" placeholder="https://..." />
+</div>
+
 <div>
   <label for="estado">Estado:</label>
   <input id="estado" formControlName="estado" type="text" placeholder="Estado" />
@@ -151,6 +157,7 @@
       <th>Disponible</th>
       <th>Tarifa</th>
       <th>Usuario ID</th>
+      <th>Foto</th>
       <th>Horarios</th>
       <th>Acciones</th>
     </tr>
@@ -167,6 +174,7 @@
       <td>{{ m.disponible ? 'Sí' : 'No' }}</td>
       <td>{{ m.tarifaConsulta }}</td>
       <td>{{ m.usuarioId }}</td>
+      <td><img class="thumb" [src]="m.imagenUrl || '/images/no-image-person.svg'" alt="Foto médico"></td>
       <td>
         <button type="button" (click)="m.showHorarios = !m.showHorarios">
           {{ m.showHorarios ? 'Ocultar' : 'Ver horarios' }}

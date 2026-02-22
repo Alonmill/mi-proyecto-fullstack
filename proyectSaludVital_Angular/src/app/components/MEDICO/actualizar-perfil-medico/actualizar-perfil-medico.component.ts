@@ -41,6 +41,7 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       especialidad: ['', Validators.required],
       tarifaConsulta: [0, [Validators.required, Validators.min(0)]],
+      imagenUrl: [''],
       horarios: this.fb.array([])
     });
   }
@@ -60,7 +61,8 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
           telefono: data.telefono,
           email: data.email,
           especialidad: data.especialidad,
-          tarifaConsulta: data.tarifaConsulta
+          tarifaConsulta: data.tarifaConsulta,
+          imagenUrl: data.imagenUrl || ''
         });
 
         this.horarios.clear();
@@ -128,7 +130,8 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
       ...this.form.value,
       estado: this.medico.estado,
       disponible: this.medico.disponible,
-      usuarioId: this.medico.usuarioId
+      usuarioId: this.medico.usuarioId,
+      imagenUrl: this.form.value.imagenUrl
     };
 
     this.medicoService.actualizarPerfil(payload).subscribe({

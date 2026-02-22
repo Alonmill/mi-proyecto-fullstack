@@ -30,7 +30,8 @@ export class PerfilPacienteComponent implements OnInit {
       fechaNacimiento: ['', Validators.required],
       alergias: this.fb.array([]), 
       enfermedades: this.fb.array([]), 
-      usuarioId: [null] 
+      usuarioId: [null],
+      imagenUrl: [''] 
   });
   }
 
@@ -82,7 +83,8 @@ get alergias(): FormArray{
       nombre: paciente.nombre,
       numeroIdentificacion: paciente.numeroIdentificacion,
       fechaNacimiento: paciente.fechaNacimiento,
-      usuarioId: paciente.usuarioId
+      usuarioId: paciente.usuarioId,
+      imagenUrl: (paciente as any).imagenUrl || ''
     });
   
     // --- Alergias ---

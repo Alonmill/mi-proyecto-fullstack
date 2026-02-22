@@ -24,5 +24,6 @@ public class ObtenerMedicoDTO {
     private boolean disponible;
     private BigDecimal tarifaConsulta;
     private long usuarioId;
+    private String imagenUrl;
     private List<HorarioDTO> horarios;
 }
