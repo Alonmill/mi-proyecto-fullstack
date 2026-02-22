@@ -46,6 +46,21 @@ export class ApiService {
     return this.http.get<T>(`${this.apiUrl}/${endpoint}`, { headers: this.getHeaders() });
   }
 
+  getWithParams<T>(endpoint: string, params: Record<string, string>): Observable<T> {
+    return this.http.get<T>(`${this.apiUrl}/${endpoint}`, {
+      headers: this.getHeaders(),
+      params
+    });
+  }
+
+  getBlob(endpoint: string, params?: Record<string, string>): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${endpoint}`, {
+      headers: this.getHeaders(),
+      params,
+      responseType: 'blob'
+    });
+  }
+
   post<T>(endpoint: string, data: any, expectText = false): Observable<T> {
     if (expectText) {
       return this.http.post(`${this.apiUrl}/${endpoint}`, data, {

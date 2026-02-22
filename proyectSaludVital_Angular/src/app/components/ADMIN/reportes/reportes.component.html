@@ -1,0 +1,47 @@
+<div class="reportes-wrapper">
+  <div class="header">
+    <h1>Reportes Administrativos</h1>
+    <p>Genera y exporta reportes PDF con datos clínicos y administrativos actualizados.</p>
+  </div>
+
+  <div class="cards-grid">
+    <article class="reporte-card" *ngFor="let card of reportes">
+      <h3>{{ card.key }}</h3>
+      <p>{{ card.descripcion }}</p>
+
+      <div class="fecha-row" *ngIf="card.requiresDate">
+        <label for="fechaDia">Fecha:</label>
+        <input id="fechaDia" type="date" [(ngModel)]="fechaPacientesDia" />
+      </div>
+
+      <div class="acciones">
+        <button class="btn btn-outline" (click)="generar(card)">Generar Reporte</button>
+        <button class="btn btn-primary" (click)="exportar(card)">Exportar a PDF</button>
+      </div>
+    </article>
+  </div>
+
+  <p class="estado" *ngIf="cargando">Cargando reporte...</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <section class="preview" *ngIf="reporteActual">
+    <h2>{{ reporteActual.titulo }}</h2>
+    <p class="meta">Generado: {{ reporteActual.fechaGeneracion | date: 'dd/MM/yyyy HH:mm' }}</p>
+    <p class="meta" *ngIf="reporteSeleccionado">Vista previa: {{ reporteSeleccionado }}</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th *ngFor="let h of reporteActual.headers">{{ h }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of reporteActual.rows">
+            <td *ngFor="let col of row">{{ col }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

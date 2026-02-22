@@ -30,6 +30,7 @@ import { ActualizarPerfilMedicoComponent } from './components/MEDICO/actualizar-
 import { CrearExpedienteComponent } from './components/MEDICO/crear-expediente/crear-expediente.component';
 import { CancelarCitaComponent } from './components/ADMIN/cancelar-cita-admin/cancelar-cita.component';
 import { ListadoCitasComponent } from './components/ADMIN/listado-citas/listado-citas.component';
+import { ReportesComponent } from './components/ADMIN/reportes/reportes.component';
 
 export const routes: Routes = [
 
@@ -98,6 +99,7 @@ export const routes: Routes = [
     { path: 'actualizar-cita', component: ActualizarCitaAdminComponent },
     { path: 'cancelar-cita', component: CancelarCitaComponent },
     { path: 'listado-citas', component: ListadoCitasComponent },
+    { path: 'reportes', component: ReportesComponent },
 
     // Expedientes solo ADMIN
     { path: 'listado-expedientes', component: ListadoExpedientesComponent }

@@ -2,12 +2,15 @@ package com.example.practica.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.practica.DTO.ReporteTablaDTO;
 import com.example.practica.Model.Cita;
 import com.example.practica.Model.EntradaHistorial;
 import com.example.practica.Model.ExpedienteMedico;
@@ -37,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 public class ReportesService {
 
     private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final CitaRepository citaRepository;
     private final RecetaRepository recetaRepository;
@@ -45,13 +49,14 @@ public class ReportesService {
     private final MedicoRepository medicoRepository;
     private final MedicamentoRepository medicamentoRepository;
 
-    public byte[] reporteCitasPdf() {
+    public ReporteTablaDTO dataCitas() {
         List<Cita> citas = citaRepository.findAll().stream()
                 .sorted(Comparator.comparing(Cita::getFecha).thenComparing(Cita::getHora))
                 .toList();
 
-        return crearDocumento("Reporte de Citas", new String[] { "Fecha", "Hora", "Paciente", "Médico", "Motivo",
-                "Estado", "Tarifa Médico", "Monto Consulta" }, citas.stream().map(c -> new String[] {
+        return tabla("Reporte de Citas",
+                List.of("Fecha", "Hora", "Paciente", "Médico", "Motivo", "Estado", "Tarifa Médico", "Monto Consulta"),
+                citas.stream().map(c -> List.of(
                         safeDate(c.getFecha()),
                         c.getHora() != null ? c.getHora().toString() : "-",
                         c.getPaciente() != null ? c.getPaciente().getNombre() : "-",
@@ -60,16 +65,21 @@ public class ReportesService {
                         c.getEstado() != null ? c.getEstado().name() : "-",
                         money(c.getMedico() != null ? c.getMedico().getTarifaConsulta() : null),
                         money(c.getTarifaAplicada())
-                }).toList());
+                )).toList());
     }
 
-    public byte[] reporteRecetasPdf() {
+    public byte[] reporteCitasPdf() {
+        return crearDocumento(dataCitas());
+    }
+
+    public ReporteTablaDTO dataRecetas() {
         List<Receta> recetas = recetaRepository.findAll().stream()
                 .sorted(Comparator.comparing(Receta::getFechaEmision, Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
 
-        return crearDocumento("Reporte de Recetas", new String[] { "ID", "Paciente", "Médico", "Estado", "Emisión",
-                "Caducidad", "Medicamentos" }, recetas.stream().map(r -> new String[] {
+        return tabla("Reporte de Recetas",
+                List.of("ID", "Paciente", "Médico", "Estado", "Emisión", "Caducidad", "Medicamentos"),
+                recetas.stream().map(r -> List.of(
                         String.valueOf(r.getId()),
                         r.getPaciente() != null ? r.getPaciente().getNombre() : "-",
                         nombreCompleto(r.getMedico()),
@@ -77,21 +87,116 @@ public class ReportesService {
                         safeDate(r.getFechaEmision()),
                         safeDate(r.getFechaCaducidad()),
                         r.getItems() != null ? String.valueOf(r.getItems().size()) : "0"
-                }).toList());
+                )).toList());
     }
 
-    public byte[] reporteExpedientesPdf() {
+    public byte[] reporteRecetasPdf() {
+        return crearDocumento(dataRecetas());
+    }
+
+    public ReporteTablaDTO dataExpedientes() {
         List<ExpedienteMedico> expedientes = expedienteRepository.findAll();
 
-        return crearDocumento("Reporte de Expedientes", new String[] { "Expediente", "Paciente", "Médico", "Fecha Entrada",
-                "Diagnóstico", "Tratamiento", "Tarifa Médico", "Monto Consulta" },
+        return tabla("Reporte de Expedientes",
+                List.of("Expediente", "Paciente", "Médico", "Fecha Entrada", "Diagnóstico", "Tratamiento", "Tarifa Médico", "Monto Consulta"),
                 expedientes.stream().flatMap(exp -> exp.getEntradas().stream().map(en -> rowExpediente(exp, en))).toList());
     }
 
-    private String[] rowExpediente(ExpedienteMedico expediente, EntradaHistorial entrada) {
+    public byte[] reporteExpedientesPdf() {
+        return crearDocumento(dataExpedientes());
+    }
+
+    public ReporteTablaDTO dataPacientes() {
+        List<Paciente> pacientes = pacienteRepository.findAll().stream()
+                .sorted(Comparator.comparing(Paciente::getNombre, Comparator.nullsLast(String::compareToIgnoreCase)))
+                .toList();
+
+        return tabla("Reporte de Pacientes",
+                List.of("Nombre", "Identificación", "Nacimiento", "Alergias", "Enfermedades"),
+                pacientes.stream().map(p -> List.of(
+                        safe(p.getNombre()),
+                        safe(p.getNumeroIdentificacion()),
+                        safeDate(p.getFechaNacimiento()),
+                        p.getAlergias() != null ? String.valueOf(p.getAlergias().size()) : "0",
+                        p.getEnfermedades() != null ? String.valueOf(p.getEnfermedades().size()) : "0"
+                )).toList());
+    }
+
+    public byte[] reportePacientesPdf() {
+        return crearDocumento(dataPacientes());
+    }
+
+    public ReporteTablaDTO dataPacientesPorDia(LocalDate fecha) {
+        LocalDate dia = fecha != null ? fecha : LocalDate.now();
+        List<Cita> citasDelDia = citaRepository.findAll().stream()
+                .filter(c -> dia.equals(c.getFecha()))
+                .sorted(Comparator.comparing(Cita::getHora))
+                .toList();
+
+        return tabla("Reporte de Pacientes por Día - " + dia.format(DF),
+                List.of("Fecha", "Hora", "Paciente", "Médico", "Estado", "Tarifa Médico", "Monto Consulta"),
+                citasDelDia.stream().map(c -> List.of(
+                        safeDate(c.getFecha()),
+                        c.getHora() != null ? c.getHora().toString() : "-",
+                        c.getPaciente() != null ? c.getPaciente().getNombre() : "-",
+                        nombreCompleto(c.getMedico()),
+                        c.getEstado() != null ? c.getEstado().name() : "-",
+                        money(c.getMedico() != null ? c.getMedico().getTarifaConsulta() : null),
+                        money(c.getTarifaAplicada())
+                )).toList());
+    }
+
+    public byte[] reportePacientesPorDiaPdf(LocalDate fecha) {
+        return crearDocumento(dataPacientesPorDia(fecha));
+    }
+
+    public ReporteTablaDTO dataMedicos() {
+        List<Medico> medicos = medicoRepository.findAll().stream()
+                .sorted(Comparator.comparing(Medico::getNombre, Comparator.nullsLast(String::compareToIgnoreCase)))
+                .toList();
+
+        return tabla("Reporte de Médicos",
+                List.of("Nombre", "Licencia", "Especialidad", "Estado", "Disponible", "Tarifa Consulta"),
+                medicos.stream().map(m -> List.of(
+                        nombreCompleto(m),
+                        safe(m.getNumeroLicencia()),
+                        m.getEspecialidad() != null ? m.getEspecialidad().name() : "-",
+                        m.getEstado() != null ? m.getEstado().name() : "-",
+                        m.isDisponible() ? "Sí" : "No",
+                        money(m.getTarifaConsulta())
+                )).toList());
+    }
+
+    public byte[] reporteMedicosPdf() {
+        return crearDocumento(dataMedicos());
+    }
+
+    public ReporteTablaDTO dataMedicamentos() {
+        List<Medicamento> medicamentos = medicamentoRepository.findAll().stream()
+                .sorted(Comparator.comparing(Medicamento::getNombre, Comparator.nullsLast(String::compareToIgnoreCase)))
+                .toList();
+
+        return tabla("Reporte de Medicamentos",
+                List.of("ID", "Nombre", "Descripción"),
+                medicamentos.stream().map(m -> List.of(
+                        String.valueOf(m.getId()),
+                        safe(m.getNombre()),
+                        safe(m.getDescripcion())
+                )).toList());
+    }
+
+    public byte[] reporteMedicamentosPdf() {
+        return crearDocumento(dataMedicamentos());
+    }
+
+    private ReporteTablaDTO tabla(String titulo, List<String> headers, List<List<String>> rows) {
+        return new ReporteTablaDTO(titulo, LocalDateTime.now(), headers, rows);
+    }
+
+    private List<String> rowExpediente(ExpedienteMedico expediente, EntradaHistorial entrada) {
         Medico medico = entrada.getMedico();
         Cita cita = entrada.getCita();
-        return new String[] {
+        return List.of(
                 String.valueOf(expediente.getId()),
                 expediente.getPaciente() != null ? expediente.getPaciente().getNombre() : "-",
                 nombreCompleto(medico),
@@ -100,73 +205,30 @@ public class ReportesService {
                 safe(entrada.getTratamiento()),
                 money(medico != null ? medico.getTarifaConsulta() : null),
                 money(cita != null ? cita.getTarifaAplicada() : null)
-        };
+        );
     }
 
-    public byte[] reportePacientesPdf() {
-        List<Paciente> pacientes = pacienteRepository.findAll().stream()
-                .sorted(Comparator.comparing(Paciente::getNombre, Comparator.nullsLast(String::compareToIgnoreCase)))
-                .toList();
-
-        return crearDocumento("Reporte de Pacientes", new String[] { "Nombre", "Identificación", "Nacimiento", "Alergias",
-                "Enfermedades" }, pacientes.stream().map(p -> new String[] {
-                        safe(p.getNombre()),
-                        safe(p.getNumeroIdentificacion()),
-                        safeDate(p.getFechaNacimiento()),
-                        p.getAlergias() != null ? String.valueOf(p.getAlergias().size()) : "0",
-                        p.getEnfermedades() != null ? String.valueOf(p.getEnfermedades().size()) : "0"
-                }).toList());
-    }
-
-    public byte[] reporteMedicosPdf() {
-        List<Medico> medicos = medicoRepository.findAll().stream()
-                .sorted(Comparator.comparing(Medico::getNombre, Comparator.nullsLast(String::compareToIgnoreCase)))
-                .toList();
-
-        return crearDocumento("Reporte de Médicos", new String[] { "Nombre", "Licencia", "Especialidad", "Estado", "Disponible",
-                "Tarifa Consulta" }, medicos.stream().map(m -> new String[] {
-                        nombreCompleto(m),
-                        safe(m.getNumeroLicencia()),
-                        m.getEspecialidad() != null ? m.getEspecialidad().name() : "-",
-                        m.getEstado() != null ? m.getEstado().name() : "-",
-                        m.isDisponible() ? "Sí" : "No",
-                        money(m.getTarifaConsulta())
-                }).toList());
-    }
-
-    public byte[] reporteMedicamentosPdf() {
-        List<Medicamento> medicamentos = medicamentoRepository.findAll().stream()
-                .sorted(Comparator.comparing(Medicamento::getNombre, Comparator.nullsLast(String::compareToIgnoreCase)))
-                .toList();
-
-        return crearDocumento("Reporte de Medicamentos", new String[] { "ID", "Nombre", "Descripción" },
-                medicamentos.stream().map(m -> new String[] {
-                        String.valueOf(m.getId()),
-                        safe(m.getNombre()),
-                        safe(m.getDescripcion())
-                }).toList());
-    }
-
-    private byte[] crearDocumento(String titulo, String[] headers, List<String[]> rows) {
+    private byte[] crearDocumento(ReporteTablaDTO reporte) {
         Document doc = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfWriter.getInstance(doc, out);
         doc.open();
 
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 15);
-        doc.add(new Paragraph(titulo, titleFont));
+        doc.add(new Paragraph(reporte.getTitulo(), titleFont));
+        doc.add(new Paragraph("Fecha de generación: " + reporte.getFechaGeneracion().format(DTF)));
         doc.add(new Paragraph("\n"));
 
-        PdfPTable table = new PdfPTable(headers.length);
+        PdfPTable table = new PdfPTable(reporte.getHeaders().size());
         table.setWidthPercentage(100);
 
-        for (String h : headers) {
+        for (String h : reporte.getHeaders()) {
             PdfPCell cell = new PdfPCell(new Phrase(h));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
             table.addCell(cell);
         }
 
-        for (String[] row : rows) {
+        for (List<String> row : reporte.getRows()) {
             for (String value : row) {
                 table.addCell(new Phrase(safe(value)));
             }
@@ -181,7 +243,7 @@ public class ReportesService {
         return value == null ? "-" : String.valueOf(value);
     }
 
-    private String safeDate(java.time.LocalDate date) {
+    private String safeDate(LocalDate date) {
         return date == null ? "-" : date.format(DF);
     }
 
