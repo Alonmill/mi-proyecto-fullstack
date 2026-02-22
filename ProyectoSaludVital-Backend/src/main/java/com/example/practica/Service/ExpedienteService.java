@@ -60,7 +60,7 @@ public class ExpedienteService {
                                     entrada.getHora(),
                                     entrada.getDiagnostico(),
                                     entrada.getTratamiento(),
-                                    entrada.getMedico().getNombre(),
+                                    nombreCompletoMedico(entrada.getMedico()),
                                     exp.getPaciente().getNumeroIdentificacion(),
                                     entrada.getCita() != null ? entrada.getCita().getEstado() : null
                             ))
@@ -72,10 +72,14 @@ public class ExpedienteService {
 
 
 
+    private String nombreCompletoMedico(Medico medico) {
+        return medico.getNombre() + " " + medico.getApellido();
+    }
+
     private String obtenerNombreMedicoPrincipal(ExpedienteMedico expediente) {
         return expediente.getEntradas().stream()
                 .findFirst()
-                .map(e -> e.getMedico().getNombre())
+                .map(e -> nombreCompletoMedico(e.getMedico()))
                 .orElse("Sin médico asignado");
     }
 
@@ -119,7 +123,7 @@ public class ExpedienteService {
                                 entrada.getHora(),
                                 entrada.getDiagnostico(),
                                 entrada.getTratamiento(),
-                                entrada.getMedico().getNombre(),
+                                nombreCompletoMedico(entrada.getMedico()),
                                 expediente.getPaciente().getNumeroIdentificacion(),
                                 entrada.getCita().getEstado()
                         ))
@@ -175,7 +179,7 @@ public class ExpedienteService {
                                 eh.getHora(),
                                 eh.getDiagnostico(),
                                 eh.getTratamiento(),
-                                eh.getMedico().getNombre(),
+                                nombreCompletoMedico(eh.getMedico()),
                                 guardado.getPaciente().getNumeroIdentificacion(),
                                 eh.getCita().getEstado()
                         ))

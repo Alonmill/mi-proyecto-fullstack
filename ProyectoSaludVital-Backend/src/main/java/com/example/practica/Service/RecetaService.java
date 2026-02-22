@@ -260,12 +260,16 @@ public class RecetaService {
                 .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
     }
 
+    private String nombreCompletoMedico(Medico medico) {
+        return medico.getNombre() + " " + medico.getApellido();
+    }
+
     private ObtenerRecetaDTO mapToDTO(Receta receta) {
         return ObtenerRecetaDTO.builder()
                 .id(receta.getId())
                 .fechaEmision(receta.getFechaEmision())
                 .fechaCaducidad(receta.getFechaCaducidad())
-                .medicoNombre(receta.getMedico().getNombre())
+                .medicoNombre(nombreCompletoMedico(receta.getMedico()))
                 .pacienteNombre(receta.getPaciente().getNombre())
                 .estado(receta.getEstado().name())
                 .items(

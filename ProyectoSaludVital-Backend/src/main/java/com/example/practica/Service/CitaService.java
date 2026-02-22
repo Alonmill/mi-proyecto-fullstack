@@ -135,7 +135,7 @@ public class CitaService {
                 guardada.getHora(),
                 guardada.getMotivo(),
                 guardada.getPaciente().getNombre(),
-                guardada.getMedico().getNombre(),
+                nombreCompletoMedico(guardada.getMedico()),
                 guardada.getMedico().getId());
     }
 
@@ -227,7 +227,7 @@ public class CitaService {
                 guardada.getHora(),
                 guardada.getMotivo(),
                 guardada.getPaciente().getNombre(),
-                guardada.getMedico().getNombre(),
+                nombreCompletoMedico(guardada.getMedico()),
                 guardada.getMedico().getId());
     }
 
@@ -255,7 +255,7 @@ public class CitaService {
                         c.getHora(),
                         c.getMotivo(),
                         c.getPaciente().getNombre(),
-                        c.getMedico().getNombre(),
+                        nombreCompletoMedico(c.getMedico()),
                         c.getMedico().getId()))
                 .collect(Collectors.toList());
     }
@@ -327,10 +327,15 @@ public class CitaService {
         dto.setMotivo(c.getMotivo());
         dto.setPacienteId(c.getPaciente().getId());
         dto.setPacienteNombre(c.getPaciente().getNombre());
-        dto.setMedicoNombre(c.getMedico().getNombre());
+        dto.setMedicoNombre(nombreCompletoMedico(c.getMedico()));
         dto.setTarifa(c.getTarifaAplicada());
         dto.setEstado(c.getEstado().name());
         return dto;
+    }
+
+
+    private String nombreCompletoMedico(Medico medico) {
+        return medico.getNombre() + " " + medico.getApellido();
     }
 
     private boolean estaDentroDeVentanaDeAtencion(Cita cita) {

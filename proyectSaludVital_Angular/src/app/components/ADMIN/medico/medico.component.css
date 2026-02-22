@@ -26,7 +26,7 @@ h2 {
 }
 
 /* ====== Inputs ====== */
-form div {
+form > div {
   display: flex;
   flex-direction: column;
 }
@@ -104,8 +104,8 @@ button[type="button"]:nth-child(odd):hover {
 }
 
 .horario-item {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   gap: 12px;
   align-items: end;
   margin-bottom: 12px;
@@ -114,6 +114,7 @@ button[type="button"]:nth-child(odd):hover {
 .campo-horario {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .hint-hora {
@@ -223,4 +224,15 @@ td button {
 
 .autocomplete-list li:hover {
   background: #f1f8ff;
+}
+
+
+@media (max-width: 900px) {
+  .horario-item {
+    grid-template-columns: 1fr;
+  }
+
+  .horario-item button {
+    width: 100%;
+  }
 }
