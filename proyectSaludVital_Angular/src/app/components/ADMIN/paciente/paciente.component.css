@@ -240,3 +240,17 @@ ul li {
 .btn-primary:hover {
   background: #2980b9 !important;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 24px;
+  flex-wrap: wrap;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #fff;
+}

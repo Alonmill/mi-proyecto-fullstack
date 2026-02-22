@@ -98,3 +98,24 @@ p.error {
   color: #e74c3c;
   font-weight: bold;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #fff;
+}

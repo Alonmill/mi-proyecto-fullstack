@@ -99,3 +99,24 @@ tbody tr:hover {
 .estado-atendida { background: #d1e7dd; color: #0f5132; }
 .estado-programada { background: #fff3cd; color: #856404; }
 .estado-default { background: #e9ecef; color: #495057; }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #fff;
+}

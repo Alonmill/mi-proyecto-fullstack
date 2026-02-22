@@ -245,3 +245,17 @@ td button {
     width: 100%;
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 24px;
+  flex-wrap: wrap;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #fff;
+}

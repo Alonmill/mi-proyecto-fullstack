@@ -24,6 +24,35 @@ export class PacienteComponent {
   emailBusquedaUsuario = '';
   sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
 
+  paginaActual = 1;
+  readonly registrosPorPagina = 10;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.pacientes.length / this.registrosPorPagina));
+  }
+
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  get pacientesPaginados(): PacienteConMostrar[] {
+    const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+    return this.pacientes.slice(inicio, inicio + this.registrosPorPagina);
+  }
+
+  irPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.totalPaginas) return;
+    this.paginaActual = pagina;
+  }
+
+  paginaAnterior(): void {
+    this.irPagina(this.paginaActual - 1);
+  }
+
+  paginaSiguiente(): void {
+    this.irPagina(this.paginaActual + 1);
+  }
+
   constructor(
     private pacienteService: PacienteService,
     private usuarioAdminService: UsuarioAdminService,
@@ -54,6 +83,7 @@ export class PacienteComponent {
   listarPacientes() {
     this.pacienteService.listar().subscribe((data) => {
       this.pacientes = data;
+      this.paginaActual = 1;
     });
   }
 

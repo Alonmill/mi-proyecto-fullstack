@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let cita of citas">
+  <tr *ngFor="let cita of citasPaginadas">
     <td data-label="ID">{{ cita.id }}</td>
     <td data-label="Paciente">{{ cita.pacienteNombre }}</td>
     <td data-label="Médico">{{ cita.medicoNombre }}</td>
@@ -23,3 +23,16 @@
   </tr>
 </tbody>
 </table>
+
+
+<div class="pagination" *ngIf="citas.length > 0">
+  <button type="button" (click)="paginaAnterior()" [disabled]="paginaActual === 1">Anterior</button>
+  <button
+    type="button"
+    *ngFor="let pagina of paginas"
+    (click)="irPagina(pagina)"
+    [class.active]="pagina === paginaActual">
+    {{ pagina }}
+  </button>
+  <button type="button" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente</button>
+</div>

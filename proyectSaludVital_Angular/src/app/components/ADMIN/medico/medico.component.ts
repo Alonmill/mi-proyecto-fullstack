@@ -24,6 +24,9 @@ export class MedicoComponent implements OnInit {
   emailBusquedaUsuario = '';
   sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
 
+  paginaActual = 1;
+  readonly registrosPorPagina = 10;
+
   especialidades = ['CARDIOLOGIA', 'PEDIATRIA', 'DERMATOLOGIA', 'GINECOLOGIA', 'NEUROLOGIA'];
   diasSemana = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'DOMINGO'];
 
@@ -51,6 +54,32 @@ export class MedicoComponent implements OnInit {
     this.listarMedicos();
   }
 
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.medicos.length / this.registrosPorPagina));
+  }
+
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  get medicosPaginados(): MedicoConMostrar[] {
+    const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+    return this.medicos.slice(inicio, inicio + this.registrosPorPagina);
+  }
+
+  irPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.totalPaginas) return;
+    this.paginaActual = pagina;
+  }
+
+  paginaAnterior(): void {
+    this.irPagina(this.paginaActual - 1);
+  }
+
+  paginaSiguiente(): void {
+    this.irPagina(this.paginaActual + 1);
+  }
+
   get horarios(): FormArray {
     return this.form.get('horarios') as FormArray;
   }
@@ -58,6 +87,7 @@ export class MedicoComponent implements OnInit {
   listarMedicos() {
     this.medicoService.listar().subscribe((data) => {
       this.medicos = data;
+      this.paginaActual = 1;
     });
   }
 
@@ -154,7 +184,7 @@ export class MedicoComponent implements OnInit {
         next: () => {
           this.listarMedicos();
           this.cancelarEdicion();
-          this.mensajeExito = "Médico actualizado correctamente";
+          this.mensajeExito = 'Médico actualizado correctamente';
         },
         error: (err) => {
           console.error(err);
@@ -166,7 +196,7 @@ export class MedicoComponent implements OnInit {
         next: () => {
           this.listarMedicos();
           this.cancelarEdicion();
-          this.mensajeExito = "Médico agregado correctamente";
+          this.mensajeExito = 'Médico agregado correctamente';
         },
         error: (err) => {
           console.error(err);
