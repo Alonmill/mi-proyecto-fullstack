@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Set;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -56,4 +57,59 @@ public class ImageStorageService {
             throw new RuntimeException("No se pudo guardar la imagen", e);
         }
     }
+
+    public void deleteIfManaged(String storedPath) {
+        String normalized = normalizeManagedPath(storedPath);
+        if (normalized == null) {
+            return;
+        }
+
+        try {
+            Path target = uploadRoot.resolve(normalized.replaceFirst("^uploads/", "")).normalize();
+            if (!target.startsWith(uploadRoot)) {
+                return;
+            }
+            Files.deleteIfExists(target);
+        } catch (IOException ignored) {
+            // no-op: evitar romper actualización por fallo al limpiar archivo viejo
+        }
+    }
+
+    private String normalizeManagedPath(String storedPath) {
+        if (storedPath == null || storedPath.isBlank()) {
+            return null;
+        }
+
+        String normalized = storedPath.trim().replace('\\', '/');
+        if (normalized.startsWith("http")) {
+            int idx = normalized.toLowerCase(Locale.ROOT).indexOf("/uploads/");
+            if (idx >= 0) {
+                normalized = normalized.substring(idx + 1);
+            } else {
+                return null;
+            }
+        }
+
+        if (normalized.startsWith("/files/")) {
+            normalized = normalized.substring(7);
+        } else if (normalized.startsWith("files/")) {
+            normalized = normalized.substring(6);
+        }
+
+        if (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+
+        int uploadsIndex = normalized.indexOf("uploads/");
+        if (uploadsIndex > 0) {
+            normalized = normalized.substring(uploadsIndex);
+        }
+
+        if (!normalized.startsWith("uploads/")) {
+            return null;
+        }
+
+        return normalized;
+    }
+
 }

@@ -38,6 +38,7 @@ public class PacienteService {
 
     private final PacienteRepository pacirepo;
     private final ExpedienteMedicoRepository expedienteRepo;
+    private final ImageStorageService imageStorageService;
     private final UsuarioRepository usuarioRepo;
     private final MedicoRepository medicoRepo;
     private final RoleRepository roleRepo;
@@ -204,7 +205,11 @@ public class PacienteService {
         paciente.setNombre(pacienteDTO.getNombre());
         paciente.setNumeroIdentificacion(pacienteDTO.getNumeroIdentificacion());
         paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
+        String imagenAnterior = paciente.getImagenUrl();
         if (pacienteDTO.getImagenUrl() != null && !pacienteDTO.getImagenUrl().isBlank()) {
+            if (imagenAnterior != null && !imagenAnterior.isBlank() && !imagenAnterior.equals(pacienteDTO.getImagenUrl())) {
+                imageStorageService.deleteIfManaged(imagenAnterior);
+            }
             paciente.setImagenUrl(pacienteDTO.getImagenUrl());
         }
 

@@ -19,6 +19,7 @@ public class MedicamentoService {
 
 	private final MedicamentoRepository medicamenRepo;
 	private final UsuarioRepository usuarioRepo;
+	private final ImageStorageService imageStorageService;
 	
 	@Transactional
 	public Medicamento actualizar(long id, Medicamento datosMedicamento) {
@@ -40,7 +41,11 @@ public class MedicamentoService {
 	   
 	    medicamento.setNombre(datosMedicamento.getNombre());
 	    medicamento.setDescripcion(datosMedicamento.getDescripcion());
+    String imagenAnterior = medicamento.getImagenUrl();
     if (datosMedicamento.getImagenUrl() != null && !datosMedicamento.getImagenUrl().isBlank()) {
+        if (imagenAnterior != null && !imagenAnterior.isBlank() && !imagenAnterior.equals(datosMedicamento.getImagenUrl())) {
+            imageStorageService.deleteIfManaged(imagenAnterior);
+        }
         medicamento.setImagenUrl(datosMedicamento.getImagenUrl());
     }
 

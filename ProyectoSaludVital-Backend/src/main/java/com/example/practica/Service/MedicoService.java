@@ -33,6 +33,7 @@ public class MedicoService {
     private final MedicoRepository medicoRepo;
     private final UsuarioRepository usuarioRepo;
     private final RoleRepository roleRepo;
+    private final ImageStorageService imageStorageService;
 
     // Listado de medicos - solo ADMIN
     public List<ObtenerMedicoDTO> listarMedicos() {
@@ -151,7 +152,11 @@ public class MedicoService {
             medico.setDisponible(request.getDisponible());
         }
         medico.setTarifaConsulta(request.getTarifaConsulta());
+        String imagenAnterior = medico.getImagenUrl();
         if (request.getImagenUrl() != null && !request.getImagenUrl().isBlank()) {
+            if (imagenAnterior != null && !imagenAnterior.isBlank() && !imagenAnterior.equals(request.getImagenUrl())) {
+                imageStorageService.deleteIfManaged(imagenAnterior);
+            }
             medico.setImagenUrl(request.getImagenUrl());
         }
         if (request.getUsuarioId() != null) {
@@ -199,7 +204,11 @@ public class MedicoService {
         medico.setEmail(request.getEmail());
         medico.setEspecialidad(request.getEspecialidad());
         medico.setTarifaConsulta(request.getTarifaConsulta());
+        String imagenAnterior = medico.getImagenUrl();
         if (request.getImagenUrl() != null && !request.getImagenUrl().isBlank()) {
+            if (imagenAnterior != null && !imagenAnterior.isBlank() && !imagenAnterior.equals(request.getImagenUrl())) {
+                imageStorageService.deleteIfManaged(imagenAnterior);
+            }
             medico.setImagenUrl(request.getImagenUrl());
         }
 
