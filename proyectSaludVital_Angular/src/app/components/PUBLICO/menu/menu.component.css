@@ -53,3 +53,14 @@
 .navbar img {
   height: 45px;
 }
+.brand {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.brand:hover .logo {
+  opacity: 0.9;
+}

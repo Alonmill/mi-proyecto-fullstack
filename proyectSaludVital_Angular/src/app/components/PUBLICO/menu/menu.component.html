@@ -1,8 +1,8 @@
 <nav class="navbar">
-  <div class="brand">
+  <button class="brand" type="button" (click)="goToInicio()" aria-label="Ir al inicio">
     <img src="saludVitalLogo.jpg" alt="logo">
     <div class="logo">Salud Vital</div>
-  </div>
+  </button>
 
   <ul class="menu">
     <li *ngFor="let item of menuItems">

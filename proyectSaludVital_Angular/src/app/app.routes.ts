@@ -31,6 +31,7 @@ import { CrearExpedienteComponent } from './components/MEDICO/crear-expediente/c
 import { CancelarCitaComponent } from './components/ADMIN/cancelar-cita-admin/cancelar-cita.component';
 import { ListadoCitasComponent } from './components/ADMIN/listado-citas/listado-citas.component';
 import { ReportesComponent } from './components/ADMIN/reportes/reportes.component';
+import { AcercaComponent } from './components/PUBLICO/acerca/acerca.component';
 
 export const routes: Routes = [
 
@@ -42,6 +43,10 @@ export const routes: Routes = [
     path : 'login',
     component : LoginComponent,
     
+  },
+  {
+    path: 'acerca',
+    component: AcercaComponent
   },
 
   {

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MedicoService } from '../../../services/medico.service';
 
 @Component({
   selector: 'app-medico-layout',
@@ -10,4 +11,26 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './medico-layout.component.html',
   styleUrl: './medico-layout.component.css'
 })
-export class MedicoLayoutComponent {}
+export class MedicoLayoutComponent implements OnInit {
+  nombreMedico = 'Dr. Médico';
+  inicialesMedico = 'DM';
+
+  constructor(private medicoService: MedicoService) {}
+
+  ngOnInit(): void {
+    this.medicoService.getPerfil().subscribe({
+      next: (medico) => {
+        const nombre = (medico?.nombre || '').trim();
+        const apellido = (medico?.apellido || '').trim();
+
+        if (!nombre && !apellido) {
+          return;
+        }
+
+        this.nombreMedico = [nombre, apellido].filter(Boolean).join(' ');
+        const base = `${nombre.charAt(0)}${apellido.charAt(0)}`.trim();
+        this.inicialesMedico = (base || nombre.slice(0, 2) || 'DM').toUpperCase();
+      }
+    });
+  }
+}

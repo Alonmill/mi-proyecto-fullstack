@@ -17,10 +17,10 @@ export class MenuComponent {
     { label: 'Iniciar sesion', route: '/login' },
     { label: 'Registro', route: '/registro' },
     { label: 'Acerca de', route: '/acerca'},
-    { label: 'Cerrar Sesion', action: 'logout' } 
+    { label: 'Cerrar Sesion', action: 'logout' }
   ];
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
    get isLoggedIn(): boolean {
     return this.authService.isLoggedIn() && !this.authService.isTokenExpired();
@@ -30,5 +30,9 @@ export class MenuComponent {
     if (item.action === 'logout') {
       this.authService.logout();
     }
+  }
+
+  goToInicio(): void {
+    this.router.navigate(['/login']);
   }
 }
