@@ -48,7 +48,10 @@
 
 <div>
   <label for="especialidad">Especialidad:</label>
-  <input id="especialidad" formControlName="especialidad" placeholder="Especialidad" />
+  <select id="especialidad" formControlName="especialidad">
+    <option value="" disabled>Selecciona una especialidad</option>
+    <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+  </select>
   <div class="error" *ngIf="form.get('especialidad')?.touched && form.get('especialidad')?.hasError('required')">
     La especialidad es obligatoria.
   </div>
@@ -81,9 +84,13 @@
 <div>
   <label for="emailUsuario">Buscar usuario por email:</label>
   <div class="usuario-search-row">
-    <input id="emailUsuario" [(ngModel)]="emailBusquedaUsuario" [ngModelOptions]="{standalone: true}" placeholder="correo@dominio.com" />
-    <button class="btn-buscar-id" type="button" (click)="buscarUsuarioPorEmail()">Buscar ID</button>
+    <input id="emailUsuario" [(ngModel)]="emailBusquedaUsuario" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEmailInputChange()" placeholder="correo@dominio.com" autocomplete="off" />
   </div>
+  <ul *ngIf="sugerenciasUsuarios.length > 0" class="autocomplete-list">
+    <li *ngFor="let usuario of sugerenciasUsuarios" (click)="seleccionarUsuario(usuario)">
+      {{ usuario.email }} <span>#{{ usuario.id }}</span>
+    </li>
+  </ul>
 </div>
 
 <div>

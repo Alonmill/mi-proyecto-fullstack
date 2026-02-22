@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ObtenerMedicoDTO } from '../../../DTO/obtener-medico-dto';
 import { MedicoConMostrar } from '../../../DTO/medico-horario';
 import { UsuarioAdminService } from '../../../services/usuario-admin.service';
+import { UsuarioBusquedaDTO } from '../../../DTO/usuario-busqueda-dto';
 
 @Component({
   selector: 'app-medico',
@@ -20,6 +21,9 @@ export class MedicoComponent implements OnInit {
   medicoSeleccionadoId: number | null = null;
   mensajeError: string | null = null;
   emailBusquedaUsuario = '';
+  sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
+
+  especialidades = ['CARDIOLOGIA', 'PEDIATRIA', 'DERMATOLOGIA', 'GINECOLOGIA', 'NEUROLOGIA'];
 
   constructor(
     private medicoService: MedicoService,
@@ -55,24 +59,30 @@ export class MedicoComponent implements OnInit {
     });
   }
 
-  buscarUsuarioPorEmail() {
+  onEmailInputChange() {
     this.mensajeError = null;
-    const email = this.emailBusquedaUsuario.trim();
+    const query = this.emailBusquedaUsuario.trim();
 
-    if (!email) {
-      this.mensajeError = 'Ingresa un email para buscar el usuario.';
+    if (query.length < 2) {
+      this.sugerenciasUsuarios = [];
       return;
     }
 
-    this.usuarioAdminService.buscarPorEmail(email).subscribe({
-      next: (usuario) => {
-        this.form.patchValue({ usuarioId: usuario.id });
+    this.usuarioAdminService.autocompletePorEmail(query).subscribe({
+      next: (usuarios) => {
+        this.sugerenciasUsuarios = usuarios;
       },
       error: (err) => {
         console.error(err);
-        this.mensajeError = err.error?.message || 'No se encontró un usuario con ese email.';
+        this.sugerenciasUsuarios = [];
       }
     });
+  }
+
+  seleccionarUsuario(usuario: UsuarioBusquedaDTO) {
+    this.emailBusquedaUsuario = usuario.email;
+    this.form.patchValue({ usuarioId: usuario.id });
+    this.sugerenciasUsuarios = [];
   }
 
   agregarHorario() {
@@ -122,6 +132,7 @@ export class MedicoComponent implements OnInit {
     this.editar = false;
     this.medicoSeleccionadoId = null;
     this.emailBusquedaUsuario = '';
+    this.sugerenciasUsuarios = [];
     this.form.reset({ estado: 'ACTIVO', tarifaConsulta: 0, disponible: null });
     this.horarios.clear();
     this.mensajeError = null;

@@ -191,3 +191,25 @@ td button {
 .btn-buscar-id {
   white-space: nowrap;
 }
+
+.autocomplete-list {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  background: #fff;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.autocomplete-list li {
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+
+.autocomplete-list li:hover {
+  background: #f1f8ff;
+}

@@ -33,9 +33,13 @@
 <div>
   <label for="emailUsuario">Buscar usuario por email:</label>
   <div class="usuario-search-row">
-    <input id="emailUsuario" [(ngModel)]="emailBusquedaUsuario" [ngModelOptions]="{standalone: true}" placeholder="correo@dominio.com" />
-    <button type="button" (click)="buscarUsuarioPorEmail()">Buscar ID</button>
+    <input id="emailUsuario" [(ngModel)]="emailBusquedaUsuario" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEmailInputChange()" placeholder="correo@dominio.com" autocomplete="off" />
   </div>
+  <ul *ngIf="sugerenciasUsuarios.length > 0" class="autocomplete-list">
+    <li *ngFor="let usuario of sugerenciasUsuarios" (click)="seleccionarUsuario(usuario)">
+      {{ usuario.email }} <span>#{{ usuario.id }}</span>
+    </li>
+  </ul>
 </div>
 
 <div>

@@ -12,4 +12,8 @@ export class UsuarioAdminService {
   buscarPorEmail(email: string): Observable<UsuarioBusquedaDTO> {
     return this.apiService.get<UsuarioBusquedaDTO>(`admin/usuarios/buscar?email=${encodeURIComponent(email)}`);
   }
+
+  autocompletePorEmail(query: string): Observable<UsuarioBusquedaDTO[]> {
+    return this.apiService.get<UsuarioBusquedaDTO[]>(`admin/usuarios/autocomplete?query=${encodeURIComponent(query)}`);
+  }
 }

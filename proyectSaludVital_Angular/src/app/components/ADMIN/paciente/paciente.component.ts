@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PacienteService } from '../../../services/paciente.service';
 import { ObtenerPacienteDTO } from '../../../DTO/obtener-paciente-dto';
 import { UsuarioAdminService } from '../../../services/usuario-admin.service';
+import { UsuarioBusquedaDTO } from '../../../DTO/usuario-busqueda-dto';
 
 @Component({
   selector: 'app-paciente',
@@ -20,6 +21,7 @@ export class PacienteComponent {
   pacienteSeleccionadoId: number | null = null;
   mensajeError: string | null = null;
   emailBusquedaUsuario = '';
+  sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
 
   constructor(
     private pacienteService: PacienteService,
@@ -54,24 +56,27 @@ export class PacienteComponent {
     });
   }
 
-  buscarUsuarioPorEmail() {
-    this.mensajeError = null;
-    const email = this.emailBusquedaUsuario.trim();
-
-    if (!email) {
-      this.mensajeError = 'Ingresa un email para buscar el usuario.';
+  onEmailInputChange() {
+    const query = this.emailBusquedaUsuario.trim();
+    if (query.length < 2) {
+      this.sugerenciasUsuarios = [];
       return;
     }
 
-    this.usuarioAdminService.buscarPorEmail(email).subscribe({
-      next: (usuario) => {
-        this.form.patchValue({ usuarioId: usuario.id });
+    this.usuarioAdminService.autocompletePorEmail(query).subscribe({
+      next: (usuarios) => {
+        this.sugerenciasUsuarios = usuarios;
       },
-      error: (err) => {
-        console.error(err);
-        this.mensajeError = err.error?.message || 'No se encontró un usuario con ese email.';
+      error: () => {
+        this.sugerenciasUsuarios = [];
       }
     });
+  }
+
+  seleccionarUsuario(usuario: UsuarioBusquedaDTO) {
+    this.emailBusquedaUsuario = usuario.email;
+    this.form.patchValue({ usuarioId: usuario.id });
+    this.sugerenciasUsuarios = [];
   }
 
   agregarAlergia() {
@@ -116,6 +121,7 @@ export class PacienteComponent {
     this.editar = false;
     this.pacienteSeleccionadoId = null;
     this.emailBusquedaUsuario = '';
+    this.sugerenciasUsuarios = [];
     this.form.reset();
     this.alergias.clear();
     this.enfermedades.clear();

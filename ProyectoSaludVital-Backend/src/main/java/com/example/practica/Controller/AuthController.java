@@ -21,6 +21,7 @@ import com.example.practica.Repository.UsuarioRepository;
 import com.example.practica.security.JwtUtil;
 
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -80,6 +81,31 @@ public class AuthController {
         return ResponseEntity.ok(new ObtenerToken(token));
     }
     
+
+
+    @GetMapping("/admin/usuarios/autocomplete")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UsuarioBusquedaDTO>> autocompletarUsuariosPorEmail(@RequestParam String query) {
+        if (query == null || query.isBlank()) {
+            return ResponseEntity.ok(List.of());
+        }
+
+        List<UsuarioBusquedaDTO> usuarios = usuarioRepository
+                .findTop10ByEmailContainingIgnoreCase(query.trim())
+                .stream()
+                .map(usuario -> new UsuarioBusquedaDTO(
+                        usuario.getId(),
+                        usuario.getName(),
+                        usuario.getEmail(),
+                        usuario.getRoles().stream()
+                                .findFirst()
+                                .map(Role::getName)
+                                .orElse("SIN_ROL")
+                ))
+                .toList();
+
+        return ResponseEntity.ok(usuarios);
+    }
 
     @GetMapping("/admin/usuarios/buscar")
     @PreAuthorize("hasRole('ADMIN')")
