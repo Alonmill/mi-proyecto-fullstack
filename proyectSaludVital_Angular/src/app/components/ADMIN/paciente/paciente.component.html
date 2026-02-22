@@ -60,26 +60,30 @@
 
   
 
-  <div formArrayName="alergias">
-  <div *ngFor="let a of alergias.controls; let i=index" [formGroupName]="i">
+  <div class="grupo-seccion" formArrayName="alergias">
+  <h3>Alergias</h3>
+  <div class="item-seccion" *ngFor="let a of alergias.controls; let i=index" [formGroupName]="i">
     <label>Nombre Alergia:</label>
     <input formControlName="nombre" placeholder="Nombre de alergia" />
-    <button type="button" (click)="eliminarAlergia(i)">Eliminar</button>
+    <button class="btn-danger" type="button" (click)="eliminarAlergia(i)">Eliminar</button>
   </div>
 </div>
-<button type="button" (click)="agregarAlergia()">Agregar Alergia</button>
+<button class="btn-add" type="button" (click)="agregarAlergia()">Agregar Alergia</button>
 
-<div formArrayName="enfermedades">
-  <div *ngFor="let e of enfermedades.controls; let i=index" [formGroupName]="i">
+<div class="grupo-seccion" formArrayName="enfermedades">
+  <h3>Enfermedades</h3>
+  <div class="item-seccion" *ngFor="let e of enfermedades.controls; let i=index" [formGroupName]="i">
     <label>Nombre Enfermedad:</label>
     <input formControlName="nombre" placeholder="Nombre de Enfermedad" />
-    <button type="button" (click)="eliminarEnfermedad(i)">Eliminar</button>
+    <button class="btn-danger" type="button" (click)="eliminarEnfermedad(i)">Eliminar</button>
   </div>
 </div>
-<button type="button" (click)="agregarEnfermedad()">Agregar Enfermedad</button>
+<button class="btn-add" type="button" (click)="agregarEnfermedad()">Agregar Enfermedad</button>
 
-  <button type="submit">{{ editar ? 'Actualizar' : 'Guardar' }}</button>
-  <button *ngIf="editar" type="button" (click)="cancelarEdicion()">Cancelar</button>
+  <div class="acciones-form">
+    <button class="btn-primary" type="submit">{{ editar ? 'Actualizar' : 'Guardar' }}</button>
+    <button *ngIf="editar" type="button" (click)="cancelarEdicion()">Cancelar</button>
+  </div>
 </form>
 
 <h2 class="section-title">Lista de Pacientes</h2>

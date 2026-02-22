@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -116,10 +117,10 @@ public class PacienteService {
         Usuario usu = usuarioRepo.findById(pacienteDTO.getUsuarioId())
                   .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        usu.setRoles(Collections.singleton(
+        usu.setRoles(new HashSet<>(Collections.singleton(
                 roleRepo.findByName("PACIENTE")
                         .orElseThrow(() -> new RuntimeException("Rol PACIENTE no encontrado"))
-        ));
+        )));
         usu = usuarioRepo.save(usu);
 
         // Crear paciente
@@ -131,22 +132,22 @@ public class PacienteService {
                 .build();
 
         // Agregar alergias
-        List<Alergia> alergias = pacienteDTO.getAlergias().stream()
+        List<Alergia> alergias = new ArrayList<>(pacienteDTO.getAlergias().stream()
                 .map(nombre -> Alergia.builder()
                         .nombre(nombre)
                         .paciente(pacienteNuevo)
                         .build())
-                .toList();
+                .toList());
 
         pacienteNuevo.setAlergias(alergias);
         
      // Agregar Enfermedades
-        List<Enfermedad> enfermedades = pacienteDTO.getEnfermedades().stream()
+        List<Enfermedad> enfermedades = new ArrayList<>(pacienteDTO.getEnfermedades().stream()
                 .map(nombre -> Enfermedad.builder()
                         .nombre(nombre)
                         .paciente(pacienteNuevo)
                         .build())
-                .toList();
+                .toList());
 
         pacienteNuevo.setEnfermedades(enfermedades);
 

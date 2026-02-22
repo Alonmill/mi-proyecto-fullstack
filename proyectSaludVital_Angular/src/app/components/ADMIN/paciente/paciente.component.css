@@ -1,7 +1,7 @@
 /* ====== FORMULARIO ====== */
 form {
   background: #ffffff;
-  padding: 25px;
+  padding: 34px;
   margin: 20px auto;
   border-radius: 12px;
   max-width: 700px;
@@ -21,7 +21,7 @@ form h2 {
 }
 
 form > div {
-  margin: 10px auto;
+  margin: 14px auto;
 }
 
 label {
@@ -47,7 +47,7 @@ input:focus {
 
 /* Botones */
 button {
-  background: #3498db;
+  background: #95a5a6;
   color: #fff;
   padding: 10px 16px;
   border: none;
@@ -59,7 +59,7 @@ button {
 }
 
 button:hover {
-  background: #2980b9;
+  background: #7f8c8d;
 }
 
 button[type="button"] {
@@ -181,4 +181,62 @@ ul li {
   margin: 12px auto 16px;
   color: #2c3e50;
   font-weight: 700;
+}
+
+
+.grupo-seccion {
+  margin-top: 22px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid #e3e7ea;
+  border-radius: 10px;
+  background: #fafbfc;
+}
+
+.grupo-seccion h3 {
+  margin: 0 0 12px;
+  color: #34495e;
+  font-size: 18px;
+}
+
+.item-seccion {
+  margin-bottom: 14px;
+}
+
+.item-seccion input {
+  margin-bottom: 10px;
+}
+
+.btn-danger {
+  background: #dc3545 !important;
+  color: #fff;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.btn-danger:hover {
+  background: #b02a37 !important;
+}
+
+.btn-add {
+  margin-top: 10px;
+  margin-right: 12px;
+  margin-bottom: 14px;
+}
+
+.acciones-form {
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-primary {
+  background: #3498db !important;
+  color: #fff;
+  margin-top: 12px;
+}
+
+.btn-primary:hover {
+  background: #2980b9 !important;
 }
