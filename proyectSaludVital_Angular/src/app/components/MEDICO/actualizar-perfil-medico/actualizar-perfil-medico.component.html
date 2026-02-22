@@ -30,7 +30,7 @@
       <input type="number" formControlName="tarifaConsulta" class="form-control" />
 
       <label>URL de imagen</label>
-      <input formControlName="imagenUrl" class="form-control" placeholder="https://..." />
+      <input type="file" class="form-control" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
 
       <div class="horarios-header">
         <label>Horarios de atención</label>

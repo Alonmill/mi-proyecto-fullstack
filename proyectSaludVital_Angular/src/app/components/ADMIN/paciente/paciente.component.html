@@ -63,7 +63,7 @@
   
 <div>
   <label for="imagenUrl">URL de Imagen:</label>
-  <input id="imagenUrl" formControlName="imagenUrl" placeholder="https://..." />
+  <input id="imagenUrl" type="file" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
 </div>
 
 <div class="grupo-seccion" formArrayName="alergias">
@@ -114,7 +114,7 @@
       <td>{{ p.numeroIdentificacion }}</td>
       <td>{{ p.fechaNacimiento}}</td>
       <td>{{ p.usuarioId }}</td>
-      <td><img class="thumb" [src]="p.imagenUrl || '/images/no-image-person.svg'" alt="Foto paciente"></td>
+      <td><img class="thumb" [src]="resolveImageUrl(p.imagenUrl)" alt="Foto paciente"></td>
       <td>
         <button type="button" (click)="p.showAlergias = !p.showAlergias">
           {{ p.showAlergias ? 'Ocultar' : 'Ver Alergias' }}

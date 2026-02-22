@@ -151,7 +151,9 @@ public class MedicoService {
             medico.setDisponible(request.getDisponible());
         }
         medico.setTarifaConsulta(request.getTarifaConsulta());
-        medico.setImagenUrl(request.getImagenUrl());
+        if (request.getImagenUrl() != null && !request.getImagenUrl().isBlank()) {
+            medico.setImagenUrl(request.getImagenUrl());
+        }
         if (request.getUsuarioId() != null) {
             Usuario usuario = usuarioRepo.findById(request.getUsuarioId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -197,7 +199,9 @@ public class MedicoService {
         medico.setEmail(request.getEmail());
         medico.setEspecialidad(request.getEspecialidad());
         medico.setTarifaConsulta(request.getTarifaConsulta());
-        medico.setImagenUrl(request.getImagenUrl());
+        if (request.getImagenUrl() != null && !request.getImagenUrl().isBlank()) {
+            medico.setImagenUrl(request.getImagenUrl());
+        }
 
         if (request.getHorarios() != null) {
             medico.getHorarios().clear();

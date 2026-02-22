@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PacienteService } from '../../../services/paciente.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-paciente-layout',
@@ -13,6 +14,7 @@ export class PacienteLayoutComponent implements OnInit {
   nombrePaciente = 'Paciente';
   inicialesPaciente = 'PA';
   imagenPacienteUrl = '';
+  readonly apiUrl = environment.apiUrl;
 
   constructor(private pacienteService: PacienteService) {}
 
@@ -24,7 +26,8 @@ export class PacienteLayoutComponent implements OnInit {
 
         this.nombrePaciente = nombre;
         this.inicialesPaciente = this.generarInicialesPaciente(nombre);
-        this.imagenPacienteUrl = (paciente as any).imagenUrl || '';
+        const ruta = (paciente as any).imagenUrl || '';
+        this.imagenPacienteUrl = ruta ? `${this.apiUrl}/files/${ruta}` : '';
       }
     });
   }

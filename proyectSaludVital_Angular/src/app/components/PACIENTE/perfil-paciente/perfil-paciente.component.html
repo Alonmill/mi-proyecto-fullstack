@@ -10,7 +10,7 @@
       <p><strong>Número de identificación:</strong> {{ paciente.numeroIdentificacion }}</p>
       <p><strong>Fecha de nacimiento:</strong> {{ paciente.fechaNacimiento }}</p>
       <p><strong>Usuario ID:</strong> {{ paciente.usuarioId }}</p>
-      <img class="thumb" [src]="paciente.imagenUrl || '/images/no-image-person.svg'" alt="Foto paciente">
+      <img class="thumb" [src]="resolveImageUrl(paciente.imagenUrl)" alt="Foto paciente">
     </div>
 
     <div class="card-section">
@@ -59,6 +59,9 @@
 
       <label>Fecha de nacimiento</label>
       <input type="date" formControlName="fechaNacimiento" class="form-control">
+
+      <label>Imagen</label>
+      <input type="file" accept="image/png,image/jpeg" class="form-control" (change)="onImageSelected($event)">
         <small class="text-danger" *ngIf="form.get('fechaNacimiento')?.invalid && form.get('fechaNacimiento')?.touched">
           La fecha de nacimiento es obligatoria.
         </small>

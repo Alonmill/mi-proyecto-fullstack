@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MedicoService } from '../../../services/medico.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-medico-layout',
@@ -15,6 +16,7 @@ export class MedicoLayoutComponent implements OnInit {
   nombreMedico = 'Dr. Médico';
   inicialesMedico = 'DM';
   imagenMedicoUrl = '';
+  readonly apiUrl = environment.apiUrl;
 
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
@@ -36,7 +38,8 @@ export class MedicoLayoutComponent implements OnInit {
         this.nombreMedico = [nombre, apellido].filter(Boolean).join(' ');
         const base = `${nombre.charAt(0)}${apellido.charAt(0)}`.trim();
         this.inicialesMedico = (base || nombre.slice(0, 2) || 'DM').toUpperCase();
-        this.imagenMedicoUrl = (medico as any).imagenUrl || '';
+        const ruta = (medico as any).imagenUrl || '';
+        this.imagenMedicoUrl = ruta ? `${this.apiUrl}/files/${ruta}` : '';
       }
     });
   }

@@ -71,7 +71,7 @@
 
 <div>
   <label for="imagenUrl">URL de Imagen:</label>
-  <input id="imagenUrl" formControlName="imagenUrl" placeholder="https://..." />
+  <input id="imagenUrl" type="file" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
 </div>
 
 <div>
@@ -174,7 +174,7 @@
       <td>{{ m.disponible ? 'Sí' : 'No' }}</td>
       <td>{{ m.tarifaConsulta }}</td>
       <td>{{ m.usuarioId }}</td>
-      <td><img class="thumb" [src]="m.imagenUrl || '/images/no-image-person.svg'" alt="Foto médico"></td>
+      <td><img class="thumb" [src]="resolveImageUrl(m.imagenUrl)" alt="Foto médico"></td>
       <td>
         <button type="button" (click)="m.showHorarios = !m.showHorarios">
           {{ m.showHorarios ? 'Ocultar' : 'Ver horarios' }}

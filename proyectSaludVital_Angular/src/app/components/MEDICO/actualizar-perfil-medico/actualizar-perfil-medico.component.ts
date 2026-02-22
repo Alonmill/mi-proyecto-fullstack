@@ -17,6 +17,7 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
   form: FormGroup;
   mensaje = '';
   mensajeError = false;
+  selectedImageFile: File | null = null;
 
   readonly especialidades = [
     'CARDIOLOGIA',
@@ -109,6 +110,11 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
   }
 
 
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedImageFile = input.files?.[0] || null;
+  }
+
   guardar(): void {
     this.mensaje = '';
 
@@ -134,7 +140,11 @@ export class ActualizarPerfilMedicoComponent implements OnInit {
       imagenUrl: this.form.value.imagenUrl
     };
 
-    this.medicoService.actualizarPerfil(payload).subscribe({
+    const requestBody = this.selectedImageFile
+      ? (() => { const fd = new FormData(); fd.append('data', new Blob([JSON.stringify(payload)], { type: 'application/json' })); fd.append('imagen', this.selectedImageFile as File); return fd; })()
+      : payload;
+
+    this.medicoService.actualizarPerfil(requestBody).subscribe({
       next: () => {
         this.mensajeError = false;
         this.mensaje = '✅ Perfil actualizado correctamente';

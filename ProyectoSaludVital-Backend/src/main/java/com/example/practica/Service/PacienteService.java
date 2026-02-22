@@ -204,7 +204,9 @@ public class PacienteService {
         paciente.setNombre(pacienteDTO.getNombre());
         paciente.setNumeroIdentificacion(pacienteDTO.getNumeroIdentificacion());
         paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
-        paciente.setImagenUrl(pacienteDTO.getImagenUrl());
+        if (pacienteDTO.getImagenUrl() != null && !pacienteDTO.getImagenUrl().isBlank()) {
+            paciente.setImagenUrl(pacienteDTO.getImagenUrl());
+        }
 
         // Actualizar alergias: eliminamos las anteriores y agregamos las nuevas
         paciente.getAlergias().clear();

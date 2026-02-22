@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { MedicamentosService } from '../../../services/medicamentos.service';
 import { AuthService } from '../../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-medicamentos',
@@ -18,6 +19,8 @@ export class MedicamentosComponent implements OnInit {
   editarId: number | null = null;
 
   usuario: any;
+  selectedImageFile: File | null = null;
+  readonly apiUrl = environment.apiUrl;
 
   paginaActual = 1;
   readonly registrosPorPagina = 10;
@@ -81,9 +84,14 @@ export class MedicamentosComponent implements OnInit {
       return;
     }
 
+    const payload = { ...this.medicamentoForm.value };
+    const requestBody = this.selectedImageFile
+      ? (() => { const fd = new FormData(); fd.append('data', new Blob([JSON.stringify(payload)], { type: 'application/json' })); fd.append('imagen', this.selectedImageFile as File); return fd; })()
+      : payload;
+
     if (this.isEditMode && this.editarId) {
       // Editar medicamento
-      this.medicamentoService.editar(this.editarId, this.medicamentoForm.value).subscribe({
+      this.medicamentoService.editar(this.editarId, requestBody).subscribe({
         next: () => {
           this.listarMedicamentos();
           this.resetForm();
@@ -92,7 +100,7 @@ export class MedicamentosComponent implements OnInit {
       });
     } else {
       // Registrar medicamento
-      this.medicamentoService.registrar(this.medicamentoForm.value).subscribe({
+      this.medicamentoService.registrar(requestBody).subscribe({
         next: () => {
           this.listarMedicamentos();
           this.resetForm();
@@ -100,6 +108,17 @@ export class MedicamentosComponent implements OnInit {
         error: (err) => console.error('Error al registrar medicamento', err)
       });
     }
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedImageFile = input.files?.[0] || null;
+  }
+
+  resolveImageUrl(path?: string): string {
+    if (!path) return '/images/no-image-medicamento.svg';
+    if (path.startsWith('http')) return path;
+    return `${this.apiUrl}/files/${path}`;
   }
 
   editarMedicamento(medicamento: any): void {
@@ -116,5 +135,6 @@ export class MedicamentosComponent implements OnInit {
     this.medicamentoForm.reset();
     this.isEditMode = false;
     this.editarId = null;
+    this.selectedImageFile = null;
   }
 }

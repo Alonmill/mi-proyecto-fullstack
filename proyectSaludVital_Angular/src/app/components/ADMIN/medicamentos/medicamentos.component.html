@@ -28,7 +28,7 @@
 
         <div class="field">
           <label for="imagenUrl">URL de Imagen</label>
-          <input type="text" id="imagenUrl" class="form-control" formControlName="imagenUrl" />
+          <input type="file" id="imagenUrl" class="form-control" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
         </div>
 
         <div class="actions-row">
@@ -56,7 +56,7 @@
               <td>{{ med.id }}</td>
               <td>{{ med.nombre }}</td>
               <td>{{ med.descripcion }}</td>
-              <td><img class="thumb" [src]="med.imagenUrl || '/images/no-image-medicamento.svg'" alt="Imagen medicamento"></td>
+              <td><img class="thumb" [src]="resolveImageUrl(med.imagenUrl)" alt="Imagen medicamento"></td>
               <td>
                 <div class="table-actions">
                   <button class="btn btn-sm btn-warning" (click)="editarMedicamento(med)">Editar</button>

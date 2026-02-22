@@ -6,6 +6,7 @@ import { ObtenerMedicoDTO } from '../../../DTO/obtener-medico-dto';
 import { MedicoConMostrar } from '../../../DTO/medico-horario';
 import { UsuarioAdminService } from '../../../services/usuario-admin.service';
 import { UsuarioBusquedaDTO } from '../../../DTO/usuario-busqueda-dto';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-medico',
@@ -23,6 +24,8 @@ export class MedicoComponent implements OnInit {
   mensajeExito: string | null = null;
   emailBusquedaUsuario = '';
   sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
+  selectedImageFile: File | null = null;
+  readonly apiUrl = environment.apiUrl;
 
   paginaActual = 1;
   readonly registrosPorPagina = 10;
@@ -85,6 +88,17 @@ export class MedicoComponent implements OnInit {
     return this.form.get('horarios') as FormArray;
   }
 
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedImageFile = input.files?.[0] || null;
+  }
+
+  resolveImageUrl(path?: string): string {
+    if (!path) return '/images/no-image-person.svg';
+    if (path.startsWith('http')) return path;
+    return `${this.apiUrl}/files/${path}`;
+  }
+
   listarMedicos() {
     this.medicoService.listar().subscribe((data) => {
       this.medicos = data;
@@ -95,6 +109,7 @@ export class MedicoComponent implements OnInit {
   onEmailInputChange() {
     this.mensajeError = null;
     this.mensajeExito = null;
+    this.selectedImageFile = null;
     const query = this.emailBusquedaUsuario.trim();
 
     if (query.length < 2) {
@@ -172,6 +187,7 @@ export class MedicoComponent implements OnInit {
     this.horarios.clear();
     this.mensajeError = null;
     this.mensajeExito = null;
+    this.selectedImageFile = null;
   }
 
   guardar() {
@@ -179,10 +195,14 @@ export class MedicoComponent implements OnInit {
 
     this.mensajeError = null;
     this.mensajeExito = null;
+    this.selectedImageFile = null;
     const medicoData = this.form.value;
+    const requestBody = this.selectedImageFile
+      ? (() => { const fd = new FormData(); fd.append('data', new Blob([JSON.stringify(medicoData)], { type: 'application/json' })); fd.append('imagen', this.selectedImageFile as File); return fd; })()
+      : medicoData;
 
     if (this.editar && this.medicoSeleccionadoId) {
-      this.medicoService.actualizar(this.medicoSeleccionadoId, medicoData).subscribe({
+      this.medicoService.actualizar(this.medicoSeleccionadoId, requestBody).subscribe({
         next: () => {
           this.listarMedicos();
           this.cancelarEdicion();
@@ -194,7 +214,7 @@ export class MedicoComponent implements OnInit {
         }
       });
     } else {
-      this.medicoService.agregar(medicoData).subscribe({
+      this.medicoService.agregar(requestBody).subscribe({
         next: () => {
           this.listarMedicos();
           this.cancelarEdicion();

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ObtenerPacienteDTO } from '../../../DTO/obtener-paciente-dto';
 import { PacienteService } from '../../../services/paciente.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-perfil-paciente',
@@ -19,6 +20,8 @@ export class PerfilPacienteComponent implements OnInit {
     mensaje: string = '';
   mensajeError: boolean = false;
  editar: boolean = false;
+  readonly apiUrl = environment.apiUrl;
+  selectedImageFile: File | null = null;
     pacienteSeleccionadoId: number | null = null;
   constructor(
         private pacienteService: PacienteService,
@@ -75,6 +78,17 @@ get alergias(): FormArray{
   this.form.reset();
 }
 
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedImageFile = input.files?.[0] || null;
+  }
+
+  resolveImageUrl(path?: string): string {
+    if (!path) return '/images/no-image-person.svg';
+    if (path.startsWith('http')) return path;
+    return `${this.apiUrl}/files/${path}`;
+  }
+
   editarPaciente(paciente: ObtenerPacienteDTO) {
     this.editar = true;
     this.pacienteSeleccionadoId = paciente.id || null;
@@ -121,7 +135,11 @@ get alergias(): FormArray{
 
   if (this.editar && this.pacienteSeleccionadoId) {
     // Actualizar paciente
-    this.pacienteService.actualizar(this.pacienteSeleccionadoId, pacienteData).subscribe({
+    const requestBody = this.selectedImageFile
+      ? (() => { const fd = new FormData(); fd.append('data', new Blob([JSON.stringify(pacienteData)], { type: 'application/json' })); fd.append('imagen', this.selectedImageFile as File); return fd; })()
+      : pacienteData;
+
+    this.pacienteService.actualizar(this.pacienteSeleccionadoId, requestBody).subscribe({
       next: res => {
         console.log('Paciente actualizado', res);
         this.mensajeError = false;

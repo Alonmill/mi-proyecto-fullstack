@@ -17,8 +17,11 @@ export class ApiService {
   }
 
   // Método para crear los headers con el token
-  private getHeaders(): HttpHeaders {
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+  private getHeaders(isFormData = false): HttpHeaders {
+    let headers = new HttpHeaders();
+    if (!isFormData) {
+      headers = headers.set('Content-Type', 'application/json');
+    }
 
     const token = this.getToken();
     if (token) {
@@ -68,11 +71,13 @@ export class ApiService {
         responseType: 'text'
       }) as unknown as Observable<T>;
     }
-    return this.http.post<T>(`${this.apiUrl}/${endpoint}`, data, { headers: this.getHeaders() });
+    const isFormData = data instanceof FormData;
+    return this.http.post<T>(`${this.apiUrl}/${endpoint}`, data, { headers: this.getHeaders(isFormData) });
   }
 
   put<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}/${endpoint}`, data, { headers: this.getHeaders() });
+    const isFormData = data instanceof FormData;
+    return this.http.put<T>(`${this.apiUrl}/${endpoint}`, data, { headers: this.getHeaders(isFormData) });
   }
 
   delete<T>(endpoint: string): Observable<T> {

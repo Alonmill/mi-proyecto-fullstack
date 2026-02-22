@@ -6,6 +6,7 @@ import { PacienteService } from '../../../services/paciente.service';
 import { ObtenerPacienteDTO } from '../../../DTO/obtener-paciente-dto';
 import { UsuarioAdminService } from '../../../services/usuario-admin.service';
 import { UsuarioBusquedaDTO } from '../../../DTO/usuario-busqueda-dto';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-paciente',
@@ -23,6 +24,8 @@ export class PacienteComponent {
   mensajeExito: string | null = null;
   emailBusquedaUsuario = '';
   sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
+  selectedImageFile: File | null = null;
+  readonly apiUrl = environment.apiUrl;
 
   paginaActual = 1;
   readonly registrosPorPagina = 10;
@@ -79,6 +82,17 @@ export class PacienteComponent {
 
   get enfermedades(): FormArray {
     return this.form.get('enfermedades') as FormArray;
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedImageFile = input.files?.[0] || null;
+  }
+
+  resolveImageUrl(path?: string): string {
+    if (!path) return '/images/no-image-person.svg';
+    if (path.startsWith('http')) return path;
+    return `${this.apiUrl}/files/${path}`;
   }
 
   listarPacientes() {
@@ -160,6 +174,7 @@ export class PacienteComponent {
     this.enfermedades.clear();
     this.mensajeError = null;
     this.mensajeExito = null;
+    this.selectedImageFile = null;
   }
 
   guardar() {
@@ -167,6 +182,7 @@ export class PacienteComponent {
 
     this.mensajeError = null;
     this.mensajeExito = null;
+    this.selectedImageFile = null;
 
     const pacienteData = {
       ...this.form.value,
@@ -174,8 +190,12 @@ export class PacienteComponent {
       enfermedades: this.form.value.enfermedades.map((e: any) => e.nombre)
     };
 
+    const requestBody = this.selectedImageFile
+      ? (() => { const fd = new FormData(); fd.append('data', new Blob([JSON.stringify(pacienteData)], { type: 'application/json' })); fd.append('imagen', this.selectedImageFile as File); return fd; })()
+      : pacienteData;
+
     if (this.editar && this.pacienteSeleccionadoId) {
-      this.pacienteService.actualizar(this.pacienteSeleccionadoId, pacienteData).subscribe({
+      this.pacienteService.actualizar(this.pacienteSeleccionadoId, requestBody).subscribe({
         next: () => {
           this.listarPacientes();
           this.cancelarEdicion();
@@ -187,7 +207,7 @@ export class PacienteComponent {
         }
       });
     } else {
-      this.pacienteService.agregar(pacienteData).subscribe({
+      this.pacienteService.agregar(requestBody).subscribe({
         next: () => {
           this.listarPacientes();
           this.cancelarEdicion();
