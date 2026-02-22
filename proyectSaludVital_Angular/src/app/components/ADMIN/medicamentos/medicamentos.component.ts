@@ -19,6 +19,35 @@ export class MedicamentosComponent implements OnInit {
 
   usuario: any;
 
+  paginaActual = 1;
+  readonly registrosPorPagina = 10;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.medicamentos.length / this.registrosPorPagina));
+  }
+
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  get medicamentosPaginados(): any[] {
+    const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+    return this.medicamentos.slice(inicio, inicio + this.registrosPorPagina);
+  }
+
+  irPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.totalPaginas) return;
+    this.paginaActual = pagina;
+  }
+
+  paginaAnterior(): void {
+    this.irPagina(this.paginaActual - 1);
+  }
+
+  paginaSiguiente(): void {
+    this.irPagina(this.paginaActual + 1);
+  }
+
   constructor(private fb: FormBuilder, private medicamentoService: MedicamentosService, private authService: AuthService ) {}
 
   ngOnInit(): void {
@@ -37,7 +66,10 @@ export class MedicamentosComponent implements OnInit {
 
   listarMedicamentos(): void {
     this.medicamentoService.listar().subscribe({
-      next: (data) => this.medicamentos = data,
+      next: (data) => {
+        this.medicamentos = data;
+        this.paginaActual = 1;
+      },
       error: (err) => console.error('Error al listar medicamentos', err)
     });
   }

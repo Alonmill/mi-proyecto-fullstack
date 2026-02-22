@@ -20,6 +20,35 @@ export class ActualizarCitaComponent implements OnInit {
   citaSeleccionadaId: number | null = null;
   mensaje: string = '';
 
+  paginaActual = 1;
+  readonly registrosPorPagina = 10;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.citas.length / this.registrosPorPagina));
+  }
+
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  get citasPaginadas(): CitaObtenidaDTO[] {
+    const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+    return this.citas.slice(inicio, inicio + this.registrosPorPagina);
+  }
+
+  irPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.totalPaginas) return;
+    this.paginaActual = pagina;
+  }
+
+  paginaAnterior(): void {
+    this.irPagina(this.paginaActual - 1);
+  }
+
+  paginaSiguiente(): void {
+    this.irPagina(this.paginaActual + 1);
+  }
+
   constructor(
     private citaService: CitaService,
     private medicoService: MedicoService,
@@ -73,6 +102,7 @@ export class ActualizarCitaComponent implements OnInit {
         this.citas = res.filter(cita =>
           this.fechaHoraConAnticipacionValida(cita.fecha, cita.hora)
         );
+        this.paginaActual = 1;
 
         if (this.citas.length === 0) {
           this.mensaje = 'ℹ️ No tienes citas programadas con al menos 2 horas de anticipación para actualizar.';

@@ -58,7 +58,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let receta of recetas">
+    <tr *ngFor="let receta of recetasPaginadas">
       <td>{{ receta.id }}</td>
       <td>{{ receta.medicoNombre }}</td>
       <td>{{ receta.pacienteNombre }}</td>
@@ -115,4 +115,17 @@
 
     <button type="button" class="btn-primary" (click)="cerrarDetalle()">Cerrar</button>
   </div>
+</div>
+
+
+<div class="pagination" *ngIf="!cargando && recetas.length > 0">
+  <button type="button" (click)="paginaAnterior()" [disabled]="paginaActual === 1">Anterior</button>
+  <button
+    type="button"
+    *ngFor="let pagina of paginas"
+    (click)="irPagina(pagina)"
+    [class.active]="pagina === paginaActual">
+    {{ pagina }}
+  </button>
+  <button type="button" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente</button>
 </div>

@@ -86,3 +86,18 @@ button:disabled {
   color: #666;
   margin-top: 20px;
 }
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: #fff;
+}
