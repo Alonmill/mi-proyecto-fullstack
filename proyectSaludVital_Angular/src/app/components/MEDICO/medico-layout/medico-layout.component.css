@@ -1,46 +1,121 @@
 .layout-container {
   display: flex;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', 'Poppins', 'Segoe UI', Arial, sans-serif;
 }
 
 .sidebar {
-  width: 220px;
-  background-color: #2c3e50;
+  width: 300px;
+  background: #1e3a8a;
   color: white;
-  padding: 20px;
+  padding: 24px 18px;
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+  box-shadow: 10px 0 25px rgba(16, 37, 84, 0.25);
+}
+
+.medico-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 26px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .sidebar .title {
-  font-size: 20px;
-  margin-bottom: 20px;
-  text-align: center;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.specialty {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #bfdbfe;
 }
 
 .menu ul {
   list-style: none;
   padding: 0;
+  margin: 0;
+}
+
+.menu-section-title {
+  margin: 16px 10px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bfdbfe;
 }
 
 .menu li {
-  margin: 15px 0;
+  margin: 12px 0;
 }
 
 .menu a {
   color: white;
   text-decoration: none;
-  font-size: 16px;
-  transition: 0.3s;
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-left: 4px solid transparent;
+  transition: all 0.25s ease;
 }
 
-.menu a:hover,
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  color: #dbeafe;
+}
+
+.menu a:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
 .menu a.active {
-  color: #1abc9c;
-  font-weight: bold;
+  background: rgba(255, 255, 255, 0.2);
+  border-left-color: #10b981;
+  color: #ffffff;
 }
 
 .content {
   flex: 1;
-  padding: 20px;
-  background: #ecf0f1;
+  padding: 24px;
+  background: #eef4ff;
+}
+
+@media (max-width: 900px) {
+  .layout-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .menu ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
 }
