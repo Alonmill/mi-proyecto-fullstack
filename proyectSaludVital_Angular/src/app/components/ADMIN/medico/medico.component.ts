@@ -96,7 +96,9 @@ export class MedicoComponent implements OnInit {
   resolveImageUrl(path?: string): string {
     if (!path) return '/images/no-image-person.svg';
     if (path.startsWith('http')) return path;
-    return `${this.apiUrl}/files/${path}`;
+    if (path.startsWith('/files/')) return `${this.apiUrl}${path}`;
+    if (path.startsWith('files/')) return `${this.apiUrl}/${path}`;
+    return `${this.apiUrl}/files/${path.replace(/^\/+/, '')}`;
   }
 
   listarMedicos() {
@@ -195,7 +197,6 @@ export class MedicoComponent implements OnInit {
 
     this.mensajeError = null;
     this.mensajeExito = null;
-    this.selectedImageFile = null;
     const medicoData = this.form.value;
     const requestBody = this.selectedImageFile
       ? (() => { const fd = new FormData(); fd.append('data', new Blob([JSON.stringify(medicoData)], { type: 'application/json' })); fd.append('imagen', this.selectedImageFile as File); return fd; })()

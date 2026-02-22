@@ -74,7 +74,7 @@ public class SecurityConfig {
           .csrf(csrf -> csrf.disable())
     	 .authorizeHttpRequests(auth -> auth
     			    // --- PÚBLICO ---
-    			    .requestMatchers("/login", "/register", "/access-denied", "/", "/ayuda", "/medicamentos/listado").permitAll()
+    			    .requestMatchers("/login", "/register", "/access-denied", "/", "/ayuda", "/medicamentos/listado", "/files/**").permitAll()
 
     			    // --- PACIENTE ---
     			    .requestMatchers("/pacientes/perfil", "/pacientes/expediente").hasRole("PACIENTE")

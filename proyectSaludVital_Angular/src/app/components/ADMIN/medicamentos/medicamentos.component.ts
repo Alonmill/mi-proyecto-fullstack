@@ -118,7 +118,9 @@ export class MedicamentosComponent implements OnInit {
   resolveImageUrl(path?: string): string {
     if (!path) return '/images/no-image-medicamento.svg';
     if (path.startsWith('http')) return path;
-    return `${this.apiUrl}/files/${path}`;
+    if (path.startsWith('/files/')) return `${this.apiUrl}${path}`;
+    if (path.startsWith('files/')) return `${this.apiUrl}/${path}`;
+    return `${this.apiUrl}/files/${path.replace(/^\/+/, '')}`;
   }
 
   editarMedicamento(medicamento: any): void {

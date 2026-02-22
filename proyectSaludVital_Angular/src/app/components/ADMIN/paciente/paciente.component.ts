@@ -92,7 +92,9 @@ export class PacienteComponent {
   resolveImageUrl(path?: string): string {
     if (!path) return '/images/no-image-person.svg';
     if (path.startsWith('http')) return path;
-    return `${this.apiUrl}/files/${path}`;
+    if (path.startsWith('/files/')) return `${this.apiUrl}${path}`;
+    if (path.startsWith('files/')) return `${this.apiUrl}/${path}`;
+    return `${this.apiUrl}/files/${path.replace(/^\/+/, '')}`;
   }
 
   listarPacientes() {
@@ -182,7 +184,6 @@ export class PacienteComponent {
 
     this.mensajeError = null;
     this.mensajeExito = null;
-    this.selectedImageFile = null;
 
     const pacienteData = {
       ...this.form.value,

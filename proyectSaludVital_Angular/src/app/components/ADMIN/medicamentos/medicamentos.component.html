@@ -26,9 +26,11 @@
           </div>
         </div>
 
-        <div class="field">
-          <label for="imagenUrl">URL de Imagen</label>
-          <input type="file" id="imagenUrl" class="form-control" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
+        <div class="field file-upload-field">
+          <label for="imagenUrl">Imagen del medicamento</label>
+          <input type="file" id="imagenUrl" class="form-control file-input" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
+          <small class="file-help">Formatos permitidos: JPG, JPEG o PNG (máx. 2MB).</small>
+          <small class="file-name" *ngIf="selectedImageFile">Seleccionada: {{ selectedImageFile.name }}</small>
         </div>
 
         <div class="actions-row">

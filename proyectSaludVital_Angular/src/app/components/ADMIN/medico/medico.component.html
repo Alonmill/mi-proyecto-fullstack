@@ -69,9 +69,11 @@
 </div>
 
 
-<div>
-  <label for="imagenUrl">URL de Imagen:</label>
-  <input id="imagenUrl" type="file" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
+<div class="file-upload-field">
+  <label for="imagenUrl">Foto del médico:</label>
+  <input id="imagenUrl" class="file-input" type="file" accept="image/png,image/jpeg" (change)="onImageSelected($event)" />
+  <small class="file-help">Formatos permitidos: JPG, JPEG o PNG (máx. 2MB).</small>
+  <small class="file-name" *ngIf="selectedImageFile">Seleccionada: {{ selectedImageFile.name }}</small>
 </div>
 
 <div>
