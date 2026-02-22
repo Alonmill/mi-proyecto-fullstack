@@ -1,21 +1,22 @@
 <div class="layout-container">
   <aside class="sidebar">
-    <h2 class="title">Administrador</h2>
+    <h2 class="title">Panel Admin</h2>
+    <p class="subtitle">Clínica SaludVital</p>
     <nav class="menu">
-       <ul>
-      <li><a routerLink="/admin/medicamento" routerLinkActive="active">Medicamentos</a></li>
-      <li><a routerLink="/admin/medico" routerLinkActive="active">Médicos</a></li>
-      <li><a routerLink="/admin/paciente" routerLinkActive="active">Pacientes</a></li>
-      <li><a routerLink="/admin/listado-receta" routerLinkActive="active">Recetas</a></li>
+      <ul>
+      <li><a routerLink="/admin/medicamento" routerLinkActive="active"><span class="menu-icon">💊</span><span>Medicamentos</span></a></li>
+      <li><a routerLink="/admin/medico" routerLinkActive="active"><span class="menu-icon">🩺</span><span>Médicos</span></a></li>
+      <li><a routerLink="/admin/paciente" routerLinkActive="active"><span class="menu-icon">🧑‍⚕️</span><span>Pacientes</span></a></li>
+      <li><a routerLink="/admin/listado-receta" routerLinkActive="active"><span class="menu-icon">📄</span><span>Recetas</span></a></li>
 
       <!-- Citas -->
-      <li><a routerLink="/admin/actualizar-cita" routerLinkActive="active">Actualizar Cita</a></li>
-      <li><a routerLink="/admin/cancelar-cita" routerLinkActive="active">Cancelar Cita</a></li>
-      <li><a routerLink="/admin/listado-citas" routerLinkActive="active">Listado de Citas</a></li>
-      <li><a routerLink="/admin/reportes" routerLinkActive="active">Reportes</a></li>
+      <li><a routerLink="/admin/actualizar-cita" routerLinkActive="active"><span class="menu-icon">📅</span><span>Actualizar Cita</span></a></li>
+      <li><a routerLink="/admin/cancelar-cita" routerLinkActive="active"><span class="menu-icon">❌</span><span>Cancelar Cita</span></a></li>
+      <li><a routerLink="/admin/listado-citas" routerLinkActive="active"><span class="menu-icon">📋</span><span>Listado de Citas</span></a></li>
+      <li><a routerLink="/admin/reportes" routerLinkActive="active"><span class="menu-icon">📈</span><span>Reportes</span></a></li>
 
       <!-- Expedientes solo ADMIN -->
-      <li><a routerLink="/admin/listado-expedientes" routerLinkActive="active">Listado de Expedientes</a></li>
+      <li><a routerLink="/admin/listado-expedientes" routerLinkActive="active"><span class="menu-icon">🗂️</span><span>Listado de Expedientes</span></a></li>
     </ul>
 
     </nav>
