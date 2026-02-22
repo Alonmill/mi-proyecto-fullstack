@@ -14,6 +14,20 @@
         <input id="fechaDia" type="date" [(ngModel)]="fechaPacientesDia" />
       </div>
 
+      <div class="fecha-row" *ngIf="card.requiresIncomeGrouping">
+        <label for="agrupacionIngresos">Agrupar:</label>
+        <ng-select
+          id="agrupacionIngresos"
+          [items]="opcionesAgrupacion"
+          bindLabel="label"
+          bindValue="value"
+          [clearable]="false"
+          [searchable]="false"
+          [(ngModel)]="agrupacionIngresos"
+          placeholder="Seleccione agrupación">
+        </ng-select>
+      </div>
+
       <div class="acciones">
         <button class="btn btn-outline" (click)="generar(card)">Generar Reporte</button>
         <button class="btn btn-primary" (click)="exportar(card)">Exportar a PDF</button>

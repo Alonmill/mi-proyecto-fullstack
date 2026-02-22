@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { ReporteTablaDTO } from '../../../DTO/reporte-tabla-dto';
 import { ReportesService } from '../../../services/reportes.service';
 
@@ -9,12 +10,13 @@ interface ReporteCard {
   endpoint: string;
   descripcion: string;
   requiresDate?: boolean;
+  requiresIncomeGrouping?: boolean;
 }
 
 @Component({
   selector: 'app-reportes',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgSelectModule],
   templateUrl: './reportes.component.html',
   styleUrl: './reportes.component.css'
 })
@@ -26,7 +28,14 @@ export class ReportesComponent {
     { key: 'Pacientes', endpoint: 'pacientes', descripcion: 'Listado general de pacientes registrados.' },
     { key: 'Médicos', endpoint: 'medicos', descripcion: 'Médicos, especialidad y tarifa.' },
     { key: 'Medicamentos', endpoint: 'medicamentos', descripcion: 'Catálogo de medicamentos disponibles.' },
-    { key: 'Pacientes por Día', endpoint: 'pacientes-por-dia', descripcion: 'Consultas del día seleccionado.', requiresDate: true }
+    { key: 'Pacientes por Día', endpoint: 'pacientes-por-dia', descripcion: 'Consultas del día seleccionado.', requiresDate: true },
+    { key: 'Ingresos', endpoint: 'ingresos', descripcion: 'Ingresos agrupados por día, semana o mes.', requiresIncomeGrouping: true }
+  ];
+
+  readonly opcionesAgrupacion = [
+    { value: 'dia', label: 'Por Día' },
+    { value: 'semana', label: 'Por Semana' },
+    { value: 'mes', label: 'Por Mes' }
   ];
 
   cargando = false;
@@ -34,6 +43,7 @@ export class ReportesComponent {
   reporteActual: ReporteTablaDTO | null = null;
   reporteSeleccionado = '';
   fechaPacientesDia = new Date().toISOString().split('T')[0];
+  agrupacionIngresos = 'dia';
 
   constructor(private reportesService: ReportesService) {}
 
@@ -42,7 +52,7 @@ export class ReportesComponent {
     this.cargando = true;
     this.reporteSeleccionado = card.key;
 
-    this.reportesService.obtenerData(card.endpoint, this.getFecha(card)).subscribe({
+    this.reportesService.obtenerData(card.endpoint, this.getFecha(card), this.getAgrupacion(card)).subscribe({
       next: data => {
         this.reporteActual = data;
         this.cargando = false;
@@ -56,7 +66,7 @@ export class ReportesComponent {
 
   exportar(card: ReporteCard): void {
     this.error = '';
-    this.reportesService.exportarPdf(card.endpoint, this.getFecha(card)).subscribe({
+    this.reportesService.exportarPdf(card.endpoint, this.getFecha(card), this.getAgrupacion(card)).subscribe({
       next: blob => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -73,5 +83,9 @@ export class ReportesComponent {
 
   private getFecha(card: ReporteCard): string | undefined {
     return card.requiresDate ? this.fechaPacientesDia : undefined;
+  }
+
+  private getAgrupacion(card: ReporteCard): string | undefined {
+    return card.requiresIncomeGrouping ? this.agrupacionIngresos : undefined;
   }
 }

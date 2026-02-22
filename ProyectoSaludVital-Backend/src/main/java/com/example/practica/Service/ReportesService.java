@@ -4,9 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -187,6 +191,56 @@ public class ReportesService {
 
     public byte[] reporteMedicamentosPdf() {
         return crearDocumento(dataMedicamentos());
+    }
+
+    public ReporteTablaDTO dataIngresos(String agrupacion) {
+        String modo = agrupacion == null ? "dia" : agrupacion.trim().toLowerCase(Locale.ROOT);
+
+        List<Cita> citasConMonto = citaRepository.findAll().stream()
+                .filter(c -> c.getFecha() != null && c.getTarifaAplicada() != null)
+                .toList();
+
+        if ("semana".equals(modo)) {
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            Map<String, BigDecimal> totalSemana = citasConMonto.stream().collect(Collectors.groupingBy(
+                    c -> c.getFecha().getYear() + "-S" + String.format("%02d", c.getFecha().get(weekFields.weekOfWeekBasedYear())),
+                    Collectors.mapping(Cita::getTarifaAplicada, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+
+            return tabla("Reporte de Ingresos (Por Semana)",
+                    List.of("Semana", "Total Ingresos"),
+                    totalSemana.entrySet().stream()
+                            .sorted(Map.Entry.comparingByKey())
+                            .map(e -> List.of(e.getKey(), money(e.getValue())))
+                            .toList());
+        }
+
+        if ("mes".equals(modo)) {
+            Map<String, BigDecimal> totalMes = citasConMonto.stream().collect(Collectors.groupingBy(
+                    c -> c.getFecha().format(DateTimeFormatter.ofPattern("MM/yyyy")),
+                    Collectors.mapping(Cita::getTarifaAplicada, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+
+            return tabla("Reporte de Ingresos (Por Mes)",
+                    List.of("Mes", "Total Ingresos"),
+                    totalMes.entrySet().stream()
+                            .sorted(Map.Entry.comparingByKey())
+                            .map(e -> List.of(e.getKey(), money(e.getValue())))
+                            .toList());
+        }
+
+        Map<LocalDate, BigDecimal> totalDia = citasConMonto.stream().collect(Collectors.groupingBy(
+                Cita::getFecha,
+                Collectors.mapping(Cita::getTarifaAplicada, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+
+        return tabla("Reporte de Ingresos (Por Día)",
+                List.of("Fecha", "Total Ingresos"),
+                totalDia.entrySet().stream()
+                        .sorted(Map.Entry.comparingByKey())
+                        .map(e -> List.of(safeDate(e.getKey()), money(e.getValue())))
+                        .toList());
+    }
+
+    public byte[] reporteIngresosPdf(String agrupacion) {
+        return crearDocumento(dataIngresos(agrupacion));
     }
 
     private ReporteTablaDTO tabla(String titulo, List<String> headers, List<List<String>> rows) {

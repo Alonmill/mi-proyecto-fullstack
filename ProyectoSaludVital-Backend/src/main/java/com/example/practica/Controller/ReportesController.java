@@ -74,6 +74,18 @@ public class ReportesController {
     @GetMapping(value = "/medicamentos", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> reporteMedicamentos() { return pdf("reporte-medicamentos.pdf", reportesService.reporteMedicamentosPdf()); }
 
+    @GetMapping("/ingresos/data")
+    public ResponseEntity<ReporteTablaDTO> dataIngresos(
+            @RequestParam(required = false, defaultValue = "dia") String agrupacion) {
+        return ResponseEntity.ok(reportesService.dataIngresos(agrupacion));
+    }
+
+    @GetMapping(value = "/ingresos", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> reporteIngresos(
+            @RequestParam(required = false, defaultValue = "dia") String agrupacion) {
+        return pdf("reporte-ingresos.pdf", reportesService.reporteIngresosPdf(agrupacion));
+    }
+
     private ResponseEntity<byte[]> pdf(String filename, byte[] data) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);

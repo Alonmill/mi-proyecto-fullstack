@@ -51,6 +51,10 @@
   padding: 6px 10px;
 }
 
+.fecha-row ng-select {
+  min-width: 170px;
+}
+
 .acciones {
   display: flex;
   gap: 10px;

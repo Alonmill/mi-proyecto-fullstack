@@ -10,16 +10,22 @@ export class ReportesService {
 
   constructor(private apiService: ApiService) {}
 
-  obtenerData(endpoint: string, fecha?: string): Observable<ReporteTablaDTO> {
+  obtenerData(endpoint: string, fecha?: string, agrupacion?: string): Observable<ReporteTablaDTO> {
     const base = `reportes/${endpoint}/data`;
+    if (agrupacion) {
+      return this.apiService.getWithParams<ReporteTablaDTO>(base, { agrupacion });
+    }
     if (fecha) {
       return this.apiService.getWithParams<ReporteTablaDTO>(base, { fecha });
     }
     return this.apiService.get<ReporteTablaDTO>(base);
   }
 
-  exportarPdf(endpoint: string, fecha?: string): Observable<Blob> {
+  exportarPdf(endpoint: string, fecha?: string, agrupacion?: string): Observable<Blob> {
     const base = `reportes/${endpoint}`;
+    if (agrupacion) {
+      return this.apiService.getBlob(base, { agrupacion });
+    }
     if (fecha) {
       return this.apiService.getBlob(base, { fecha });
     }
