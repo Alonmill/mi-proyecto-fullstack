@@ -116,6 +116,7 @@ export class MedicamentosComponent implements OnInit {
   }
 
   resolveImageUrl(path?: string): string {
+    
     if (!path) return '/images/no-image-medicamento.svg';
 
     const normalized = path.trim().replace(/\\/g, '/');
