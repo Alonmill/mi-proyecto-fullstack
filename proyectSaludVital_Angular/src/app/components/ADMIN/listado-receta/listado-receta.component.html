@@ -11,7 +11,7 @@
       <th>Fecha Emisión</th>
       <th>Fecha Caducidad</th>
       <th>Estado</th>
-      <th>Items</th>
+      <th>Medicamentos</th>
     </tr>
   </thead>
   <tbody>
@@ -24,7 +24,7 @@
       <td><span class="badge" [ngClass]="obtenerClaseEstado(receta.estado)">{{ receta.estado }}</span></td>
       <td>
         <button type="button" (click)="receta.showItems = !receta.showItems">
-          {{ receta.showItems ? 'Ocultar' : 'Ver Items' }}
+          {{ receta.showItems ? 'Ocultar' : 'Ver Medicamentos' }}
         </button>
         <ul *ngIf="receta.showItems">
           <li *ngFor="let item of receta.items">
