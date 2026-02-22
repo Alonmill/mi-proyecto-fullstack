@@ -80,3 +80,9 @@ p[ng-reflect-ng-if="true"] {
   color: #e74c3c; /* error */
   font-weight: bold;
 }
+
+
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+}

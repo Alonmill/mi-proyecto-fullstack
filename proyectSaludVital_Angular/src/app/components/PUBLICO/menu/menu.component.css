@@ -43,3 +43,13 @@
 .material-icons {
   font-size: 18px;
 }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar img {
+  height: 45px;
+}
