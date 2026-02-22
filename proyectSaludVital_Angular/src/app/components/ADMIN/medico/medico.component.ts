@@ -111,7 +111,6 @@ export class MedicoComponent implements OnInit {
   onEmailInputChange() {
     this.mensajeError = null;
     this.mensajeExito = null;
-    this.selectedImageFile = null;
     const query = this.emailBusquedaUsuario.trim();
 
     if (query.length < 2) {
