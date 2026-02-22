@@ -1,16 +1,42 @@
 <div class="layout-container">
   <aside class="sidebar">
-    <h2 class="title">Paciente</h2>
+    <div class="paciente-profile">
+      <div class="avatar">PA</div>
+      <div class="profile-text">
+        <h2 class="title">Paciente SaludVital</h2>
+        <p class="role">Paciente</p>
+      </div>
+    </div>
+
     <nav class="menu">
+      <p class="menu-section-title">Mi Información</p>
       <ul>
-        <li><a routerLink="/paciente/perfil-paciente" routerLinkActive="active">Perfil</a></li>
-        <li><a routerLink="/paciente/expediente-paciente" routerLinkActive="active">Expediente</a></li>
-        <li><a routerLink="/paciente/mis-recetas" routerLinkActive="active">Mi receta</a></li>
- 
-  <li><a routerLink="/paciente/crear-cita" routerLinkActive="active">Crear Cita</a></li>
-  <li><a routerLink="/paciente/actualizar-cita" routerLinkActive="active">Actualizar Cita</a></li>
-  <li><a routerLink="/paciente/cancelar-cita-paciente" routerLinkActive="active">Cancelar Cita</a></li>
-  <li><a routerLink="/paciente/mis-citas" routerLinkActive="active">Mis Citas</a></li>
+        <li>
+          <a routerLink="/paciente/perfil-paciente" routerLinkActive="active">
+            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+            <span>Perfil</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/paciente/expediente-paciente" routerLinkActive="active">
+            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5A3.375 3.375 0 0010.125 2.25H8.25m.75 12h6m-6 3h3.75M9 3H4.875C3.839 3 3 3.84 3 4.875v14.25C3 20.16 3.84 21 4.875 21h14.25C20.16 21 21 20.16 21 19.125V11.25" /></svg>
+            <span>Expediente</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/paciente/mis-recetas" routerLinkActive="active">
+            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2.25-9H6.75A2.25 2.25 0 004.5 9.25v8.25a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V9.25A2.25 2.25 0 0017.25 7z" /></svg>
+            <span>Mi receta</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="menu-section-title">Mis Citas</p>
+      <ul>
+        <li><a routerLink="/paciente/crear-cita" routerLinkActive="active"><svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" /></svg><span>Crear Cita</span></a></li>
+        <li><a routerLink="/paciente/actualizar-cita" routerLinkActive="active"><svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" /></svg><span>Actualizar Cita</span></a></li>
+        <li><a routerLink="/paciente/cancelar-cita-paciente" routerLinkActive="active"><svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg><span>Cancelar Cita</span></a></li>
+        <li><a routerLink="/paciente/mis-citas" routerLinkActive="active"><svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75V4.5m7.5 2.25V4.5M3.75 9h16.5M4.5 19.5h15a1.5 1.5 0 001.5-1.5V8.25a1.5 1.5 0 00-1.5-1.5h-15A1.5 1.5 0 003 8.25V18a1.5 1.5 0 001.5 1.5z" /></svg><span>Mis Citas</span></a></li>
       </ul>
     </nav>
   </aside>
