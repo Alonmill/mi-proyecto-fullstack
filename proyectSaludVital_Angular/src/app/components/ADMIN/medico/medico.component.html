@@ -1,5 +1,8 @@
 
-<h2>{{ editar ? 'Actualizar Médico' : 'Agregar Médico' }}</h2>
+<h2 class="section-title">{{ editar ? 'Actualizar Médico' : 'Agregar Médico' }}</h2>
+
+<div *ngIf="mensajeExito" class="alert-success">{{ mensajeExito }}</div>
+<div *ngIf="mensajeError" class="alert-error">{{ mensajeError }}</div>
 <form [formGroup]="form" (ngSubmit)="guardar()">
 
   <div>
@@ -135,7 +138,7 @@
   <button type="submit">{{ editar ? 'Actualizar' : 'Guardar' }}</button>
   <button *ngIf="editar" type="button" (click)="cancelarEdicion()">Cancelar</button>
 </form>
-<h2>Lista de Médicos</h2>
+<h2 class="section-title">Lista de Médicos</h2>
 
 <table border="1" cellpadding="5" cellspacing="0">
   <thead>
@@ -182,7 +185,3 @@
     </tr>
   </tbody>
 </table>
-
-<div *ngIf="mensajeError" class="alert-error">
-  {{ mensajeError }}
-</div>

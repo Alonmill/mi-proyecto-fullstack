@@ -18,7 +18,7 @@ form {
 }
 
 /* ====== Títulos ====== */
-h2 {
+h2, .section-title {
   text-align: center;
   margin-bottom: 20px;
   color: #2c3e50;
@@ -128,6 +128,7 @@ table {
   width: 95%;
   margin: 30px auto;
   border-collapse: collapse;
+  border: 1px solid #d0d7de;
   font-size: 14px;
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -143,7 +144,7 @@ thead {
 th, td {
   padding: 10px 12px;
   text-align: left;
-  border-bottom: 1px solid #ecf0f1;
+  border: 1px solid #d0d7de;
 }
 
 tr:hover {
@@ -156,13 +157,24 @@ td button {
   font-size: 13px;
 }
 
+.alert-success {
+  background: #d1e7dd;
+  color: #0f5132;
+  padding: 10px;
+  border-radius: 6px;
+  margin: 10px auto;
+  border: 1px solid #badbcc;
+  max-width: 800px;
+}
+
 .alert-error {
   background: #f8d7da;
   color: #721c24;
   padding: 10px;
   border-radius: 6px;
-  margin-bottom: 15px;
+  margin: 10px auto;
   border: 1px solid #f5c6cb;
+  max-width: 800px;
 }   
 .usuario-search-row {
   display: flex;

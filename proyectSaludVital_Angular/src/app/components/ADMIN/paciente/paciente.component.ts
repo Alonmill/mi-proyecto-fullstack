@@ -20,6 +20,7 @@ export class PacienteComponent {
   editar = false;
   pacienteSeleccionadoId: number | null = null;
   mensajeError: string | null = null;
+  mensajeExito: string | null = null;
   emailBusquedaUsuario = '';
   sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
 
@@ -126,12 +127,14 @@ export class PacienteComponent {
     this.alergias.clear();
     this.enfermedades.clear();
     this.mensajeError = null;
+    this.mensajeExito = null;
   }
 
   guardar() {
     if (this.form.invalid) return;
 
     this.mensajeError = null;
+    this.mensajeExito = null;
 
     const pacienteData = {
       ...this.form.value,
@@ -144,6 +147,7 @@ export class PacienteComponent {
         next: () => {
           this.listarPacientes();
           this.cancelarEdicion();
+          this.mensajeExito = "Paciente actualizado correctamente";
         },
         error: (err) => {
           console.error(err);
@@ -155,6 +159,7 @@ export class PacienteComponent {
         next: () => {
           this.listarPacientes();
           this.cancelarEdicion();
+          this.mensajeExito = "Paciente actualizado correctamente";
         },
         error: (err) => {
           console.error(err);

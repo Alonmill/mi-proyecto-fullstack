@@ -20,8 +20,8 @@ form h2 {
   margin-top: 3px;
 }
 
-form div {
-  margin-bottom: 15px;
+form > div {
+  margin: 10px auto;
 }
 
 label {
@@ -75,6 +75,7 @@ table {
   width: 95%;
   margin: 25px auto;
   border-collapse: collapse;
+  border: 1px solid #d0d7de;
   background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
@@ -90,6 +91,7 @@ th, td {
   padding: 12px 15px;
   text-align: center;
   font-size: 14px;
+  border: 1px solid #d0d7de;
 }
 
 tbody tr:nth-child(even) {
@@ -121,13 +123,24 @@ ul li {
   font-size: 13px;
 }
 
+.alert-success {
+  background: #d1e7dd;
+  color: #0f5132;
+  padding: 10px;
+  border-radius: 6px;
+  margin: 10px auto;
+  border: 1px solid #badbcc;
+  max-width: 700px;
+}
+
 .alert-error {
   background: #f8d7da;
   color: #721c24;
   padding: 10px;
   border-radius: 6px;
-  margin-bottom: 15px;
+  margin: 10px auto;
   border: 1px solid #f5c6cb;
+  max-width: 700px;
 }
 
 .usuario-search-row {
@@ -160,4 +173,12 @@ ul li {
 
 .autocomplete-list li:hover {
   background: #f1f8ff;
+}
+
+
+.section-title {
+  text-align: center;
+  margin: 12px auto 16px;
+  color: #2c3e50;
+  font-weight: 700;
 }

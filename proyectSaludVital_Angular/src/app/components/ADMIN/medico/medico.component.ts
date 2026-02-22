@@ -20,6 +20,7 @@ export class MedicoComponent implements OnInit {
   editar = false;
   medicoSeleccionadoId: number | null = null;
   mensajeError: string | null = null;
+  mensajeExito: string | null = null;
   emailBusquedaUsuario = '';
   sugerenciasUsuarios: UsuarioBusquedaDTO[] = [];
 
@@ -62,6 +63,7 @@ export class MedicoComponent implements OnInit {
 
   onEmailInputChange() {
     this.mensajeError = null;
+    this.mensajeExito = null;
     const query = this.emailBusquedaUsuario.trim();
 
     if (query.length < 2) {
@@ -137,12 +139,14 @@ export class MedicoComponent implements OnInit {
     this.form.reset({ estado: 'ACTIVO', tarifaConsulta: 0, disponible: null });
     this.horarios.clear();
     this.mensajeError = null;
+    this.mensajeExito = null;
   }
 
   guardar() {
     if (this.form.invalid) return;
 
     this.mensajeError = null;
+    this.mensajeExito = null;
     const medicoData = this.form.value;
 
     if (this.editar && this.medicoSeleccionadoId) {
@@ -150,6 +154,7 @@ export class MedicoComponent implements OnInit {
         next: () => {
           this.listarMedicos();
           this.cancelarEdicion();
+          this.mensajeExito = "Médico actualizado correctamente";
         },
         error: (err) => {
           console.error(err);
@@ -161,6 +166,7 @@ export class MedicoComponent implements OnInit {
         next: () => {
           this.listarMedicos();
           this.cancelarEdicion();
+          this.mensajeExito = "Médico agregado correctamente";
         },
         error: (err) => {
           console.error(err);
