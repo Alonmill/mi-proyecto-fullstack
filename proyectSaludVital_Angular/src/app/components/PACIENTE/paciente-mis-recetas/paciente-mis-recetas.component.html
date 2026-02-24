@@ -1,6 +1,5 @@
 <div *ngIf="recetas.length > 0; else noReceta">
   <div *ngFor="let receta of recetas">
-    <h2>Receta N° {{ receta.id }}</h2>
     <p><strong>Médico:</strong> {{ receta.medicoNombre }}</p>
     <p><strong>Paciente:</strong> {{ receta.pacienteNombre }}</p>
     <p><strong>Fecha de emisión:</strong> {{ receta.fechaEmision }}</p>
